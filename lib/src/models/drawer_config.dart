@@ -45,6 +45,24 @@ enum NovaDrawerAnimationType {
 
   /// Gradient color transition effect.
   gradient,
+
+  /// Floating drawer effect with shadow and elevation.
+  floating,
+
+  /// Floating drawer with bounce overshoot.
+  floatingBounce,
+
+  /// Circular reveal effect from an origin point.
+  floatingReveal,
+
+  /// Wave-like boundary reveal animation.
+  wave,
+
+  /// Parallax multi-layer depth effect.
+  parallax,
+
+  /// Curtain-style split reveal animation.
+  curtain,
 }
 
 /// Enumeration of drawer display modes.

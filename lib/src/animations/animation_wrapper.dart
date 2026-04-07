@@ -21,6 +21,8 @@ import '../animations/spring_animation.dart';
 import '../animations/shimmer_animation.dart';
 import '../animations/blur_animation.dart';
 import '../animations/gradient_animation.dart';
+import '../animations/floating_animation.dart';
+import '../animations/wave_animation.dart';
 
 /// A unified animation wrapper that applies the configured animation
 /// type to its child.
@@ -139,6 +141,43 @@ class NovaDrawerAnimationWrapper extends StatelessWidget {
         return NovaGradientDrawerAnimation(
           animation: animation,
           curve: animationConfig.curve,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.floating:
+        return NovaFloatingDrawerAnimation(
+          animation: animation,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.floatingBounce:
+        return NovaFloatingBounceAnimation(
+          animation: animation,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.floatingReveal:
+        return NovaFloatingRevealAnimation(
+          animation: animation,
+          origin: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.wave:
+        return NovaWaveDrawerAnimation(
+          animation: animation,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.parallax:
+        return NovaParallaxDrawerAnimation(
+          animation: animation,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.curtain:
+        return NovaCurtainDrawerAnimation(
+          animation: animation,
           child: child,
         );
     }

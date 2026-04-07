@@ -88,3 +88,9 @@ export 'src/utils/accessibility_utils.dart';
 // ── Backgrounds ─────────────────────────────────────────────────────────
 export 'src/backgrounds/gradient_background.dart';
 export 'src/backgrounds/particle_background.dart';
+
+// ── Deprecated Aliases (backward compatibility) ─────────────────────────
+export 'src/deprecated_aliases.dart';
+
+// ── Re-export search_plus for convenience ───────────────────────────────
+export 'package:search_plus/search_plus.dart';
