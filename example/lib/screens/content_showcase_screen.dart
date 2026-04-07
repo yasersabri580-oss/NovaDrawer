@@ -171,7 +171,10 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        NovaDrawerSearchBar(
+        NovaDrawerSearchBar<String>.simple(
+          items: const ['Home', 'Settings', 'Profile', 'Dashboard', 'Analytics'],
+          searchableFields: (item) => [item],
+          toResult: (item) => SearchResult(id: item, title: item, data: item),
           hintText: 'Search items…',
           onChanged: (v) => setState(() => _searchQuery = v),
         ),

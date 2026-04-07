@@ -1289,14 +1289,18 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: NovaDrawerSearchBar(
+            body: NovaDrawerSearchBar<String>.simple(
+              items: const ['Home', 'Settings', 'Profile'],
+              searchableFields: (item) => [item],
+              toResult: (item) =>
+                  SearchResult(id: item, title: item, data: item),
               hintText: 'Find items',
               onChanged: (_) {},
             ),
           ),
         ),
       );
-      expect(find.byType(TextField), findsOneWidget);
+      expect(find.byType(NovaDrawerSearchBar<String>), findsOneWidget);
     });
 
     testWidgets('NovaDrawerStatsCard renders stats', (tester) async {

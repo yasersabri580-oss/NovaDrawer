@@ -6,10 +6,10 @@
 ///
 /// This library provides a comprehensive drawer navigation system with:
 /// - Responsive layout (mobile, tablet, desktop)
-/// - 10+ animation types
+/// - 16+ animation types (including floating, wave, parallax, and curtain)
 /// - Advanced modular header system with 10 variants
 /// - Drawer surface styles (glassmorphism, neumorphic, gradient, etc.)
-/// - Content blocks (search, stats, shortcuts, recent items, etc.)
+/// - Content blocks (search powered by search_plus, stats, shortcuts, etc.)
 /// - RTL support
 /// - Nested/multi-level menus
 /// - Dynamic data loading
@@ -19,6 +19,7 @@
 /// - Gesture controls
 /// - Background effects
 /// - Slot-based builder APIs for deep customization
+/// - Deprecated aliases for backward compatibility with pre-Nova naming
 library nova_drawer;
 
 // ── Models ──────────────────────────────────────────────────────────────
