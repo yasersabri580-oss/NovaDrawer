@@ -7,6 +7,8 @@
 /// motion when opening/closing the drawer.
 library;
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 
@@ -114,7 +116,7 @@ class _SpringCurve extends Curve {
     final spring = SpringDescription(
       mass: mass,
       stiffness: stiffness,
-      damping: damping * 2.0 * (stiffness * mass).clamp(0.01, double.infinity),
+      damping: damping * 2.0 * math.sqrt(stiffness * mass),
     );
 
     final simulation = SpringSimulation(spring, 0.0, 1.0, 0.0);
@@ -188,6 +190,6 @@ SpringDescription createDrawerSpring({
   return SpringDescription(
     mass: mass,
     stiffness: stiffness,
-    damping: damping * 2.0 * (stiffness * mass).clamp(0.01, double.infinity),
+    damping: damping * 2.0 * math.sqrt(stiffness * mass),
   );
 }

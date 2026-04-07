@@ -891,6 +891,43 @@ void main() {
 
       controller.dispose();
     });
+
+    testWidgets('non-collapsible section shows items without collapse',
+        (WidgetTester tester) async {
+      final controller = AdvancedDrawerController();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: DrawerControllerProvider(
+              controller: controller,
+              child: const SingleChildScrollView(
+                child: DrawerSectionWidget(
+                  section: DrawerSectionData(
+                    id: 'fixed',
+                    title: 'Fixed Section',
+                    isCollapsible: false,
+                    items: [
+                      DrawerItem(id: 'item1', title: 'Item 1'),
+                      DrawerItem(id: 'item2', title: 'Item 2'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      // Items should be visible
+      expect(find.text('Item 1'), findsOneWidget);
+      expect(find.text('Item 2'), findsOneWidget);
+
+      // Section header should not have expand icon since not collapsible
+      expect(find.byIcon(Icons.expand_more), findsNothing);
+
+      controller.dispose();
+    });
   });
 
   group('AdvancedAppDrawer', () {

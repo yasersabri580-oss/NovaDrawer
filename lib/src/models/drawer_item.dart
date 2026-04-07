@@ -41,11 +41,14 @@ class DrawerItemBadge {
   /// Custom widget to display instead of count/label.
   final Widget? customWidget;
 
+  /// Maximum badge count before showing "+".
+  static const int maxDisplayCount = 99;
+
   /// Returns the display text for this badge.
   String get displayText {
     if (label != null) return label!;
     if (count != null) {
-      return count! > 99 ? '99+' : count.toString();
+      return count! > maxDisplayCount ? '$maxDisplayCount+' : count.toString();
     }
     return '';
   }
