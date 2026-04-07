@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Configuration options for the AdvancedAppDrawer.
+/// Configuration options for the NovaAppDrawer.
 ///
 /// Controls behavior like responsiveness, gestures, pinning,
 /// animation styles, and accessibility settings.
@@ -15,7 +15,7 @@ import '../animations/animation_config.dart';
 ///
 /// Each type provides a distinct visual transition when the drawer
 /// opens and closes.
-enum DrawerAnimationType {
+enum NovaDrawerAnimationType {
   /// Drawer slides in from the side.
   slide,
 
@@ -45,10 +45,28 @@ enum DrawerAnimationType {
 
   /// Gradient color transition effect.
   gradient,
+
+  /// Floating drawer effect with shadow and elevation.
+  floating,
+
+  /// Floating drawer with bounce overshoot.
+  floatingBounce,
+
+  /// Circular reveal effect from an origin point.
+  floatingReveal,
+
+  /// Wave-like boundary reveal animation.
+  wave,
+
+  /// Parallax multi-layer depth effect.
+  parallax,
+
+  /// Curtain-style split reveal animation.
+  curtain,
 }
 
 /// Enumeration of drawer display modes.
-enum DrawerDisplayMode {
+enum NovaDrawerDisplayMode {
   /// Standard overlay drawer that covers content.
   overlay,
 
@@ -69,9 +87,9 @@ enum DrawerDisplayMode {
 ///
 /// Defines the screen widths at which the drawer switches
 /// between mobile, tablet, and desktop layouts.
-class DrawerBreakpoints {
-  /// Creates [DrawerBreakpoints] with custom values.
-  const DrawerBreakpoints({
+class NovaDrawerBreakpoints {
+  /// Creates [NovaDrawerBreakpoints] with custom values.
+  const NovaDrawerBreakpoints({
     this.mobile = 600.0,
     this.tablet = 1024.0,
   });
@@ -84,13 +102,13 @@ class DrawerBreakpoints {
   final double tablet;
 
   /// Default breakpoints matching Material Design guidelines.
-  static const DrawerBreakpoints standard = DrawerBreakpoints();
+  static const NovaDrawerBreakpoints standard = NovaDrawerBreakpoints();
 }
 
 /// Gesture control configuration for the drawer.
-class DrawerGestureConfig {
-  /// Creates a [DrawerGestureConfig].
-  const DrawerGestureConfig({
+class NovaDrawerGestureConfig {
+  /// Creates a [NovaDrawerGestureConfig].
+  const NovaDrawerGestureConfig({
     this.enableSwipeToOpen = true,
     this.enableSwipeToClose = true,
     this.swipeEdgeWidth = 20.0,
@@ -119,9 +137,9 @@ class DrawerGestureConfig {
 }
 
 /// Accessibility configuration for the drawer.
-class DrawerAccessibilityConfig {
-  /// Creates a [DrawerAccessibilityConfig].
-  const DrawerAccessibilityConfig({
+class NovaDrawerAccessibilityConfig {
+  /// Creates a [NovaDrawerAccessibilityConfig].
+  const NovaDrawerAccessibilityConfig({
     this.enableSemantics = true,
     this.enableFocusTraversal = true,
     this.enableScalableText = true,
@@ -158,9 +176,9 @@ class DrawerAccessibilityConfig {
 }
 
 /// Configuration for auto-hide on scroll behavior.
-class DrawerAutoHideConfig {
-  /// Creates a [DrawerAutoHideConfig].
-  const DrawerAutoHideConfig({
+class NovaDrawerAutoHideConfig {
+  /// Creates a [NovaDrawerAutoHideConfig].
+  const NovaDrawerAutoHideConfig({
     this.enabled = false,
     this.scrollThreshold = 50.0,
     this.hideDelay = Duration.zero,
@@ -180,30 +198,30 @@ class DrawerAutoHideConfig {
   final Duration showDelay;
 }
 
-/// Complete configuration for the AdvancedAppDrawer.
+/// Complete configuration for the NovaAppDrawer.
 ///
 /// Combines all sub-configurations into a single object for easy
 /// passing to the drawer widget.
 ///
 /// Example:
 /// ```dart
-/// DrawerConfig(
-///   displayMode: DrawerDisplayMode.auto,
-///   animationType: DrawerAnimationType.slide,
+/// NovaDrawerConfig(
+///   displayMode: NovaDrawerDisplayMode.auto,
+///   animationType: NovaDrawerAnimationType.slide,
 ///   isPinnable: true,
-///   gestureConfig: DrawerGestureConfig(enableSwipeToOpen: true),
+///   gestureConfig: NovaDrawerGestureConfig(enableSwipeToOpen: true),
 /// )
 /// ```
-class DrawerConfig {
-  /// Creates a [DrawerConfig].
-  const DrawerConfig({
-    this.displayMode = DrawerDisplayMode.auto,
-    this.animationType = DrawerAnimationType.slide,
-    this.animationConfig = const DrawerAnimationConfig(),
-    this.breakpoints = const DrawerBreakpoints(),
-    this.gestureConfig = const DrawerGestureConfig(),
-    this.accessibilityConfig = const DrawerAccessibilityConfig(),
-    this.autoHideConfig = const DrawerAutoHideConfig(),
+class NovaDrawerConfig {
+  /// Creates a [NovaDrawerConfig].
+  const NovaDrawerConfig({
+    this.displayMode = NovaDrawerDisplayMode.auto,
+    this.animationType = NovaDrawerAnimationType.slide,
+    this.animationConfig = const NovaDrawerAnimationConfig(),
+    this.breakpoints = const NovaDrawerBreakpoints(),
+    this.gestureConfig = const NovaDrawerGestureConfig(),
+    this.accessibilityConfig = const NovaDrawerAccessibilityConfig(),
+    this.autoHideConfig = const NovaDrawerAutoHideConfig(),
     this.isPinnable = true,
     this.isPinnedByDefault = false,
     this.showMiniOnCollapse = true,
@@ -220,25 +238,25 @@ class DrawerConfig {
   });
 
   /// How the drawer is displayed on screen.
-  final DrawerDisplayMode displayMode;
+  final NovaDrawerDisplayMode displayMode;
 
   /// Primary animation type for open/close transitions.
-  final DrawerAnimationType animationType;
+  final NovaDrawerAnimationType animationType;
 
   /// Detailed animation configuration.
-  final DrawerAnimationConfig animationConfig;
+  final NovaDrawerAnimationConfig animationConfig;
 
   /// Responsive breakpoints for layout switching.
-  final DrawerBreakpoints breakpoints;
+  final NovaDrawerBreakpoints breakpoints;
 
   /// Gesture control settings.
-  final DrawerGestureConfig gestureConfig;
+  final NovaDrawerGestureConfig gestureConfig;
 
   /// Accessibility settings.
-  final DrawerAccessibilityConfig accessibilityConfig;
+  final NovaDrawerAccessibilityConfig accessibilityConfig;
 
   /// Auto-hide on scroll settings.
-  final DrawerAutoHideConfig autoHideConfig;
+  final NovaDrawerAutoHideConfig autoHideConfig;
 
   /// Whether the drawer can be pinned open on tablet/desktop.
   final bool isPinnable;
@@ -280,14 +298,14 @@ class DrawerConfig {
   final Duration hoverExpandDelay;
 
   /// Creates a copy of this config with the given fields replaced.
-  DrawerConfig copyWith({
-    DrawerDisplayMode? displayMode,
-    DrawerAnimationType? animationType,
-    DrawerAnimationConfig? animationConfig,
-    DrawerBreakpoints? breakpoints,
-    DrawerGestureConfig? gestureConfig,
-    DrawerAccessibilityConfig? accessibilityConfig,
-    DrawerAutoHideConfig? autoHideConfig,
+  NovaDrawerConfig copyWith({
+    NovaDrawerDisplayMode? displayMode,
+    NovaDrawerAnimationType? animationType,
+    NovaDrawerAnimationConfig? animationConfig,
+    NovaDrawerBreakpoints? breakpoints,
+    NovaDrawerGestureConfig? gestureConfig,
+    NovaDrawerAccessibilityConfig? accessibilityConfig,
+    NovaDrawerAutoHideConfig? autoHideConfig,
     bool? isPinnable,
     bool? isPinnedByDefault,
     bool? showMiniOnCollapse,
@@ -302,7 +320,7 @@ class DrawerConfig {
     bool? enableHoverExpand,
     Duration? hoverExpandDelay,
   }) {
-    return DrawerConfig(
+    return NovaDrawerConfig(
       displayMode: displayMode ?? this.displayMode,
       animationType: animationType ?? this.animationType,
       animationConfig: animationConfig ?? this.animationConfig,

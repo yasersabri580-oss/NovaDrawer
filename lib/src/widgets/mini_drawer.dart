@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Mini drawer widget for the AdvancedAppDrawer.
+/// Mini drawer widget for the NovaAppDrawer.
 ///
 /// Provides a collapsed icon-only view of the drawer suitable
 /// for tablet and desktop layouts, with expand-on-hover support.
@@ -24,14 +24,14 @@ import 'nested_menu_item.dart';
 ///
 /// Example:
 /// ```dart
-/// MiniDrawerWidget(
+/// NovaMiniDrawer(
 ///   items: drawerItems,
 ///   onItemTap: (item) => navigateTo(item.route),
 /// )
 /// ```
-class MiniDrawerWidget extends StatefulWidget {
-  /// Creates a [MiniDrawerWidget].
-  const MiniDrawerWidget({
+class NovaMiniDrawer extends StatefulWidget {
+  /// Creates a [NovaMiniDrawer].
+  const NovaMiniDrawer({
     super.key,
     required this.items,
     this.sections,
@@ -46,10 +46,10 @@ class MiniDrawerWidget extends StatefulWidget {
   });
 
   /// Flat list of drawer items to display.
-  final List<DrawerItem> items;
+  final List<NovaDrawerItem> items;
 
   /// Sections to display (takes precedence over [items] if provided).
-  final List<DrawerSectionData>? sections;
+  final List<NovaDrawerSectionData>? sections;
 
   /// Custom header widget (e.g., app logo).
   final Widget? header;
@@ -58,16 +58,16 @@ class MiniDrawerWidget extends StatefulWidget {
   final Widget? footer;
 
   /// Callback when an item is tapped.
-  final void Function(DrawerItem item)? onItemTap;
+  final void Function(NovaDrawerItem item)? onItemTap;
 
   /// Callback when the user requests expansion (e.g., hover).
   final VoidCallback? onExpandRequest;
 
   /// Theme overrides.
-  final AdvancedDrawerTheme? theme;
+  final NovaDrawerTheme? theme;
 
   /// Configuration.
-  final DrawerConfig? config;
+  final NovaDrawerConfig? config;
 
   /// Override width. Defaults to theme mini width.
   final double? width;
@@ -76,20 +76,20 @@ class MiniDrawerWidget extends StatefulWidget {
   final Animation<double>? animation;
 
   @override
-  State<MiniDrawerWidget> createState() => _MiniDrawerWidgetState();
+  State<NovaMiniDrawer> createState() => _NovaMiniDrawerState();
 }
 
-class _MiniDrawerWidgetState extends State<MiniDrawerWidget> {
+class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
   bool _isHovered = false;
 
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final drawerTheme = widget.theme?.resolve(themeData) ??
-        const AdvancedDrawerTheme().resolve(themeData);
+        const NovaDrawerTheme().resolve(themeData);
     final effectiveWidth =
         widget.width ?? drawerTheme.miniDrawerWidth ?? 72.0;
-    final config = widget.config ?? const DrawerConfig();
+    final config = widget.config ?? const NovaDrawerConfig();
 
     return MouseRegion(
       onEnter: config.enableHoverExpand ? (_) => _onHover(true) : null,
@@ -151,12 +151,12 @@ class _MiniDrawerWidgetState extends State<MiniDrawerWidget> {
     );
   }
 
-  Widget _buildToggleButton(AdvancedDrawerTheme drawerTheme) {
+  Widget _buildToggleButton(NovaDrawerTheme drawerTheme) {
     return Tooltip(
       message: 'Expand drawer',
       child: InkWell(
         onTap: widget.onExpandRequest ?? () {
-          final controller = DrawerControllerProvider.of(context);
+          final controller = NovaDrawerControllerProvider.of(context);
           controller.fromMini();
         },
         borderRadius: BorderRadius.circular(8.0),
@@ -174,11 +174,11 @@ class _MiniDrawerWidgetState extends State<MiniDrawerWidget> {
     );
   }
 
-  Widget _buildItemsList(AdvancedDrawerTheme drawerTheme) {
-    final controller = DrawerControllerProvider.of(context);
+  Widget _buildItemsList(NovaDrawerTheme drawerTheme) {
+    final controller = NovaDrawerControllerProvider.of(context);
 
     // Use sections if available, otherwise flat items
-    final allItems = <DrawerItem>[];
+    final allItems = <NovaDrawerItem>[];
     if (widget.sections != null && widget.sections!.isNotEmpty) {
       for (final section in widget.sections!) {
         allItems.addAll(section.items.where((item) =>
@@ -199,7 +199,7 @@ class _MiniDrawerWidgetState extends State<MiniDrawerWidget> {
         if (item.hasChildren) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 2.0),
-            child: NestedMenuItem(
+            child: NovaNestedMenuItem(
               item: item,
               isSelected: isSelected,
               onItemTap: widget.onItemTap,
@@ -212,7 +212,7 @@ class _MiniDrawerWidgetState extends State<MiniDrawerWidget> {
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 2.0),
-          child: DrawerItemWidget(
+          child: NovaDrawerItemWidget(
             item: item,
             isSelected: isSelected,
             isMiniMode: true,
@@ -225,7 +225,7 @@ class _MiniDrawerWidgetState extends State<MiniDrawerWidget> {
     );
   }
 
-  void _handleItemTap(DrawerItem item, AdvancedDrawerController controller) {
+  void _handleItemTap(NovaDrawerItem item, NovaDrawerController controller) {
     controller.selectItem(item.id);
     widget.onItemTap?.call(item);
     item.onTap?.call();

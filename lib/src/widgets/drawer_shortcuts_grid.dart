@@ -11,21 +11,21 @@ import 'package:flutter/material.dart';
 
 import '../models/content_config.dart';
 
-/// A grid of [DrawerShortcut] buttons displayed in the drawer.
+/// A grid of [NovaDrawerShortcut] buttons displayed in the drawer.
 ///
 /// Example:
 /// ```dart
-/// DrawerShortcutsGrid(
+/// NovaDrawerShortcutsGrid(
 ///   shortcuts: [
-///     DrawerShortcut(id: 'files', label: 'Files', icon: Icons.folder),
-///     DrawerShortcut(id: 'photos', label: 'Photos', icon: Icons.photo),
-///     DrawerShortcut(id: 'music', label: 'Music', icon: Icons.music_note),
+///     NovaDrawerShortcut(id: 'files', label: 'Files', icon: Icons.folder),
+///     NovaDrawerShortcut(id: 'photos', label: 'Photos', icon: Icons.photo),
+///     NovaDrawerShortcut(id: 'music', label: 'Music', icon: Icons.music_note),
 ///   ],
 /// )
 /// ```
-class DrawerShortcutsGrid extends StatelessWidget {
-  /// Creates a [DrawerShortcutsGrid].
-  const DrawerShortcutsGrid({
+class NovaDrawerShortcutsGrid extends StatelessWidget {
+  /// Creates a [NovaDrawerShortcutsGrid].
+  const NovaDrawerShortcutsGrid({
     super.key,
     required this.shortcuts,
     this.crossAxisCount = 4,
@@ -33,7 +33,7 @@ class DrawerShortcutsGrid extends StatelessWidget {
   });
 
   /// The shortcuts to display.
-  final List<DrawerShortcut> shortcuts;
+  final List<NovaDrawerShortcut> shortcuts;
 
   /// Number of columns in the grid.
   final int crossAxisCount;
@@ -71,7 +71,7 @@ class DrawerShortcutsGrid extends StatelessWidget {
 class _ShortcutTile extends StatelessWidget {
   const _ShortcutTile({required this.shortcut});
 
-  final DrawerShortcut shortcut;
+  final NovaDrawerShortcut shortcut;
 
   @override
   Widget build(BuildContext context) {

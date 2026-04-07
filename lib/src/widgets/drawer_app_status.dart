@@ -16,8 +16,8 @@ import '../models/content_config.dart';
 ///
 /// Example:
 /// ```dart
-/// DrawerAppStatusWidget(
-///   status: DrawerAppStatus(
+/// NovaDrawerAppStatusWidget(
+///   status: NovaDrawerAppStatus(
 ///     isOnline: true,
 ///     statusMessage: 'Connected',
 ///     version: '1.2.0',
@@ -25,16 +25,16 @@ import '../models/content_config.dart';
 ///   ),
 /// )
 /// ```
-class DrawerAppStatusWidget extends StatelessWidget {
-  /// Creates a [DrawerAppStatusWidget].
-  const DrawerAppStatusWidget({
+class NovaDrawerAppStatusWidget extends StatelessWidget {
+  /// Creates a [NovaDrawerAppStatusWidget].
+  const NovaDrawerAppStatusWidget({
     super.key,
     required this.status,
     this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
   });
 
   /// The app status data to display.
-  final DrawerAppStatus status;
+  final NovaDrawerAppStatus status;
 
   /// Outer padding around the widget.
   final EdgeInsetsGeometry padding;

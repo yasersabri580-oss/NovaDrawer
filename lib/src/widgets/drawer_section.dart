@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Drawer section widget for the AdvancedAppDrawer.
+/// Drawer section widget for the NovaAppDrawer.
 ///
 /// Groups related drawer items under a collapsible/expandable
 /// section header with smooth animation.
@@ -25,20 +25,20 @@ import 'nested_menu_item.dart';
 ///
 /// Example:
 /// ```dart
-/// DrawerSectionWidget(
-///   section: DrawerSectionData(
+/// NovaDrawerSectionWidget(
+///   section: NovaDrawerSectionData(
 ///     id: 'main',
 ///     title: 'Navigation',
 ///     items: [
-///       DrawerItem(id: 'home', title: 'Home', icon: Icons.home),
-///       DrawerItem(id: 'search', title: 'Search', icon: Icons.search),
+///       NovaDrawerItem(id: 'home', title: 'Home', icon: Icons.home),
+///       NovaDrawerItem(id: 'search', title: 'Search', icon: Icons.search),
 ///     ],
 ///   ),
 /// )
 /// ```
-class DrawerSectionWidget extends StatefulWidget {
-  /// Creates a [DrawerSectionWidget].
-  const DrawerSectionWidget({
+class NovaDrawerSectionWidget extends StatefulWidget {
+  /// Creates a [NovaDrawerSectionWidget].
+  const NovaDrawerSectionWidget({
     super.key,
     required this.section,
     this.onItemTap,
@@ -51,16 +51,16 @@ class DrawerSectionWidget extends StatefulWidget {
   });
 
   /// The section data to render.
-  final DrawerSectionData section;
+  final NovaDrawerSectionData section;
 
   /// Callback when any item in the section is tapped.
-  final void Function(DrawerItem item)? onItemTap;
+  final void Function(NovaDrawerItem item)? onItemTap;
 
   /// Theme overrides.
-  final AdvancedDrawerTheme? theme;
+  final NovaDrawerTheme? theme;
 
   /// Configuration.
-  final DrawerConfig? config;
+  final NovaDrawerConfig? config;
 
   /// Whether the drawer is in mini mode.
   final bool isMiniMode;
@@ -75,10 +75,10 @@ class DrawerSectionWidget extends StatefulWidget {
   final int totalAnimatedItems;
 
   @override
-  State<DrawerSectionWidget> createState() => _DrawerSectionWidgetState();
+  State<NovaDrawerSectionWidget> createState() => _NovaDrawerSectionWidgetState();
 }
 
-class _DrawerSectionWidgetState extends State<DrawerSectionWidget>
+class _NovaDrawerSectionWidgetState extends State<NovaDrawerSectionWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _expandController;
   late Animation<double> _expandAnimation;
@@ -97,7 +97,7 @@ class _DrawerSectionWidgetState extends State<DrawerSectionWidget>
     );
 
     // Set initial state
-    final controller = DrawerControllerProvider.read(context);
+    final controller = NovaDrawerControllerProvider.read(context);
     if (controller.isSectionExpanded(widget.section.id)) {
       _expandController.value = 1.0;
     }
@@ -113,8 +113,8 @@ class _DrawerSectionWidgetState extends State<DrawerSectionWidget>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final drawerTheme = widget.theme?.resolve(themeData) ??
-        const AdvancedDrawerTheme().resolve(themeData);
-    final controller = DrawerControllerProvider.of(context);
+        const NovaDrawerTheme().resolve(themeData);
+    final controller = NovaDrawerControllerProvider.of(context);
     final isExpanded = controller.isSectionExpanded(widget.section.id);
 
     // Sync animation with controller state
@@ -180,12 +180,12 @@ class _DrawerSectionWidgetState extends State<DrawerSectionWidget>
   }
 
   Widget _buildSectionHeader(
-    AdvancedDrawerTheme drawerTheme,
-    AdvancedDrawerController controller,
+    NovaDrawerTheme drawerTheme,
+    NovaDrawerController controller,
     bool isExpanded,
   ) {
     final header = Semantics(
-      label: AccessibilityUtils.sectionHeaderLabel(
+      label: NovaAccessibilityUtils.sectionHeaderLabel(
         widget.section.title!,
         isExpanded,
       ),
@@ -238,8 +238,8 @@ class _DrawerSectionWidgetState extends State<DrawerSectionWidget>
   }
 
   Widget _buildItemsList(
-    AdvancedDrawerTheme drawerTheme,
-    AdvancedDrawerController controller,
+    NovaDrawerTheme drawerTheme,
+    NovaDrawerController controller,
   ) {
     final visibleItems = widget.section.items.where((item) {
       return item.isVisible && !controller.isItemHidden(item.id);
@@ -255,9 +255,9 @@ class _DrawerSectionWidgetState extends State<DrawerSectionWidget>
   }
 
   Widget _buildItem(
-    DrawerItem item,
-    AdvancedDrawerTheme drawerTheme,
-    AdvancedDrawerController controller,
+    NovaDrawerItem item,
+    NovaDrawerTheme drawerTheme,
+    NovaDrawerController controller,
     int index,
   ) {
     if (item.customWidget != null) {
@@ -267,7 +267,7 @@ class _DrawerSectionWidgetState extends State<DrawerSectionWidget>
     final isSelected = controller.isSelected(item.id);
 
     if (item.hasChildren) {
-      return NestedMenuItem(
+      return NovaNestedMenuItem(
         item: item,
         isSelected: isSelected,
         onItemTap: widget.onItemTap,
@@ -280,7 +280,7 @@ class _DrawerSectionWidgetState extends State<DrawerSectionWidget>
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: DrawerItemWidget(
+      child: NovaDrawerItemWidget(
         item: item,
         isSelected: isSelected,
         depth: 0,
@@ -292,14 +292,14 @@ class _DrawerSectionWidgetState extends State<DrawerSectionWidget>
     );
   }
 
-  void _handleItemTap(DrawerItem item, AdvancedDrawerController controller) {
+  void _handleItemTap(NovaDrawerItem item, NovaDrawerController controller) {
     controller.selectItem(item.id);
     widget.onItemTap?.call(item);
     item.onTap?.call();
 
     // Close drawer on mobile if configured
-    final config = widget.config ?? const DrawerConfig();
-    if (config.closeOnItemTap && controller.deviceType == DeviceType.mobile) {
+    final config = widget.config ?? const NovaDrawerConfig();
+    if (config.closeOnItemTap && controller.deviceType == NovaDeviceType.mobile) {
       controller.close();
     }
   }

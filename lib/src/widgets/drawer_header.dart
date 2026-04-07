@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Drawer header widget for the AdvancedAppDrawer.
+/// Drawer header widget for the NovaAppDrawer.
 ///
 /// Displays user information, branding, or custom content at
 /// the top of the drawer with configurable layout and theming.
@@ -19,16 +19,16 @@ import '../controllers/drawer_controller.dart';
 ///
 /// Example:
 /// ```dart
-/// DrawerHeaderWidget(
+/// NovaDrawerHeaderWidget(
 ///   title: 'John Doe',
 ///   subtitle: 'john@example.com',
 ///   avatar: CircleAvatar(child: Text('JD')),
 ///   onTap: () => navigateToProfile(),
 /// )
 /// ```
-class DrawerHeaderWidget extends StatelessWidget {
-  /// Creates a [DrawerHeaderWidget].
-  const DrawerHeaderWidget({
+class NovaDrawerHeaderWidget extends StatelessWidget {
+  /// Creates a [NovaDrawerHeaderWidget].
+  const NovaDrawerHeaderWidget({
     super.key,
     this.title,
     this.subtitle,
@@ -73,7 +73,7 @@ class DrawerHeaderWidget extends StatelessWidget {
   final bool showPinButton;
 
   /// Theme overrides.
-  final AdvancedDrawerTheme? theme;
+  final NovaDrawerTheme? theme;
 
   /// Custom padding.
   final EdgeInsetsGeometry? padding;
@@ -87,7 +87,7 @@ class DrawerHeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final drawerTheme = theme?.resolve(Theme.of(context)) ??
-        const AdvancedDrawerTheme().resolve(Theme.of(context));
+        const NovaDrawerTheme().resolve(Theme.of(context));
     final effectiveHeight = height ?? drawerTheme.headerHeight ?? 180.0;
     final effectivePadding = padding ??
         const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0);
@@ -169,7 +169,7 @@ class DrawerHeaderWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildActionBar(BuildContext context, AdvancedDrawerTheme drawerTheme) {
+  Widget _buildActionBar(BuildContext context, NovaDrawerTheme drawerTheme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -183,7 +183,7 @@ class DrawerHeaderWidget extends StatelessWidget {
               size: 20.0,
             ),
             onPressed: () {
-              DrawerControllerProvider.of(context).close();
+              NovaDrawerControllerProvider.of(context).close();
             },
             tooltip: 'Close drawer',
             padding: EdgeInsets.zero,
@@ -200,11 +200,11 @@ class DrawerHeaderWidget extends StatelessWidget {
 class _PinButton extends StatelessWidget {
   const _PinButton({required this.theme});
 
-  final AdvancedDrawerTheme theme;
+  final NovaDrawerTheme theme;
 
   @override
   Widget build(BuildContext context) {
-    final controller = DrawerControllerProvider.of(context);
+    final controller = NovaDrawerControllerProvider.of(context);
     final isPinned = controller.isPinned;
 
     return IconButton(

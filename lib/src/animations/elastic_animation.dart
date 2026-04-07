@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Elastic animation for the AdvancedAppDrawer.
+/// Elastic animation for the NovaAppDrawer.
 ///
 /// Provides bouncy, elastic transitions with overshoot
 /// for a playful visual effect.
@@ -15,9 +15,9 @@ import 'package:flutter/material.dart';
 ///
 /// Produces a bouncing overshoot effect similar to a stretched
 /// rubber band snapping into place.
-class ElasticCurve extends Curve {
-  /// Creates an [ElasticCurve].
-  const ElasticCurve({
+class NovaElasticCurve extends Curve {
+  /// Creates an [NovaElasticCurve].
+  const NovaElasticCurve({
     this.period = 0.4,
     this.amplitude = 1.0,
   });
@@ -46,16 +46,16 @@ class ElasticCurve extends Curve {
 ///
 /// Example:
 /// ```dart
-/// ElasticDrawerAnimation(
+/// NovaElasticDrawerAnimation(
 ///   animation: controller,
 ///   child: drawerContent,
 ///   period: 0.5,
 ///   amplitude: 1.2,
 /// )
 /// ```
-class ElasticDrawerAnimation extends StatelessWidget {
-  /// Creates an [ElasticDrawerAnimation].
-  const ElasticDrawerAnimation({
+class NovaElasticDrawerAnimation extends StatelessWidget {
+  /// Creates an [NovaElasticDrawerAnimation].
+  const NovaElasticDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -85,7 +85,7 @@ class ElasticDrawerAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final elasticCurve = ElasticCurve(
+    final elasticCurve = NovaElasticCurve(
       period: period,
       amplitude: amplitude,
     );
@@ -121,9 +121,9 @@ class ElasticDrawerAnimation extends StatelessWidget {
 }
 
 /// An elastic scale animation that bounces into size.
-class ElasticScaleAnimation extends StatelessWidget {
-  /// Creates an [ElasticScaleAnimation].
-  const ElasticScaleAnimation({
+class NovaElasticScaleAnimation extends StatelessWidget {
+  /// Creates an [NovaElasticScaleAnimation].
+  const NovaElasticScaleAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -149,7 +149,7 @@ class ElasticScaleAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final elasticCurve = ElasticCurve(
+    final elasticCurve = NovaElasticCurve(
       period: period,
       amplitude: amplitude,
     );

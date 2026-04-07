@@ -13,20 +13,20 @@ import 'header_utils.dart';
 /// [Wrap]. Actions may carry badge counts.
 ///
 /// ```dart
-/// ProfileHeaderMultiAction(
+/// NovaProfileHeaderMultiAction(
 ///   config: NovaHeaderConfig(
-///     variant: HeaderVariant.multiAction,
+///     variant: NovaHeaderVariant.multiAction,
 ///     profile: myProfile,
 ///     actions: [
-///       HeaderAction(id: 'settings', icon: Icons.settings, label: 'Settings'),
-///       HeaderAction(id: 'share', icon: Icons.share, label: 'Share'),
+///       NovaHeaderAction(id: 'settings', icon: Icons.settings, label: 'Settings'),
+///       NovaHeaderAction(id: 'share', icon: Icons.share, label: 'Share'),
 ///     ],
 ///   ),
 /// )
 /// ```
-class ProfileHeaderMultiAction extends StatefulWidget {
+class NovaProfileHeaderMultiAction extends StatefulWidget {
   /// Creates a multi-action profile header.
-  const ProfileHeaderMultiAction({
+  const NovaProfileHeaderMultiAction({
     super.key,
     required this.config,
     this.theme,
@@ -39,11 +39,11 @@ class ProfileHeaderMultiAction extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderMultiAction> createState() =>
-      _ProfileHeaderMultiActionState();
+  State<NovaProfileHeaderMultiAction> createState() =>
+      _NovaProfileHeaderMultiActionState();
 }
 
-class _ProfileHeaderMultiActionState extends State<ProfileHeaderMultiAction>
+class _NovaProfileHeaderMultiActionState extends State<NovaProfileHeaderMultiAction>
     with SingleTickerProviderStateMixin {
   static const _kDuration = Duration(milliseconds: 300);
 
@@ -69,10 +69,10 @@ class _ProfileHeaderMultiActionState extends State<ProfileHeaderMultiAction>
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme ?? Theme.of(context);
-    final height = _c.headerHeight ?? HeaderWidgetUtils.kDefaultHeaderHeight;
+    final height = _c.headerHeight ?? NovaHeaderWidgetUtils.kDefaultHeaderHeight;
 
     if (_c.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: theme,
         height: height,
       );
@@ -82,7 +82,7 @@ class _ProfileHeaderMultiActionState extends State<ProfileHeaderMultiAction>
     }
 
     final profile = _c.profile;
-    final radius = _c.avatarRadius ?? HeaderWidgetUtils.kDefaultAvatarRadius;
+    final radius = _c.avatarRadius ?? NovaHeaderWidgetUtils.kDefaultAvatarRadius;
 
     return AnimatedContainer(
       duration: _kDuration,
@@ -98,7 +98,7 @@ class _ProfileHeaderMultiActionState extends State<ProfileHeaderMultiAction>
             // User info row
             Row(
               children: [
-                HeaderWidgetUtils.buildAvatar(
+                NovaHeaderWidgetUtils.buildAvatar(
                   profile: profile,
                   radius: radius,
                   showStatus: _c.showStatusIndicator,
@@ -110,11 +110,11 @@ class _ProfileHeaderMultiActionState extends State<ProfileHeaderMultiAction>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      HeaderWidgetUtils.buildUserName(
+                      NovaHeaderWidgetUtils.buildUserName(
                         name: profile?.name,
                         theme: theme,
                       ),
-                      HeaderWidgetUtils.buildSubtitle(
+                      NovaHeaderWidgetUtils.buildSubtitle(
                         text: profile?.effectiveSubtitle,
                         theme: theme,
                       ),
@@ -123,7 +123,7 @@ class _ProfileHeaderMultiActionState extends State<ProfileHeaderMultiAction>
                 ),
                 if (_c.showNotificationBadge &&
                     (profile?.notificationCount ?? 0) > 0)
-                  HeaderWidgetUtils.buildNotificationBadge(
+                  NovaHeaderWidgetUtils.buildNotificationBadge(
                     count: profile!.notificationCount,
                     theme: theme,
                   ),
@@ -143,7 +143,7 @@ class _ProfileHeaderMultiActionState extends State<ProfileHeaderMultiAction>
     );
   }
 
-  /// Renders each [HeaderAction] as a labelled icon button in a [Wrap].
+  /// Renders each [NovaHeaderAction] as a labelled icon button in a [Wrap].
   Widget _buildActionGrid(ThemeData theme) {
     return Wrap(
       spacing: 12,
@@ -190,7 +190,7 @@ class _ProfileHeaderMultiActionState extends State<ProfileHeaderMultiAction>
 
   /// Builds an action icon with an optional badge overlay.
   Widget _buildActionIcon(
-    HeaderAction action,
+    NovaHeaderAction action,
     Color color,
     ThemeData theme,
   ) {
@@ -205,7 +205,7 @@ class _ProfileHeaderMultiActionState extends State<ProfileHeaderMultiAction>
         Positioned(
           top: -4,
           right: -6,
-          child: HeaderWidgetUtils.buildNotificationBadge(
+          child: NovaHeaderWidgetUtils.buildNotificationBadge(
             count: action.badge!,
             theme: theme,
             size: 14,

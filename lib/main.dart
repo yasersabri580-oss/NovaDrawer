@@ -6,10 +6,10 @@
 ///
 /// This library provides a comprehensive drawer navigation system with:
 /// - Responsive layout (mobile, tablet, desktop)
-/// - 10+ animation types
+/// - 16+ animation types (including floating, wave, parallax, and curtain)
 /// - Advanced modular header system with 10 variants
 /// - Drawer surface styles (glassmorphism, neumorphic, gradient, etc.)
-/// - Content blocks (search, stats, shortcuts, recent items, etc.)
+/// - Content blocks (search powered by search_plus, stats, shortcuts, etc.)
 /// - RTL support
 /// - Nested/multi-level menus
 /// - Dynamic data loading
@@ -19,6 +19,7 @@
 /// - Gesture controls
 /// - Background effects
 /// - Slot-based builder APIs for deep customization
+/// - Deprecated aliases for backward compatibility with pre-Nova naming
 library nova_drawer;
 
 // ── Models ──────────────────────────────────────────────────────────────
@@ -77,7 +78,9 @@ export 'src/animations/elastic_animation.dart';
 export 'src/animations/spring_animation.dart';
 export 'src/animations/shimmer_animation.dart';
 export 'src/animations/blur_animation.dart';
+export 'src/animations/floating_animation.dart';
 export 'src/animations/gradient_animation.dart';
+export 'src/animations/wave_animation.dart';
 
 // ── Utilities ───────────────────────────────────────────────────────────
 export 'src/utils/responsive_utils.dart';
@@ -86,3 +89,9 @@ export 'src/utils/accessibility_utils.dart';
 // ── Backgrounds ─────────────────────────────────────────────────────────
 export 'src/backgrounds/gradient_background.dart';
 export 'src/backgrounds/particle_background.dart';
+
+// ── Deprecated Aliases (backward compatibility) ─────────────────────────
+export 'src/deprecated_aliases.dart';
+
+// ── Re-export search_plus for convenience ───────────────────────────────
+export 'package:search_plus/search_plus.dart';

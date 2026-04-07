@@ -11,9 +11,9 @@ import 'header_utils.dart';
 ///
 /// Uses [BackdropFilter] with [ImageFilter.blur] for a translucent, frosted
 /// panel. Avatar and user info float on the glass surface.
-class ProfileHeaderGlassmorphism extends StatefulWidget {
+class NovaProfileHeaderGlassmorphism extends StatefulWidget {
   /// Creates a glassmorphism profile header.
-  const ProfileHeaderGlassmorphism({super.key, required this.config, this.theme});
+  const NovaProfileHeaderGlassmorphism({super.key, required this.config, this.theme});
 
   /// Header configuration.
   final NovaHeaderConfig config;
@@ -22,12 +22,12 @@ class ProfileHeaderGlassmorphism extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderGlassmorphism> createState() =>
-      _ProfileHeaderGlassmorphismState();
+  State<NovaProfileHeaderGlassmorphism> createState() =>
+      _NovaProfileHeaderGlassmorphismState();
 }
 
-class _ProfileHeaderGlassmorphismState
-    extends State<ProfileHeaderGlassmorphism> {
+class _NovaProfileHeaderGlassmorphismState
+    extends State<NovaProfileHeaderGlassmorphism> {
   static const _animDuration = Duration(milliseconds: 300);
   static const _blurSigma = 12.0;
 
@@ -36,9 +36,9 @@ class _ProfileHeaderGlassmorphismState
   double get _effectiveHeight {
     if (_config.isCollapsed) {
       return _config.collapsedHeaderHeight ??
-          HeaderWidgetUtils.kDefaultCollapsedHeight;
+          NovaHeaderWidgetUtils.kDefaultCollapsedHeight;
     }
-    return _config.headerHeight ?? HeaderWidgetUtils.kDefaultHeaderHeight;
+    return _config.headerHeight ?? NovaHeaderWidgetUtils.kDefaultHeaderHeight;
   }
 
   @override
@@ -46,7 +46,7 @@ class _ProfileHeaderGlassmorphismState
     final theme = widget.theme ?? Theme.of(context);
 
     if (_config.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: theme,
         height: _effectiveHeight,
       );
@@ -111,14 +111,14 @@ class _ProfileHeaderGlassmorphismState
   Widget _buildCollapsed(ThemeData theme) {
     final profile = _config.profile;
     final radius = _config.collapsedAvatarRadius ??
-        HeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
+        NovaHeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
 
     return Padding(
       padding: _config.padding ??
           const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
-          HeaderWidgetUtils.buildAvatar(
+          NovaHeaderWidgetUtils.buildAvatar(
             profile: profile,
             radius: radius,
             showStatus: _config.showStatusIndicator,
@@ -127,7 +127,7 @@ class _ProfileHeaderGlassmorphismState
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: HeaderWidgetUtils.buildUserName(
+            child: NovaHeaderWidgetUtils.buildUserName(
               name: profile?.name,
               theme: theme,
             ),
@@ -140,7 +140,7 @@ class _ProfileHeaderGlassmorphismState
   Widget _buildExpanded(ThemeData theme) {
     final profile = _config.profile;
     final avatarRadius =
-        _config.avatarRadius ?? HeaderWidgetUtils.kDefaultAvatarRadius;
+        _config.avatarRadius ?? NovaHeaderWidgetUtils.kDefaultAvatarRadius;
 
     return Padding(
       padding: _config.padding ?? const EdgeInsets.all(16),
@@ -148,7 +148,7 @@ class _ProfileHeaderGlassmorphismState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Action bar
-          HeaderWidgetUtils.buildActionBar(
+          NovaHeaderWidgetUtils.buildActionBar(
             context: context,
             config: _config,
             theme: theme,
@@ -157,7 +157,7 @@ class _ProfileHeaderGlassmorphismState
           // Avatar + info
           Row(
             children: [
-              HeaderWidgetUtils.buildAvatar(
+              NovaHeaderWidgetUtils.buildAvatar(
                 profile: profile,
                 radius: avatarRadius,
                 showStatus: _config.showStatusIndicator,
@@ -170,11 +170,11 @@ class _ProfileHeaderGlassmorphismState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    HeaderWidgetUtils.buildUserName(
+                    NovaHeaderWidgetUtils.buildUserName(
                       name: profile?.name,
                       theme: theme,
                     ),
-                    HeaderWidgetUtils.buildSubtitle(
+                    NovaHeaderWidgetUtils.buildSubtitle(
                       text: profile?.effectiveSubtitle,
                       theme: theme,
                     ),
@@ -183,7 +183,7 @@ class _ProfileHeaderGlassmorphismState
               ),
               if (_config.showNotificationBadge &&
                   (profile?.notificationCount ?? 0) > 0)
-                HeaderWidgetUtils.buildNotificationBadge(
+                NovaHeaderWidgetUtils.buildNotificationBadge(
                   count: profile!.notificationCount,
                   theme: theme,
                 ),

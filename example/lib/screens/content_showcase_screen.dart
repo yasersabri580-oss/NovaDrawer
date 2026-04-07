@@ -15,22 +15,22 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
   // --- Sample data ---
 
   static const _stats = [
-    DrawerStatItem(
+    NovaDrawerStatItem(
       label: 'Projects',
       value: '42',
       icon: Icons.folder_outlined,
     ),
-    DrawerStatItem(
+    NovaDrawerStatItem(
       label: 'Tasks',
       value: '128',
       icon: Icons.task_alt,
     ),
-    DrawerStatItem(
+    NovaDrawerStatItem(
       label: 'Stars',
       value: '1.2K',
       icon: Icons.star_outline,
     ),
-    DrawerStatItem(
+    NovaDrawerStatItem(
       label: 'Team',
       value: '8',
       icon: Icons.group_outlined,
@@ -38,37 +38,37 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
   ];
 
   static const _shortcuts = [
-    DrawerShortcut(
+    NovaDrawerShortcut(
       id: 'new_file',
       label: 'New File',
       icon: Icons.note_add,
       color: Colors.blue,
     ),
-    DrawerShortcut(
+    NovaDrawerShortcut(
       id: 'upload',
       label: 'Upload',
       icon: Icons.upload_file,
       color: Colors.green,
     ),
-    DrawerShortcut(
+    NovaDrawerShortcut(
       id: 'share',
       label: 'Share',
       icon: Icons.share,
       color: Colors.orange,
     ),
-    DrawerShortcut(
+    NovaDrawerShortcut(
       id: 'export',
       label: 'Export',
       icon: Icons.download,
       color: Colors.purple,
     ),
-    DrawerShortcut(
+    NovaDrawerShortcut(
       id: 'calendar',
       label: 'Calendar',
       icon: Icons.calendar_month,
       color: Colors.red,
     ),
-    DrawerShortcut(
+    NovaDrawerShortcut(
       id: 'chat',
       label: 'Chat',
       icon: Icons.chat_bubble_outline,
@@ -77,22 +77,22 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
     ),
   ];
 
-  late final List<DrawerRecentItem> _recentItems = [
-    DrawerRecentItem(
+  late final List<NovaDrawerRecentItem> _recentItems = [
+    NovaDrawerRecentItem(
       id: '1',
       title: 'Project Alpha',
       subtitle: 'Last edited 5 min ago',
       icon: Icons.folder,
       timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
     ),
-    DrawerRecentItem(
+    NovaDrawerRecentItem(
       id: '2',
       title: 'Design System v2',
       subtitle: 'Shared by Alice',
       icon: Icons.design_services,
       timestamp: DateTime.now().subtract(const Duration(hours: 1)),
     ),
-    DrawerRecentItem(
+    NovaDrawerRecentItem(
       id: '3',
       title: 'Sprint Retro Notes',
       subtitle: 'Meeting notes',
@@ -102,25 +102,25 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
   ];
 
   static const _workspaces = [
-    DrawerWorkspace(
+    NovaDrawerWorkspace(
       id: 'personal',
       name: 'Personal',
       icon: Icons.person,
       isActive: true,
     ),
-    DrawerWorkspace(
+    NovaDrawerWorkspace(
       id: 'team',
       name: 'Team Nova',
       icon: Icons.groups,
     ),
-    DrawerWorkspace(
+    NovaDrawerWorkspace(
       id: 'org',
       name: 'Acme Corp',
       icon: Icons.business,
     ),
   ];
 
-  static const _appStatus = DrawerAppStatus(
+  static const _appStatus = NovaDrawerAppStatus(
     isOnline: true,
     statusMessage: 'All systems operational',
     version: '1.4.0',
@@ -171,7 +171,10 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        DrawerSearchBar(
+        NovaDrawerSearchBar<String>.simple(
+          items: const ['Home', 'Settings', 'Profile', 'Dashboard', 'Analytics'],
+          searchableFields: (item) => [item],
+          toResult: (item) => SearchResult(id: item, title: item, data: item),
           hintText: 'Search items…',
           onChanged: (v) => setState(() => _searchQuery = v),
         ),
@@ -188,18 +191,18 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
   }
 
   Widget _buildStatsCard() {
-    return const DrawerStatsCard(items: _stats);
+    return const NovaDrawerStatsCard(items: _stats);
   }
 
   Widget _buildShortcutsGrid() {
-    return const DrawerShortcutsGrid(
+    return const NovaDrawerShortcutsGrid(
       shortcuts: _shortcuts,
       crossAxisCount: 3,
     );
   }
 
   Widget _buildRecentItems() {
-    return DrawerRecentItems(items: _recentItems);
+    return NovaDrawerRecentItems(items: _recentItems);
   }
 
   Widget _buildFilterChips() {
@@ -211,9 +214,9 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
       ('mine', 'Mine', Icons.person_outline),
     ];
 
-    return DrawerFilterChips(
+    return NovaDrawerFilterChipsWidget(
       chips: chipDefs
-          .map((c) => DrawerFilterChip(
+          .map((c) => NovaDrawerFilterChip(
                 id: c.$1,
                 label: c.$2,
                 icon: c.$3,
@@ -233,10 +236,10 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
   }
 
   Widget _buildWorkspaceSwitcher() {
-    return const DrawerWorkspaceSwitcher(workspaces: _workspaces);
+    return const NovaDrawerWorkspaceSwitcher(workspaces: _workspaces);
   }
 
   Widget _buildAppStatus() {
-    return const DrawerAppStatusWidget(status: _appStatus);
+    return const NovaDrawerAppStatusWidget(status: _appStatus);
   }
 }

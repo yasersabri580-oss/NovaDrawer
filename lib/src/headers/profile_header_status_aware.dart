@@ -9,24 +9,24 @@ import 'header_utils.dart';
 /// Status-aware header that prominently displays the user's presence state.
 ///
 /// A large coloured status indicator and label sit beside the avatar. When the
-/// status is [UserStatus.online] a breathing (pulsing) animation draws
+/// status is [NovaUserStatus.online] a breathing (pulsing) animation draws
 /// attention. The status colour subtly tints the header background.
 ///
 /// ```dart
-/// ProfileHeaderStatusAware(
+/// NovaProfileHeaderStatusAware(
 ///   config: NovaHeaderConfig(
-///     variant: HeaderVariant.statusAware,
-///     profile: HeaderUserProfile(
+///     variant: NovaHeaderVariant.statusAware,
+///     profile: NovaHeaderUserProfile(
 ///       name: 'Jane',
-///       status: UserStatus.online,
+///       status: NovaUserStatus.online,
 ///     ),
 ///     showStatusIndicator: true,
 ///   ),
 /// )
 /// ```
-class ProfileHeaderStatusAware extends StatefulWidget {
+class NovaProfileHeaderStatusAware extends StatefulWidget {
   /// Creates a status-aware profile header.
-  const ProfileHeaderStatusAware({
+  const NovaProfileHeaderStatusAware({
     super.key,
     required this.config,
     this.theme,
@@ -39,11 +39,11 @@ class ProfileHeaderStatusAware extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderStatusAware> createState() =>
-      _ProfileHeaderStatusAwareState();
+  State<NovaProfileHeaderStatusAware> createState() =>
+      _NovaProfileHeaderStatusAwareState();
 }
 
-class _ProfileHeaderStatusAwareState extends State<ProfileHeaderStatusAware>
+class _NovaProfileHeaderStatusAwareState extends State<NovaProfileHeaderStatusAware>
     with SingleTickerProviderStateMixin {
   late final AnimationController _pulseCtrl;
   late final Animation<double> _pulseAnim;
@@ -64,13 +64,13 @@ class _ProfileHeaderStatusAwareState extends State<ProfileHeaderStatusAware>
   }
 
   @override
-  void didUpdateWidget(covariant ProfileHeaderStatusAware old) {
+  void didUpdateWidget(covariant NovaProfileHeaderStatusAware old) {
     super.didUpdateWidget(old);
     if (old.config.profile?.status != _c.profile?.status) _syncPulse();
   }
 
   void _syncPulse() {
-    if (_c.profile?.status == UserStatus.online) {
+    if (_c.profile?.status == NovaUserStatus.online) {
       _pulseCtrl.repeat(reverse: true);
     } else {
       _pulseCtrl.stop();
@@ -87,10 +87,10 @@ class _ProfileHeaderStatusAwareState extends State<ProfileHeaderStatusAware>
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme ?? Theme.of(context);
-    final height = _c.headerHeight ?? HeaderWidgetUtils.kDefaultHeaderHeight;
+    final height = _c.headerHeight ?? NovaHeaderWidgetUtils.kDefaultHeaderHeight;
 
     if (_c.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: theme,
         height: height,
       );
@@ -99,8 +99,8 @@ class _ProfileHeaderStatusAwareState extends State<ProfileHeaderStatusAware>
       return _c.customHeaderBuilder!(context, _c);
     }
 
-    final status = _c.profile?.status ?? UserStatus.unknown;
-    final statusClr = HeaderWidgetUtils.statusColor(status);
+    final status = _c.profile?.status ?? NovaUserStatus.unknown;
+    final statusClr = NovaHeaderWidgetUtils.statusColor(status);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 350),
@@ -123,10 +123,10 @@ class _ProfileHeaderStatusAwareState extends State<ProfileHeaderStatusAware>
         children: [
           Row(
             children: [
-              HeaderWidgetUtils.buildAvatar(
+              NovaHeaderWidgetUtils.buildAvatar(
                 profile: _c.profile,
                 radius: _c.avatarRadius ??
-                    HeaderWidgetUtils.kDefaultAvatarRadius,
+                    NovaHeaderWidgetUtils.kDefaultAvatarRadius,
                 showStatus: false,
                 theme: theme,
                 onTap: _c.onProfileTap,
@@ -136,11 +136,11 @@ class _ProfileHeaderStatusAwareState extends State<ProfileHeaderStatusAware>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    HeaderWidgetUtils.buildUserName(
+                    NovaHeaderWidgetUtils.buildUserName(
                       name: _c.profile?.name,
                       theme: theme,
                     ),
-                    HeaderWidgetUtils.buildSubtitle(
+                    NovaHeaderWidgetUtils.buildSubtitle(
                       text: _c.profile?.effectiveSubtitle,
                       theme: theme,
                     ),
@@ -151,7 +151,7 @@ class _ProfileHeaderStatusAwareState extends State<ProfileHeaderStatusAware>
                   (_c.profile?.notificationCount ?? 0) > 0)
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
-                  child: HeaderWidgetUtils.buildNotificationBadge(
+                  child: NovaHeaderWidgetUtils.buildNotificationBadge(
                     count: _c.profile!.notificationCount,
                     theme: theme,
                   ),
@@ -171,7 +171,7 @@ class _ProfileHeaderStatusAwareState extends State<ProfileHeaderStatusAware>
   }
 
   /// Large status indicator dot with label and breathing animation.
-  Widget _buildStatusRow(ThemeData theme, UserStatus status, Color color) {
+  Widget _buildStatusRow(ThemeData theme, NovaUserStatus status, Color color) {
     final label = _statusLabel(status);
 
     return Row(
@@ -207,17 +207,17 @@ class _ProfileHeaderStatusAwareState extends State<ProfileHeaderStatusAware>
   }
 
   /// Returns a human-readable label for [status].
-  static String _statusLabel(UserStatus status) {
+  static String _statusLabel(NovaUserStatus status) {
     switch (status) {
-      case UserStatus.online:
+      case NovaUserStatus.online:
         return 'Online';
-      case UserStatus.offline:
+      case NovaUserStatus.offline:
         return 'Offline';
-      case UserStatus.busy:
+      case NovaUserStatus.busy:
         return 'Busy';
-      case UserStatus.away:
+      case NovaUserStatus.away:
         return 'Away';
-      case UserStatus.unknown:
+      case NovaUserStatus.unknown:
         return 'Unknown';
     }
   }

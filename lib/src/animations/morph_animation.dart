@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Morph animation for the AdvancedAppDrawer.
+/// Morph animation for the NovaAppDrawer.
 ///
 /// Provides shape-morphing transitions that smoothly transform
 /// the drawer between different sizes and shapes.
@@ -16,16 +16,16 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// MorphDrawerAnimation(
+/// NovaMorphDrawerAnimation(
 ///   animation: controller,
 ///   child: drawerContent,
 ///   beginDecoration: BoxDecoration(borderRadius: BorderRadius.circular(32)),
 ///   endDecoration: BoxDecoration(borderRadius: BorderRadius.zero),
 /// )
 /// ```
-class MorphDrawerAnimation extends StatelessWidget {
-  /// Creates a [MorphDrawerAnimation].
-  const MorphDrawerAnimation({
+class NovaMorphDrawerAnimation extends StatelessWidget {
+  /// Creates a [NovaMorphDrawerAnimation].
+  const NovaMorphDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -129,9 +129,9 @@ class MorphDrawerAnimation extends StatelessWidget {
 
 /// A morph animation specifically for transitioning between
 /// mini and expanded drawer states.
-class DrawerExpansionMorph extends StatelessWidget {
-  /// Creates a [DrawerExpansionMorph].
-  const DrawerExpansionMorph({
+class NovaDrawerExpansionMorph extends StatelessWidget {
+  /// Creates a [NovaDrawerExpansionMorph].
+  const NovaDrawerExpansionMorph({
     super.key,
     required this.animation,
     required this.child,

@@ -10,9 +10,9 @@ import 'header_utils.dart';
 ///
 /// Large cover (~60% of height), avatar overlapping the cover bottom edge,
 /// and bold name text. Uses [AnimatedContainer] for smooth transitions.
-class ProfileHeaderHero extends StatefulWidget {
+class NovaProfileHeaderHero extends StatefulWidget {
   /// Creates a hero profile header.
-  const ProfileHeaderHero({
+  const NovaProfileHeaderHero({
     super.key,
     required this.config,
     this.theme,
@@ -25,10 +25,10 @@ class ProfileHeaderHero extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderHero> createState() => _ProfileHeaderHeroState();
+  State<NovaProfileHeaderHero> createState() => _NovaProfileHeaderHeroState();
 }
 
-class _ProfileHeaderHeroState extends State<ProfileHeaderHero> {
+class _NovaProfileHeaderHeroState extends State<NovaProfileHeaderHero> {
   static const _animDuration = Duration(milliseconds: 350);
   static const _defaultExpandedHeight = 260.0;
 
@@ -37,7 +37,7 @@ class _ProfileHeaderHeroState extends State<ProfileHeaderHero> {
   double get _effectiveHeight {
     if (_config.isCollapsed) {
       return _config.collapsedHeaderHeight ??
-          HeaderWidgetUtils.kDefaultCollapsedHeight;
+          NovaHeaderWidgetUtils.kDefaultCollapsedHeight;
     }
     return _config.headerHeight ?? _defaultExpandedHeight;
   }
@@ -47,7 +47,7 @@ class _ProfileHeaderHeroState extends State<ProfileHeaderHero> {
     final theme = widget.theme ?? Theme.of(context);
 
     if (_config.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: theme,
         height: _effectiveHeight,
       );
@@ -71,14 +71,14 @@ class _ProfileHeaderHeroState extends State<ProfileHeaderHero> {
   Widget _buildCollapsed(ThemeData theme) {
     final profile = _config.profile;
     final radius = _config.collapsedAvatarRadius ??
-        HeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
+        NovaHeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
 
     return Padding(
       padding:
           _config.padding ?? const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
-          HeaderWidgetUtils.buildAvatar(
+          NovaHeaderWidgetUtils.buildAvatar(
             profile: profile,
             radius: radius,
             showStatus: _config.showStatusIndicator,
@@ -87,7 +87,7 @@ class _ProfileHeaderHeroState extends State<ProfileHeaderHero> {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: HeaderWidgetUtils.buildUserName(
+            child: NovaHeaderWidgetUtils.buildUserName(
               name: profile?.name,
               theme: theme,
               style: theme.textTheme.titleMedium
@@ -102,7 +102,7 @@ class _ProfileHeaderHeroState extends State<ProfileHeaderHero> {
   Widget _buildExpanded(ThemeData theme) {
     final profile = _config.profile;
     final avatarRadius =
-        _config.avatarRadius ?? HeaderWidgetUtils.kDefaultAvatarRadius;
+        _config.avatarRadius ?? NovaHeaderWidgetUtils.kDefaultAvatarRadius;
     // Cover takes ~60% of total height.
     final coverH = _config.coverHeight ?? _effectiveHeight * 0.6;
 
@@ -117,7 +117,7 @@ class _ProfileHeaderHeroState extends State<ProfileHeaderHero> {
           top: 0,
           left: 0,
           right: 0,
-          child: HeaderWidgetUtils.buildActionBar(
+          child: NovaHeaderWidgetUtils.buildActionBar(
             context: context,
             config: _config,
             theme: theme,
@@ -129,7 +129,7 @@ class _ProfileHeaderHeroState extends State<ProfileHeaderHero> {
         Positioned(
           top: coverH - avatarRadius,
           left: (_config.padding as EdgeInsets?)?.left ?? 16,
-          child: HeaderWidgetUtils.buildAvatar(
+          child: NovaHeaderWidgetUtils.buildAvatar(
             profile: profile,
             radius: avatarRadius,
             showStatus: _config.showStatusIndicator,
@@ -150,13 +150,13 @@ class _ProfileHeaderHeroState extends State<ProfileHeaderHero> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                HeaderWidgetUtils.buildUserName(
+                NovaHeaderWidgetUtils.buildUserName(
                   name: profile?.name,
                   theme: theme,
                   style: theme.textTheme.titleLarge
                       ?.copyWith(fontWeight: FontWeight.w800),
                 ),
-                HeaderWidgetUtils.buildSubtitle(
+                NovaHeaderWidgetUtils.buildSubtitle(
                   text: profile?.effectiveSubtitle,
                   theme: theme,
                 ),
