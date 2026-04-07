@@ -14,6 +14,7 @@ import '../models/drawer_theme.dart';
 import '../models/drawer_config.dart';
 import '../controllers/drawer_controller.dart';
 import '../utils/accessibility_utils.dart';
+import '../utils/responsive_utils.dart';
 import 'drawer_item_widget.dart';
 import 'nested_menu_item.dart';
 

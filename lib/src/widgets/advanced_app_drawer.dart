@@ -17,7 +17,6 @@ import '../controllers/drawer_controller.dart';
 import '../animations/animation_wrapper.dart';
 import '../animations/shimmer_animation.dart';
 import '../utils/responsive_utils.dart';
-import '../utils/accessibility_utils.dart';
 import '../backgrounds/gradient_background.dart';
 import '../backgrounds/particle_background.dart';
 import 'drawer_header.dart';

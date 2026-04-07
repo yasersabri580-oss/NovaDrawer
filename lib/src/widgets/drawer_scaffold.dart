@@ -14,9 +14,7 @@ import '../models/drawer_item.dart';
 import '../models/drawer_theme.dart';
 import '../models/drawer_config.dart';
 import '../controllers/drawer_controller.dart';
-import '../animations/animation_wrapper.dart';
 import '../utils/responsive_utils.dart';
-import '../utils/accessibility_utils.dart';
 import 'advanced_app_drawer.dart';
 import 'mini_drawer.dart';
 
