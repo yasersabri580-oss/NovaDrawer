@@ -1017,4 +1017,321 @@ void main() {
       controller.dispose();
     });
   });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // HEADER USER PROFILE TESTS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('HeaderUserProfile', () {
+    test('should create with required name', () {
+      const profile = HeaderUserProfile(name: 'Alice');
+      expect(profile.name, 'Alice');
+      expect(profile.email, isNull);
+      expect(profile.role, isNull);
+      expect(profile.status, UserStatus.unknown);
+      expect(profile.notificationCount, 0);
+      expect(profile.metadata, isEmpty);
+    });
+
+    test('copyWith should override fields', () {
+      const profile = HeaderUserProfile(name: 'Alice', email: 'a@b.com');
+      final updated = profile.copyWith(name: 'Bob', status: UserStatus.online);
+      expect(updated.name, 'Bob');
+      expect(updated.email, 'a@b.com');
+      expect(updated.status, UserStatus.online);
+    });
+
+    test('effectiveSubtitle returns subtitle over email over phone', () {
+      const withAll = HeaderUserProfile(
+        name: 'A',
+        subtitle: 'Sub',
+        email: 'e@e.com',
+        phone: '555',
+      );
+      expect(withAll.effectiveSubtitle, 'Sub');
+
+      const emailOnly = HeaderUserProfile(name: 'A', email: 'e@e.com', phone: '555');
+      expect(emailOnly.effectiveSubtitle, 'e@e.com');
+
+      const phoneOnly = HeaderUserProfile(name: 'A', phone: '555');
+      expect(phoneOnly.effectiveSubtitle, '555');
+
+      const none = HeaderUserProfile(name: 'A');
+      expect(none.effectiveSubtitle, isNull);
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // NOVA HEADER CONFIG TESTS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('NovaHeaderConfig', () {
+    test('should have sensible defaults', () {
+      const config = NovaHeaderConfig();
+      expect(config.variant, HeaderVariant.classic);
+      expect(config.profile, isNull);
+      expect(config.actions, isEmpty);
+      expect(config.showCloseButton, isTrue);
+      expect(config.showPinButton, isTrue);
+      expect(config.showEditProfileButton, isFalse);
+      expect(config.isLoading, isFalse);
+      expect(config.isCollapsed, isFalse);
+      expect(config.enableCollapseExpand, isFalse);
+    });
+
+    test('copyWith should override variant and loading', () {
+      const config = NovaHeaderConfig();
+      final updated = config.copyWith(
+        variant: HeaderVariant.compact,
+        isLoading: true,
+      );
+      expect(updated.variant, HeaderVariant.compact);
+      expect(updated.isLoading, isTrue);
+      expect(updated.showCloseButton, isTrue);
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // HEADER ACTION TESTS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('HeaderAction', () {
+    test('should create with required fields', () {
+      const action = HeaderAction(id: 'settings', icon: Icons.settings);
+      expect(action.id, 'settings');
+      expect(action.icon, Icons.settings);
+      expect(action.isDestructive, isFalse);
+      expect(action.isEnabled, isTrue);
+      expect(action.label, isNull);
+    });
+
+    test('copyWith should override fields', () {
+      const action = HeaderAction(id: 'a', icon: Icons.add);
+      final updated = action.copyWith(isDestructive: true, badge: 5);
+      expect(updated.isDestructive, isTrue);
+      expect(updated.badge, 5);
+      expect(updated.id, 'a');
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // DRAWER SURFACE CONFIG TESTS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('DrawerSurfaceConfig', () {
+    test('should default to plain style', () {
+      const config = DrawerSurfaceConfig();
+      expect(config.style, DrawerSurfaceStyle.plain);
+      expect(config.blurSigma, 10.0);
+      expect(config.opacity, 1.0);
+      expect(config.elevation, 0.0);
+      expect(config.backgroundColor, isNull);
+    });
+
+    test('copyWith should override style and opacity', () {
+      const config = DrawerSurfaceConfig();
+      final updated = config.copyWith(
+        style: DrawerSurfaceStyle.gradient,
+        opacity: 0.8,
+        gradientColors: [Colors.blue, Colors.purple],
+      );
+      expect(updated.style, DrawerSurfaceStyle.gradient);
+      expect(updated.opacity, 0.8);
+      expect(updated.gradientColors, hasLength(2));
+      expect(updated.blurSigma, 10.0);
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // CONTENT MODEL TESTS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('Content Models', () {
+    test('DrawerStatItem should create with required fields', () {
+      const stat = DrawerStatItem(label: 'Posts', value: '42');
+      expect(stat.label, 'Posts');
+      expect(stat.value, '42');
+      expect(stat.icon, isNull);
+    });
+
+    test('DrawerShortcut should create with required fields', () {
+      const shortcut = DrawerShortcut(id: 's1', label: 'Home', icon: Icons.home);
+      expect(shortcut.id, 's1');
+      expect(shortcut.label, 'Home');
+      expect(shortcut.icon, Icons.home);
+      expect(shortcut.badge, isNull);
+    });
+
+    test('DrawerRecentItem should create with required fields', () {
+      final item = DrawerRecentItem(
+        id: 'r1',
+        title: 'Doc',
+        timestamp: DateTime(2024, 1, 15),
+      );
+      expect(item.id, 'r1');
+      expect(item.title, 'Doc');
+      expect(item.timestamp, isNotNull);
+    });
+
+    test('DrawerFilterChip should default to unselected', () {
+      const chip = DrawerFilterChip(id: 'c1', label: 'Tag');
+      expect(chip.id, 'c1');
+      expect(chip.label, 'Tag');
+      expect(chip.isSelected, isFalse);
+    });
+
+    test('DrawerAppStatus should default to online', () {
+      const status = DrawerAppStatus();
+      expect(status.isOnline, isTrue);
+      expect(status.statusMessage, isNull);
+      expect(status.version, isNull);
+    });
+
+    test('DrawerWorkspace should create with required fields', () {
+      const ws = DrawerWorkspace(id: 'w1', name: 'Personal');
+      expect(ws.id, 'w1');
+      expect(ws.name, 'Personal');
+      expect(ws.isActive, isFalse);
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // DRAWER BUILDERS TESTS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('DrawerBuilders', () {
+    test('should create with all callbacks null by default', () {
+      const builders = DrawerBuilders();
+      expect(builders.headerBuilder, isNull);
+      expect(builders.itemBuilder, isNull);
+      expect(builders.footerBuilder, isNull);
+      expect(builders.loadingBuilder, isNull);
+      expect(builders.errorBuilder, isNull);
+    });
+
+    test('copyWith should override specific builders', () {
+      const builders = DrawerBuilders();
+      final updated = builders.copyWith(
+        footerBuilder: (context) => const Text('Footer'),
+      );
+      expect(updated.footerBuilder, isNotNull);
+      expect(updated.headerBuilder, isNull);
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // NOVA DRAWER HEADER WIDGET TESTS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('NovaDrawerHeader Widget', () {
+    testWidgets('renders with classic variant', (tester) async {
+      const config = NovaHeaderConfig(
+        variant: HeaderVariant.classic,
+        profile: HeaderUserProfile(name: 'Test User', email: 'test@mail.com'),
+      );
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: NovaDrawerHeader(config: config))),
+      );
+      expect(find.text('Test User'), findsOneWidget);
+    });
+
+    testWidgets('renders loading state', (tester) async {
+      const config = NovaHeaderConfig(
+        isLoading: true,
+        profile: HeaderUserProfile(name: 'Loading User'),
+      );
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: NovaDrawerHeader(config: config))),
+      );
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // DRAWER SURFACE WIDGET TESTS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('DrawerSurface Widget', () {
+    testWidgets('renders plain surface with child', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: DrawerSurface(
+            config: DrawerSurfaceConfig(style: DrawerSurfaceStyle.plain),
+            child: Text('Content'),
+          ),
+        ),
+      );
+      expect(find.text('Content'), findsOneWidget);
+    });
+
+    testWidgets('renders gradient surface with child', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: DrawerSurface(
+            config: DrawerSurfaceConfig(
+              style: DrawerSurfaceStyle.gradient,
+              gradientColors: [Colors.blue, Colors.purple],
+            ),
+            child: Text('Gradient'),
+          ),
+        ),
+      );
+      expect(find.text('Gradient'), findsOneWidget);
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // CONTENT WIDGET TESTS
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('Content Widgets', () {
+    testWidgets('DrawerSearchBar renders with hint', (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: DrawerSearchBar(
+              hintText: 'Find items',
+              onChanged: (_) {},
+            ),
+          ),
+        ),
+      );
+      expect(find.byType(TextField), findsOneWidget);
+    });
+
+    testWidgets('DrawerStatsCard renders stats', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: DrawerStatsCard(
+              items: [
+                DrawerStatItem(label: 'Posts', value: '12'),
+                DrawerStatItem(label: 'Likes', value: '99'),
+              ],
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Posts'), findsOneWidget);
+      expect(find.text('99'), findsOneWidget);
+    });
+
+    testWidgets('DrawerShortcutsGrid renders shortcuts', (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: DrawerShortcutsGrid(
+              shortcuts: [
+                DrawerShortcut(id: 's1', label: 'Home', icon: Icons.home),
+                DrawerShortcut(id: 's2', label: 'Files', icon: Icons.folder),
+              ],
+              crossAxisCount: 2,
+            ),
+          ),
+        ),
+      );
+      expect(find.text('Home'), findsOneWidget);
+      expect(find.text('Files'), findsOneWidget);
+    });
+  });
 }
