@@ -1,6 +1,6 @@
-# AdvancedAppDrawer
+# NovaDrawer
 
-A **modern, fully dynamic, and highly responsive** app drawer component for Flutter. Supports **mobile, tablet, and desktop** with 10+ animation types, nested menus, RTL support, theming, accessibility, and much more.
+A **modern, production-grade, and highly responsive** app drawer system for Flutter. Supports **mobile, tablet, and desktop** with 10+ animation types, 10 header variants, 10 surface styles, content widgets, nested menus, RTL support, theming, accessibility, slot-based builder APIs, and much more.
 
 ---
 
@@ -13,7 +13,46 @@ A **modern, fully dynamic, and highly responsive** app drawer component for Flut
 - **Nested menu items** with animated expansion (multi-level)
 - Dynamic width adjustment depending on screen size
 
-### Animations (10+ types)
+### 🎨 Header System (10 variants)
+| Variant | Description |
+|---------|-------------|
+| `classic` | Standard cover + avatar + user info layout |
+| `glassmorphism` | Frosted glass effect with blur and transparency |
+| `compact` | Minimal single-row layout for space-constrained UIs |
+| `hero` | Large cover image, magazine-style dramatic layout |
+| `expanded` | Full detail with expand/collapse animation |
+| `animatedGradient` | Cycling gradient background header |
+| `avatarStack` | Multiple account avatars overlapping |
+| `multiAction` | Prominent action buttons row |
+| `statusAware` | Status-focused with breathing animation |
+| `collapsible` | Toggle between expanded/collapsed states |
+
+Each header supports: avatar, cover image, user name, role, email, status indicator, action buttons, notification badge, edit profile shortcut, RTL, theme awareness, loading skeleton state, and custom widget slots.
+
+### 🏗️ Surface Styles (10 variants)
+| Style | Description |
+|-------|-------------|
+| `plain` | Flat background color |
+| `elevated` | Shadow-lifted surface |
+| `glassmorphism` | Frosted glass with backdrop blur |
+| `blurred` | Background-blurred surface |
+| `gradient` | Linear gradient fill |
+| `premiumShadow` | Deep multi-layer shadow |
+| `outlinedMinimal` | Subtle border outline |
+| `neumorphic` | Soft inset/outset shadows |
+| `imageBacked` | Background image surface |
+| `animatedMeshGradient` | Animated shifting gradient |
+
+### 📦 Content Widgets
+- **DrawerSearchBar** — Animated focus state, clear button
+- **DrawerStatsCard** — Row of stat items with dividers
+- **DrawerShortcutsGrid** — Tappable shortcut grid with badges
+- **DrawerRecentItems** — Recent items list with timestamps
+- **DrawerFilterChips** — Horizontally scrollable filter chips
+- **DrawerAppStatusWidget** — Connection status and version info
+- **DrawerWorkspaceSwitcher** — Expandable workspace/account switcher
+
+### 🎬 Animations (10+ types)
 | Animation | Description |
 |-----------|-------------|
 | `slide` | Slides in from the edge |
@@ -29,20 +68,23 @@ A **modern, fully dynamic, and highly responsive** app drawer component for Flut
 
 All animations are smooth and performant. Developers can customize **duration, curve, and style**.
 
-### Customizability
+### 🔧 Customizability
 - Themeable colors, text styles, icons, shadows, and borders
+- **Slot-based builder APIs** for every component (header, items, sections, backgrounds, footer, etc.)
 - Inject **custom widgets** inside drawer sections
 - **Gesture controls** (swipe to open/close)
 - **Pin drawer** open on desktop/tablet
 - Light and dark theme support
 
-### Advanced Features
+### 🚀 Advanced Features
 - **Dynamic data loading** (menu items fetched from API)
 - **Active route highlighting**
 - Built-in **accessibility support** (screen readers, focus order, scalable fonts)
 - **Mini-drawer mode** for tablet/desktop
 - **Custom backgrounds** (animated gradient, particle effects)
 - **Auto-hide on scroll** support
+- **Account switcher** support
+- **Loading skeletons** for headers and content
 
 ---
 
@@ -133,6 +175,143 @@ DrawerScaffoldWidget(
   ),
   body: YourPageContent(),
   appBar: AppBar(title: Text('My App')),
+)
+```
+
+---
+
+## 🎭 Header System
+
+### Using the header system
+
+Replace the old `DrawerHeaderWidget` with the new `NovaDrawerHeader`:
+
+```dart
+AdvancedAppDrawer(
+  controller: controller,
+  sections: sections,
+  header: NovaDrawerHeader(
+    config: NovaHeaderConfig(
+      variant: HeaderVariant.classic,
+      profile: HeaderUserProfile(
+        name: 'Jane Developer',
+        email: 'jane@example.com',
+        role: 'Senior Engineer',
+        status: UserStatus.online,
+        notificationCount: 5,
+      ),
+      showCloseButton: true,
+      showPinButton: true,
+      actions: [
+        HeaderAction(id: 'settings', icon: Icons.settings, tooltip: 'Settings'),
+        HeaderAction(id: 'notifications', icon: Icons.notifications, badge: 3),
+      ],
+    ),
+  ),
+)
+```
+
+### Switch header variant
+
+Just change the `variant` parameter:
+
+```dart
+NovaHeaderConfig(
+  variant: HeaderVariant.glassmorphism, // or hero, compact, collapsible, etc.
+  profile: myProfile,
+)
+```
+
+### Account switcher with avatar stack
+
+```dart
+NovaHeaderConfig(
+  variant: HeaderVariant.avatarStack,
+  profile: primaryUser,
+  accounts: [
+    HeaderUserProfile(name: 'Alice', status: UserStatus.online),
+    HeaderUserProfile(name: 'Bob', status: UserStatus.busy),
+  ],
+  onSwitchAccount: () => showAccountPicker(),
+)
+```
+
+### Custom header builder
+
+```dart
+NovaHeaderConfig(
+  customHeaderBuilder: (context, config) {
+    return MyCustomHeader(profile: config.profile);
+  },
+)
+```
+
+---
+
+## 🏗️ Surface Styles
+
+Wrap your drawer content with a surface style:
+
+```dart
+DrawerSurface(
+  config: DrawerSurfaceConfig(
+    style: DrawerSurfaceStyle.glassmorphism,
+    blurSigma: 15.0,
+    opacity: 0.8,
+  ),
+  child: myDrawerContent,
+)
+```
+
+---
+
+## 📦 Content Widgets
+
+### Search bar
+
+```dart
+DrawerSearchBar(
+  hintText: 'Search...',
+  onChanged: (query) => filterItems(query),
+)
+```
+
+### Stats card
+
+```dart
+DrawerStatsCard(
+  stats: [
+    DrawerStatItem(label: 'Projects', value: '42'),
+    DrawerStatItem(label: 'Tasks', value: '128'),
+  ],
+)
+```
+
+### Workspace switcher
+
+```dart
+DrawerWorkspaceSwitcher(
+  workspaces: [
+    DrawerWorkspace(id: '1', name: 'Personal', isActive: true),
+    DrawerWorkspace(id: '2', name: 'Work'),
+  ],
+)
+```
+
+---
+
+## 🔌 Builder APIs
+
+Customize every component with builder callbacks:
+
+```dart
+DrawerBuilders(
+  headerBuilder: (context, config) => MyCustomHeader(config: config),
+  itemBuilder: (context, item, isSelected) => MyCustomItem(item: item),
+  footerBuilder: (context) => MyCustomFooter(),
+  loadingBuilder: (context) => MyCustomLoader(),
+  errorBuilder: (context, msg, retry) => MyErrorWidget(msg, retry),
+  emptyStateBuilder: (context) => MyEmptyState(),
 )
 ```
 
@@ -369,16 +548,41 @@ lib/
       drawer_item.dart               # DrawerItem, DrawerSectionData, Badge
       drawer_theme.dart              # AdvancedDrawerTheme
       drawer_config.dart             # DrawerConfig, enums, sub-configs
+      header_config.dart             # NovaHeaderConfig, HeaderUserProfile, HeaderAction
+      surface_config.dart            # DrawerSurfaceConfig, DrawerSurface widget
+      content_config.dart            # Content models (stats, shortcuts, etc.)
     controllers/
       drawer_controller.dart         # AdvancedDrawerController
+    headers/
+      nova_drawer_header.dart        # Main header router widget
+      header_utils.dart              # Shared header utilities
+      profile_header_classic.dart    # Classic variant
+      profile_header_glassmorphism.dart # Glassmorphism variant
+      profile_header_compact.dart    # Compact variant
+      profile_header_hero.dart       # Hero variant
+      profile_header_expanded.dart   # Expanded variant
+      profile_header_animated_gradient.dart # Animated gradient variant
+      profile_header_avatar_stack.dart # Avatar stack variant
+      profile_header_multi_action.dart # Multi-action variant
+      profile_header_status_aware.dart # Status-aware variant
+      profile_header_collapsible.dart # Collapsible variant
+    builders/
+      drawer_builders.dart           # Slot-based builder callbacks
     widgets/
       advanced_app_drawer.dart       # Main drawer widget
-      drawer_header.dart             # Header widget
+      drawer_header.dart             # Legacy header widget
       drawer_item_widget.dart        # Individual item widget
       drawer_section.dart            # Collapsible section widget
       nested_menu_item.dart          # Nested expandable items
       mini_drawer.dart               # Mini/collapsed drawer
       drawer_scaffold.dart           # Responsive scaffold
+      drawer_search_bar.dart         # Search bar with animated focus
+      drawer_stats_card.dart         # User stats card
+      drawer_shortcuts_grid.dart     # Shortcuts grid
+      drawer_recent_items.dart       # Recent items list
+      drawer_filter_chips.dart       # Filter chips row
+      drawer_app_status.dart         # App status footer
+      drawer_workspace_switcher.dart # Workspace/account switcher
     animations/
       animation_config.dart          # Animation configuration
       animation_wrapper.dart         # Unified animation wrapper
@@ -401,6 +605,11 @@ lib/
 example/
   lib/
     main.dart                        # Full demo app
+    screens/
+      header_showcase_screen.dart    # All 10 header variants
+      surface_showcase_screen.dart   # All 10 surface styles
+      content_showcase_screen.dart   # Content widgets demo
+      animation_showcase_screen.dart # Animation types demo
 test/
   widget_test.dart                   # Comprehensive tests
 ```
@@ -425,6 +634,28 @@ test/
 | `loadItems(loader)` | Dynamic data loading |
 | `disableItem(id)` | Disable an item |
 | `hideItem(id)` | Hide an item |
+
+### NovaHeaderConfig
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `variant` | `HeaderVariant` | Header visual style |
+| `profile` | `HeaderUserProfile?` | User profile data |
+| `actions` | `List<HeaderAction>` | Action buttons |
+| `showCloseButton` | `bool` | Show close button |
+| `showPinButton` | `bool` | Show pin button |
+| `isLoading` | `bool` | Show skeleton |
+| `isCollapsed` | `bool` | Collapsed state |
+| `accounts` | `List<HeaderUserProfile>` | For avatar stack |
+| `customHeaderBuilder` | `Function?` | Custom header |
+
+### HeaderVariant
+
+`classic` · `glassmorphism` · `compact` · `hero` · `expanded` · `animatedGradient` · `avatarStack` · `multiAction` · `statusAware` · `collapsible`
+
+### DrawerSurfaceStyle
+
+`plain` · `elevated` · `glassmorphism` · `blurred` · `gradient` · `premiumShadow` · `outlinedMinimal` · `neumorphic` · `imageBacked` · `animatedMeshGradient`
 
 ### DrawerItem
 

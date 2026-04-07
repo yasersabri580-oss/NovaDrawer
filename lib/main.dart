@@ -1,12 +1,15 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaDrawer Contributors
 // Licensed under the MIT License.
 
-/// AdvancedAppDrawer - A modern, fully dynamic, and highly responsive
+/// NovaDrawer – A modern, fully dynamic, and highly responsive
 /// app drawer component for Flutter.
 ///
 /// This library provides a comprehensive drawer navigation system with:
 /// - Responsive layout (mobile, tablet, desktop)
 /// - 10+ animation types
+/// - Advanced modular header system with 10 variants
+/// - Drawer surface styles (glassmorphism, neumorphic, gradient, etc.)
+/// - Content blocks (search, stats, shortcuts, recent items, etc.)
 /// - RTL support
 /// - Nested/multi-level menus
 /// - Dynamic data loading
@@ -15,12 +18,16 @@
 /// - Mini-drawer mode
 /// - Gesture controls
 /// - Background effects
-library advanced_app_drawer;
+/// - Slot-based builder APIs for deep customization
+library nova_drawer;
 
 // ── Models ──────────────────────────────────────────────────────────────
 export 'src/models/drawer_item.dart';
 export 'src/models/drawer_theme.dart';
 export 'src/models/drawer_config.dart';
+export 'src/models/header_config.dart';
+export 'src/models/surface_config.dart';
+export 'src/models/content_config.dart';
 
 // ── Controllers ─────────────────────────────────────────────────────────
 export 'src/controllers/drawer_controller.dart';
@@ -33,6 +40,30 @@ export 'src/widgets/drawer_section.dart';
 export 'src/widgets/nested_menu_item.dart';
 export 'src/widgets/mini_drawer.dart';
 export 'src/widgets/drawer_scaffold.dart';
+export 'src/widgets/drawer_search_bar.dart';
+export 'src/widgets/drawer_stats_card.dart';
+export 'src/widgets/drawer_shortcuts_grid.dart';
+export 'src/widgets/drawer_recent_items.dart';
+export 'src/widgets/drawer_filter_chips.dart';
+export 'src/widgets/drawer_app_status.dart';
+export 'src/widgets/drawer_workspace_switcher.dart';
+
+// ── Headers ─────────────────────────────────────────────────────────────
+export 'src/headers/header_utils.dart';
+export 'src/headers/nova_drawer_header.dart';
+export 'src/headers/profile_header_classic.dart';
+export 'src/headers/profile_header_glassmorphism.dart';
+export 'src/headers/profile_header_compact.dart';
+export 'src/headers/profile_header_hero.dart';
+export 'src/headers/profile_header_expanded.dart';
+export 'src/headers/profile_header_animated_gradient.dart';
+export 'src/headers/profile_header_avatar_stack.dart';
+export 'src/headers/profile_header_multi_action.dart';
+export 'src/headers/profile_header_status_aware.dart';
+export 'src/headers/profile_header_collapsible.dart';
+
+// ── Builders ────────────────────────────────────────────────────────────
+export 'src/builders/drawer_builders.dart';
 
 // ── Animations ──────────────────────────────────────────────────────────
 export 'src/animations/animation_config.dart';
