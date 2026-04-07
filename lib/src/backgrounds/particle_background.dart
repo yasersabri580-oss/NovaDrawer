@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Particle background for the AdvancedAppDrawer.
+/// Particle background for the NovaAppDrawer.
 ///
 /// Provides floating particle effects for a dynamic, modern
 /// drawer background.
@@ -18,15 +18,15 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// DrawerParticleBackground(
+/// NovaParticleBackground(
 ///   particleCount: 30,
 ///   color: Colors.white.withOpacity(0.1),
 ///   child: drawerContent,
 /// )
 /// ```
-class DrawerParticleBackground extends StatefulWidget {
-  /// Creates a [DrawerParticleBackground].
-  const DrawerParticleBackground({
+class NovaParticleBackground extends StatefulWidget {
+  /// Creates a [NovaParticleBackground].
+  const NovaParticleBackground({
     super.key,
     required this.child,
     this.particleCount = 20,
@@ -63,11 +63,11 @@ class DrawerParticleBackground extends StatefulWidget {
   final double opacity;
 
   @override
-  State<DrawerParticleBackground> createState() =>
-      _DrawerParticleBackgroundState();
+  State<NovaParticleBackground> createState() =>
+      _NovaParticleBackgroundState();
 }
 
-class _DrawerParticleBackgroundState extends State<DrawerParticleBackground>
+class _NovaParticleBackgroundState extends State<NovaParticleBackground>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late List<_Particle> _particles;
@@ -87,7 +87,7 @@ class _DrawerParticleBackgroundState extends State<DrawerParticleBackground>
   }
 
   @override
-  void didUpdateWidget(DrawerParticleBackground oldWidget) {
+  void didUpdateWidget(NovaParticleBackground oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.enabled != oldWidget.enabled) {
       if (widget.enabled) {

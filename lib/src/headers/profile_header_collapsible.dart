@@ -17,17 +17,17 @@ import 'header_utils.dart';
 /// `true`.
 ///
 /// ```dart
-/// ProfileHeaderCollapsible(
+/// NovaProfileHeaderCollapsible(
 ///   config: NovaHeaderConfig(
-///     variant: HeaderVariant.collapsible,
+///     variant: NovaHeaderVariant.collapsible,
 ///     profile: myProfile,
 ///     enableCollapseExpand: true,
 ///   ),
 /// )
 /// ```
-class ProfileHeaderCollapsible extends StatefulWidget {
+class NovaProfileHeaderCollapsible extends StatefulWidget {
   /// Creates a collapsible profile header.
-  const ProfileHeaderCollapsible({
+  const NovaProfileHeaderCollapsible({
     super.key,
     required this.config,
     this.theme,
@@ -40,11 +40,11 @@ class ProfileHeaderCollapsible extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderCollapsible> createState() =>
-      _ProfileHeaderCollapsibleState();
+  State<NovaProfileHeaderCollapsible> createState() =>
+      _NovaProfileHeaderCollapsibleState();
 }
 
-class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
+class _NovaProfileHeaderCollapsibleState extends State<NovaProfileHeaderCollapsible>
     with SingleTickerProviderStateMixin {
   static const _kDuration = Duration(milliseconds: 350);
 
@@ -66,7 +66,7 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
   }
 
   @override
-  void didUpdateWidget(covariant ProfileHeaderCollapsible old) {
+  void didUpdateWidget(covariant NovaProfileHeaderCollapsible old) {
     super.didUpdateWidget(old);
     if (old.config.isCollapsed != _c.isCollapsed) {
       _collapsed = _c.isCollapsed;
@@ -87,9 +87,9 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
     });
   }
 
-  double get _expH => _c.headerHeight ?? HeaderWidgetUtils.kDefaultHeaderHeight;
+  double get _expH => _c.headerHeight ?? NovaHeaderWidgetUtils.kDefaultHeaderHeight;
   double get _colH =>
-      _c.collapsedHeaderHeight ?? HeaderWidgetUtils.kDefaultCollapsedHeight;
+      _c.collapsedHeaderHeight ?? NovaHeaderWidgetUtils.kDefaultCollapsedHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +97,7 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
     final height = _collapsed ? _colH : _expH;
 
     if (_c.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: theme,
         height: height,
       );
@@ -127,7 +127,7 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
 
   Widget _buildExpanded(ThemeData theme) {
     final profile = _c.profile;
-    final radius = _c.avatarRadius ?? HeaderWidgetUtils.kDefaultAvatarRadius;
+    final radius = _c.avatarRadius ?? NovaHeaderWidgetUtils.kDefaultAvatarRadius;
     final coverH = _c.coverHeight ?? _expH * 0.4;
 
     return SizedBox(
@@ -155,7 +155,7 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
             top: 0,
             left: 0,
             right: 0,
-            child: HeaderWidgetUtils.buildActionBar(
+            child: NovaHeaderWidgetUtils.buildActionBar(
               context: context,
               config: _c,
               theme: theme,
@@ -176,7 +176,7 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
                 children: [
                   Row(
                     children: [
-                      HeaderWidgetUtils.buildAvatar(
+                      NovaHeaderWidgetUtils.buildAvatar(
                         profile: profile,
                         radius: radius,
                         showStatus: _c.showStatusIndicator,
@@ -188,9 +188,9 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
                     ],
                   ),
                   const SizedBox(height: 4),
-                  HeaderWidgetUtils.buildUserName(
+                  NovaHeaderWidgetUtils.buildUserName(
                       name: profile?.name, theme: theme),
-                  HeaderWidgetUtils.buildSubtitle(
+                  NovaHeaderWidgetUtils.buildSubtitle(
                       text: profile?.effectiveSubtitle, theme: theme),
                   if (_c.bottomWidget != null) ...[
                     const SizedBox(height: 4),
@@ -210,7 +210,7 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
   Widget _buildCollapsed(ThemeData theme) {
     final profile = _c.profile;
     final radius = _c.collapsedAvatarRadius ??
-        HeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
+        NovaHeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
 
     return SizedBox(
       height: _colH,
@@ -219,7 +219,7 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
             _c.padding ?? const EdgeInsets.symmetric(horizontal: 12),
         child: Row(
           children: [
-            HeaderWidgetUtils.buildAvatar(
+            NovaHeaderWidgetUtils.buildAvatar(
               profile: profile,
               radius: radius,
               showStatus: _c.showStatusIndicator,
@@ -228,12 +228,12 @@ class _ProfileHeaderCollapsibleState extends State<ProfileHeaderCollapsible>
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: HeaderWidgetUtils.buildUserName(
+              child: NovaHeaderWidgetUtils.buildUserName(
                   name: profile?.name, theme: theme),
             ),
             if (_c.showNotificationBadge &&
                 (profile?.notificationCount ?? 0) > 0)
-              HeaderWidgetUtils.buildNotificationBadge(
+              NovaHeaderWidgetUtils.buildNotificationBadge(
                 count: profile!.notificationCount,
                 theme: theme,
               ),

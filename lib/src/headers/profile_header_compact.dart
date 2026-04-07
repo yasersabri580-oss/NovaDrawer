@@ -14,16 +14,16 @@ import 'header_utils.dart';
 /// The layout automatically respects RTL via [Directionality.of].
 ///
 /// ```dart
-/// ProfileHeaderCompact(
+/// NovaProfileHeaderCompact(
 ///   config: NovaHeaderConfig(
-///     variant: HeaderVariant.compact,
+///     variant: NovaHeaderVariant.compact,
 ///     profile: myProfile,
 ///   ),
 /// )
 /// ```
-class ProfileHeaderCompact extends StatefulWidget {
+class NovaProfileHeaderCompact extends StatefulWidget {
   /// Creates a compact profile header.
-  const ProfileHeaderCompact({
+  const NovaProfileHeaderCompact({
     super.key,
     required this.config,
     this.theme,
@@ -36,10 +36,10 @@ class ProfileHeaderCompact extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderCompact> createState() => _ProfileHeaderCompactState();
+  State<NovaProfileHeaderCompact> createState() => _NovaProfileHeaderCompactState();
 }
 
-class _ProfileHeaderCompactState extends State<ProfileHeaderCompact>
+class _NovaProfileHeaderCompactState extends State<NovaProfileHeaderCompact>
     with SingleTickerProviderStateMixin {
   late final AnimationController _fadeCtrl;
   late final Animation<double> _fadeAnim;
@@ -57,7 +57,7 @@ class _ProfileHeaderCompactState extends State<ProfileHeaderCompact>
   }
 
   @override
-  void didUpdateWidget(covariant ProfileHeaderCompact old) {
+  void didUpdateWidget(covariant NovaProfileHeaderCompact old) {
     super.didUpdateWidget(old);
     if (old.config.profile?.name != _config.profile?.name) {
       _fadeCtrl
@@ -76,10 +76,10 @@ class _ProfileHeaderCompactState extends State<ProfileHeaderCompact>
   Widget build(BuildContext context) {
     final theme = widget.theme ?? Theme.of(context);
     final height = _config.collapsedHeaderHeight ??
-        HeaderWidgetUtils.kDefaultCollapsedHeight;
+        NovaHeaderWidgetUtils.kDefaultCollapsedHeight;
 
     if (_config.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: theme,
         height: height,
       );
@@ -91,7 +91,7 @@ class _ProfileHeaderCompactState extends State<ProfileHeaderCompact>
 
     final profile = _config.profile;
     final radius = _config.avatarRadius ??
-        HeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
+        NovaHeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
 
     return Container(
       height: height,
@@ -104,7 +104,7 @@ class _ProfileHeaderCompactState extends State<ProfileHeaderCompact>
           children: [
             // Leading widget or avatar
             _config.leadingWidget ??
-                HeaderWidgetUtils.buildAvatar(
+                NovaHeaderWidgetUtils.buildAvatar(
                   profile: profile,
                   radius: radius,
                   showStatus: _config.showStatusIndicator,
@@ -118,11 +118,11 @@ class _ProfileHeaderCompactState extends State<ProfileHeaderCompact>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  HeaderWidgetUtils.buildUserName(
+                  NovaHeaderWidgetUtils.buildUserName(
                     name: profile?.name,
                     theme: theme,
                   ),
-                  HeaderWidgetUtils.buildSubtitle(
+                  NovaHeaderWidgetUtils.buildSubtitle(
                     text: profile?.effectiveSubtitle,
                     theme: theme,
                   ),
@@ -132,7 +132,7 @@ class _ProfileHeaderCompactState extends State<ProfileHeaderCompact>
             // Notification badge
             if (_config.showNotificationBadge &&
                 (profile?.notificationCount ?? 0) > 0) ...[
-              HeaderWidgetUtils.buildNotificationBadge(
+              NovaHeaderWidgetUtils.buildNotificationBadge(
                 count: profile!.notificationCount,
                 theme: theme,
               ),
@@ -149,7 +149,7 @@ class _ProfileHeaderCompactState extends State<ProfileHeaderCompact>
 
   /// Builds a minimal set of trailing action icons.
   Widget _buildCompactActions(ThemeData theme) {
-    return HeaderWidgetUtils.buildActionBar(
+    return NovaHeaderWidgetUtils.buildActionBar(
       context: context,
       config: _config,
       theme: theme,

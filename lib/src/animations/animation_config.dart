@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Animation configuration for the AdvancedAppDrawer.
+/// Animation configuration for the NovaAppDrawer.
 ///
 /// Defines duration, curve, and style parameters that apply
 /// to all drawer animations.
@@ -16,16 +16,16 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// DrawerAnimationConfig(
+/// NovaDrawerAnimationConfig(
 ///   duration: Duration(milliseconds: 350),
 ///   reverseDuration: Duration(milliseconds: 250),
 ///   curve: Curves.easeOutCubic,
 ///   enableItemAnimations: true,
 /// )
 /// ```
-class DrawerAnimationConfig {
-  /// Creates a [DrawerAnimationConfig].
-  const DrawerAnimationConfig({
+class NovaDrawerAnimationConfig {
+  /// Creates a [NovaDrawerAnimationConfig].
+  const NovaDrawerAnimationConfig({
     this.duration = const Duration(milliseconds: 300),
     this.reverseDuration,
     this.curve = Curves.easeInOutCubic,
@@ -111,7 +111,7 @@ class DrawerAnimationConfig {
   Curve get effectiveReverseCurve => reverseCurve ?? curve.flipped;
 
   /// Creates a copy of this config with the given fields replaced.
-  DrawerAnimationConfig copyWith({
+  NovaDrawerAnimationConfig copyWith({
     Duration? duration,
     Duration? reverseDuration,
     Curve? curve,
@@ -132,7 +132,7 @@ class DrawerAnimationConfig {
     Color? shimmerHighlightColor,
     double? blurSigma,
   }) {
-    return DrawerAnimationConfig(
+    return NovaDrawerAnimationConfig(
       duration: duration ?? this.duration,
       reverseDuration: reverseDuration ?? this.reverseDuration,
       curve: curve ?? this.curve,

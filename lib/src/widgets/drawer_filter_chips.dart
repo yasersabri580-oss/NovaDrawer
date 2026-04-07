@@ -4,35 +4,35 @@
 /// A horizontally scrollable row of filter chips for the drawer.
 ///
 /// Wraps Flutter's [FilterChip] with optional icons and accent
-/// colors, driven by [DrawerFilterChip] data models.
+/// colors, driven by [NovaDrawerFilterChip] data models.
 library;
 
 import 'package:flutter/material.dart';
 
 import '../models/content_config.dart';
 
-/// A horizontal row of selectable [DrawerFilterChip] items.
+/// A horizontal row of selectable [NovaDrawerFilterChip] items.
 ///
 /// Example:
 /// ```dart
-/// DrawerFilterChips(
+/// NovaDrawerFilterChipsWidget(
 ///   chips: [
-///     DrawerFilterChip(id: 'all', label: 'All', isSelected: true),
-///     DrawerFilterChip(id: 'docs', label: 'Docs', icon: Icons.article),
-///     DrawerFilterChip(id: 'images', label: 'Images', icon: Icons.image),
+///     NovaDrawerFilterChip(id: 'all', label: 'All', isSelected: true),
+///     NovaDrawerFilterChip(id: 'docs', label: 'Docs', icon: Icons.article),
+///     NovaDrawerFilterChip(id: 'images', label: 'Images', icon: Icons.image),
 ///   ],
 /// )
 /// ```
-class DrawerFilterChips extends StatelessWidget {
-  /// Creates a [DrawerFilterChips] widget.
-  const DrawerFilterChips({
+class NovaDrawerFilterChipsWidget extends StatelessWidget {
+  /// Creates a [NovaDrawerFilterChipsWidget] widget.
+  const NovaDrawerFilterChipsWidget({
     super.key,
     required this.chips,
     this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
   });
 
   /// The filter chips to display.
-  final List<DrawerFilterChip> chips;
+  final List<NovaDrawerFilterChip> chips;
 
   /// Outer padding around the chip row.
   final EdgeInsetsGeometry padding;
@@ -55,7 +55,7 @@ class DrawerFilterChips extends StatelessWidget {
     );
   }
 
-  Widget _buildChip(BuildContext context, DrawerFilterChip chip) {
+  Widget _buildChip(BuildContext context, NovaDrawerFilterChip chip) {
     final colorScheme = Theme.of(context).colorScheme;
     final accentColor = chip.color ?? colorScheme.primary;
 

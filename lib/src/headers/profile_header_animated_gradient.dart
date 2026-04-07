@@ -16,17 +16,17 @@ import 'header_utils.dart';
 /// to sensible Material defaults derived from the current theme.
 ///
 /// ```dart
-/// ProfileHeaderAnimatedGradient(
+/// NovaProfileHeaderAnimatedGradient(
 ///   config: NovaHeaderConfig(
-///     variant: HeaderVariant.animatedGradient,
+///     variant: NovaHeaderVariant.animatedGradient,
 ///     profile: myProfile,
 ///     gradientColors: [Colors.indigo, Colors.cyan, Colors.teal],
 ///   ),
 /// )
 /// ```
-class ProfileHeaderAnimatedGradient extends StatefulWidget {
+class NovaProfileHeaderAnimatedGradient extends StatefulWidget {
   /// Creates an animated gradient profile header.
-  const ProfileHeaderAnimatedGradient({
+  const NovaProfileHeaderAnimatedGradient({
     super.key,
     required this.config,
     this.theme,
@@ -39,12 +39,12 @@ class ProfileHeaderAnimatedGradient extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderAnimatedGradient> createState() =>
-      _ProfileHeaderAnimatedGradientState();
+  State<NovaProfileHeaderAnimatedGradient> createState() =>
+      _NovaProfileHeaderAnimatedGradientState();
 }
 
-class _ProfileHeaderAnimatedGradientState
-    extends State<ProfileHeaderAnimatedGradient>
+class _NovaProfileHeaderAnimatedGradientState
+    extends State<NovaProfileHeaderAnimatedGradient>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
@@ -68,10 +68,10 @@ class _ProfileHeaderAnimatedGradientState
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme ?? Theme.of(context);
-    final height = _c.headerHeight ?? HeaderWidgetUtils.kDefaultHeaderHeight;
+    final height = _c.headerHeight ?? NovaHeaderWidgetUtils.kDefaultHeaderHeight;
 
     if (_c.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: theme,
         height: height,
       );
@@ -109,7 +109,7 @@ class _ProfileHeaderAnimatedGradientState
 
   Widget _buildContent(ThemeData theme, double height) {
     final profile = _c.profile;
-    final radius = _c.avatarRadius ?? HeaderWidgetUtils.kDefaultAvatarRadius;
+    final radius = _c.avatarRadius ?? NovaHeaderWidgetUtils.kDefaultAvatarRadius;
     final textColor = Colors.white;
 
     return Stack(
@@ -119,7 +119,7 @@ class _ProfileHeaderAnimatedGradientState
           top: 0,
           left: 0,
           right: 0,
-          child: HeaderWidgetUtils.buildActionBar(
+          child: NovaHeaderWidgetUtils.buildActionBar(
             context: context,
             config: _c,
             theme: theme,
@@ -134,7 +134,7 @@ class _ProfileHeaderAnimatedGradientState
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                HeaderWidgetUtils.buildAvatar(
+                NovaHeaderWidgetUtils.buildAvatar(
                   profile: profile,
                   radius: radius,
                   showStatus: _c.showStatusIndicator,
@@ -142,7 +142,7 @@ class _ProfileHeaderAnimatedGradientState
                   onTap: _c.onProfileTap,
                 ),
                 const SizedBox(height: 10),
-                HeaderWidgetUtils.buildUserName(
+                NovaHeaderWidgetUtils.buildUserName(
                   name: profile?.name,
                   theme: theme,
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -150,7 +150,7 @@ class _ProfileHeaderAnimatedGradientState
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                HeaderWidgetUtils.buildSubtitle(
+                NovaHeaderWidgetUtils.buildSubtitle(
                   text: profile?.effectiveSubtitle,
                   theme: theme,
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -160,7 +160,7 @@ class _ProfileHeaderAnimatedGradientState
                 if (_c.showNotificationBadge &&
                     (profile?.notificationCount ?? 0) > 0) ...[
                   const SizedBox(height: 6),
-                  HeaderWidgetUtils.buildNotificationBadge(
+                  NovaHeaderWidgetUtils.buildNotificationBadge(
                     count: profile!.notificationCount,
                     theme: theme,
                   ),

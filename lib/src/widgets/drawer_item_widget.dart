@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Drawer item widget for the AdvancedAppDrawer.
+/// Drawer item widget for the NovaAppDrawer.
 ///
 /// Renders individual menu items with icon, title, subtitle,
 /// badge, and interactive states (hover, selected, disabled).
@@ -22,15 +22,15 @@ import '../utils/accessibility_utils.dart';
 ///
 /// Example:
 /// ```dart
-/// DrawerItemWidget(
-///   item: DrawerItem(id: 'home', title: 'Home', icon: Icons.home),
+/// NovaDrawerItemWidget(
+///   item: NovaDrawerItem(id: 'home', title: 'Home', icon: Icons.home),
 ///   isSelected: true,
 ///   onTap: () => navigateTo('/home'),
 /// )
 /// ```
-class DrawerItemWidget extends StatefulWidget {
-  /// Creates a [DrawerItemWidget].
-  const DrawerItemWidget({
+class NovaDrawerItemWidget extends StatefulWidget {
+  /// Creates a [NovaDrawerItemWidget].
+  const NovaDrawerItemWidget({
     super.key,
     required this.item,
     this.isSelected = false,
@@ -43,7 +43,7 @@ class DrawerItemWidget extends StatefulWidget {
   });
 
   /// The drawer item data to render.
-  final DrawerItem item;
+  final NovaDrawerItem item;
 
   /// Whether this item is currently selected/active.
   final bool isSelected;
@@ -58,19 +58,19 @@ class DrawerItemWidget extends StatefulWidget {
   final VoidCallback? onLongPress;
 
   /// Theme overrides.
-  final AdvancedDrawerTheme? theme;
+  final NovaDrawerTheme? theme;
 
   /// Configuration.
-  final DrawerConfig? config;
+  final NovaDrawerConfig? config;
 
   /// Whether the drawer is in mini mode (icon only).
   final bool isMiniMode;
 
   @override
-  State<DrawerItemWidget> createState() => _DrawerItemWidgetState();
+  State<NovaDrawerItemWidget> createState() => _NovaDrawerItemWidgetState();
 }
 
-class _DrawerItemWidgetState extends State<DrawerItemWidget>
+class _NovaDrawerItemWidgetState extends State<NovaDrawerItemWidget>
     with SingleTickerProviderStateMixin {
   bool _isHovered = false;
   late AnimationController _hoverController;
@@ -99,9 +99,9 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final drawerTheme = widget.theme?.resolve(themeData) ??
-        const AdvancedDrawerTheme().resolve(themeData);
+        const NovaDrawerTheme().resolve(themeData);
     final accessibilityConfig = widget.config?.accessibilityConfig ??
-        const DrawerAccessibilityConfig();
+        const NovaDrawerAccessibilityConfig();
     final isEnabled = widget.item.isEnabled;
     final indentation = widget.depth * 16.0;
 
@@ -114,7 +114,7 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget>
     }
 
     // Wrap with accessibility
-    itemWidget = AccessibilityUtils.wrapWithSemantics(
+    itemWidget = NovaAccessibilityUtils.wrapWithSemantics(
       child: itemWidget,
       item: widget.item,
       isSelected: widget.isSelected,
@@ -124,7 +124,7 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget>
     return itemWidget;
   }
 
-  Widget _buildMiniItem(AdvancedDrawerTheme drawerTheme, bool isEnabled) {
+  Widget _buildMiniItem(NovaDrawerTheme drawerTheme, bool isEnabled) {
     final iconColor = widget.isSelected
         ? drawerTheme.selectedItemColor
         : drawerTheme.unselectedItemColor;
@@ -169,7 +169,7 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget>
   }
 
   Widget _buildFullItem(
-    AdvancedDrawerTheme drawerTheme,
+    NovaDrawerTheme drawerTheme,
     bool isEnabled,
     double indentation,
   ) {
@@ -291,7 +291,7 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget>
     );
   }
 
-  Widget _buildBadge(AdvancedDrawerTheme drawerTheme) {
+  Widget _buildBadge(NovaDrawerTheme drawerTheme) {
     final badge = widget.item.badge!;
     final badgeTheme = drawerTheme.badgeTheme;
 
@@ -325,8 +325,8 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget>
     );
   }
 
-  Widget _buildExpandIcon(AdvancedDrawerTheme drawerTheme) {
-    final controller = DrawerControllerProvider.of(context);
+  Widget _buildExpandIcon(NovaDrawerTheme drawerTheme) {
+    final controller = NovaDrawerControllerProvider.of(context);
     final isExpanded = controller.isItemExpanded(widget.item.id);
 
     return AnimatedRotation(

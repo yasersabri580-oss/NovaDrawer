@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Drawer controller for the AdvancedAppDrawer.
+/// Drawer controller for the NovaAppDrawer.
 ///
 /// Manages drawer state including open/close, pinned/unpinned,
 /// expanded/collapsed, and active item tracking. Provides a
@@ -14,7 +14,7 @@ import '../models/drawer_item.dart';
 import '../models/drawer_config.dart';
 import '../utils/responsive_utils.dart';
 
-/// Controller that manages the state of the AdvancedAppDrawer.
+/// Controller that manages the state of the NovaAppDrawer.
 ///
 /// Holds the current open/close status, selected item, expansion
 /// states, and provides methods to manipulate drawer behavior.
@@ -23,16 +23,16 @@ import '../utils/responsive_utils.dart';
 ///
 /// Example:
 /// ```dart
-/// final controller = AdvancedDrawerController(
+/// final controller = NovaDrawerController(
 ///   initialSelectedItemId: 'home',
 ///   initiallyOpen: false,
 /// );
 /// controller.open();
 /// controller.selectItem('settings');
 /// ```
-class AdvancedDrawerController extends ChangeNotifier {
-  /// Creates an [AdvancedDrawerController].
-  AdvancedDrawerController({
+class NovaDrawerController extends ChangeNotifier {
+  /// Creates an [NovaDrawerController].
+  NovaDrawerController({
     String? initialSelectedItemId,
     bool initiallyOpen = false,
     bool initiallyPinned = false,
@@ -49,13 +49,13 @@ class AdvancedDrawerController extends ChangeNotifier {
   bool _isPinned;
   bool _isMini;
   bool _isAnimating = false;
-  DeviceType _deviceType = DeviceType.mobile;
+  NovaDeviceType _deviceType = NovaDeviceType.mobile;
   final Map<String, bool> _expandedSections = {};
   final Map<String, bool> _expandedItems = {};
   final Set<String> _disabledItems = {};
   final Set<String> _hiddenItems = {};
-  List<DrawerItem> _items = [];
-  List<DrawerSectionData> _sections = [];
+  List<NovaDrawerItem> _items = [];
+  List<NovaDrawerSectionData> _sections = [];
   bool _isLoading = false;
   String? _errorMessage;
 
@@ -77,13 +77,13 @@ class AdvancedDrawerController extends ChangeNotifier {
   bool get isAnimating => _isAnimating;
 
   /// The current device type.
-  DeviceType get deviceType => _deviceType;
+  NovaDeviceType get deviceType => _deviceType;
 
   /// Current list of drawer items.
-  List<DrawerItem> get items => List.unmodifiable(_items);
+  List<NovaDrawerItem> get items => List.unmodifiable(_items);
 
   /// Current list of drawer sections.
-  List<DrawerSectionData> get sections => List.unmodifiable(_sections);
+  List<NovaDrawerSectionData> get sections => List.unmodifiable(_sections);
 
   /// Whether data is currently loading.
   bool get isLoading => _isLoading;
@@ -299,13 +299,13 @@ class AdvancedDrawerController extends ChangeNotifier {
   // ── Data Management ────────────────────────────────────────────────
 
   /// Sets the drawer items.
-  void setItems(List<DrawerItem> items) {
+  void setItems(List<NovaDrawerItem> items) {
     _items = items;
     notifyListeners();
   }
 
   /// Sets the drawer sections.
-  void setSections(List<DrawerSectionData> sections) {
+  void setSections(List<NovaDrawerSectionData> sections) {
     _sections = sections;
     // Initialize section expansion states
     for (final section in sections) {
@@ -319,7 +319,7 @@ class AdvancedDrawerController extends ChangeNotifier {
   /// Sets [isLoading] to true during the load, and populates
   /// [errorMessage] on failure.
   Future<void> loadItems(
-    Future<List<DrawerItem>> Function() loader,
+    Future<List<NovaDrawerItem>> Function() loader,
   ) async {
     _isLoading = true;
     _errorMessage = null;
@@ -339,7 +339,7 @@ class AdvancedDrawerController extends ChangeNotifier {
 
   /// Loads sections dynamically using the provided [loader] function.
   Future<void> loadSections(
-    Future<List<DrawerSectionData>> Function() loader,
+    Future<List<NovaDrawerSectionData>> Function() loader,
   ) async {
     _isLoading = true;
     _errorMessage = null;
@@ -360,11 +360,11 @@ class AdvancedDrawerController extends ChangeNotifier {
   // ── Device Type ────────────────────────────────────────────────────
 
   /// Updates the device type (called when screen size changes).
-  void updateDeviceType(DeviceType type) {
+  void updateDeviceType(NovaDeviceType type) {
     if (_deviceType != type) {
       _deviceType = type;
       // Auto-adjust behavior based on device type
-      if (type == DeviceType.mobile) {
+      if (type == NovaDeviceType.mobile) {
         _isPinned = false;
       }
       notifyListeners();
@@ -388,7 +388,7 @@ class AdvancedDrawerController extends ChangeNotifier {
   // ── Private Helpers ────────────────────────────────────────────────
 
   /// Recursively finds an item by route.
-  DrawerItem? _findItemByRoute(String route, List<DrawerItem> items) {
+  NovaDrawerItem? _findItemByRoute(String route, List<NovaDrawerItem> items) {
     for (final item in items) {
       if (item.route == route) return item;
       if (item.hasChildren) {
@@ -400,7 +400,7 @@ class AdvancedDrawerController extends ChangeNotifier {
   }
 
   /// Expands all parent items containing the target item.
-  void _expandParentsOf(String targetId, List<DrawerItem> items) {
+  void _expandParentsOf(String targetId, List<NovaDrawerItem> items) {
     for (final item in items) {
       if (item.hasChildren) {
         if (_containsItem(targetId, item.children)) {
@@ -412,7 +412,7 @@ class AdvancedDrawerController extends ChangeNotifier {
   }
 
   /// Checks if items contain an item with the given ID.
-  bool _containsItem(String targetId, List<DrawerItem> items) {
+  bool _containsItem(String targetId, List<NovaDrawerItem> items) {
     for (final item in items) {
       if (item.id == targetId) return true;
       if (item.hasChildren && _containsItem(targetId, item.children)) {
@@ -423,33 +423,33 @@ class AdvancedDrawerController extends ChangeNotifier {
   }
 }
 
-/// An [InheritedNotifier] that provides the [AdvancedDrawerController]
+/// An [InheritedNotifier] that provides the [NovaDrawerController]
 /// to descendant widgets.
 ///
 /// Wrap your drawer subtree with this to make the controller
-/// accessible via [DrawerControllerProvider.of(context)].
-class DrawerControllerProvider
-    extends InheritedNotifier<AdvancedDrawerController> {
-  /// Creates a [DrawerControllerProvider].
-  const DrawerControllerProvider({
+/// accessible via [NovaDrawerControllerProvider.of(context)].
+class NovaDrawerControllerProvider
+    extends InheritedNotifier<NovaDrawerController> {
+  /// Creates a [NovaDrawerControllerProvider].
+  const NovaDrawerControllerProvider({
     super.key,
-    required AdvancedDrawerController controller,
+    required NovaDrawerController controller,
     required super.child,
   }) : super(notifier: controller);
 
-  /// Retrieves the nearest [AdvancedDrawerController] from the widget tree.
-  static AdvancedDrawerController of(BuildContext context) {
+  /// Retrieves the nearest [NovaDrawerController] from the widget tree.
+  static NovaDrawerController of(BuildContext context) {
     final provider =
-        context.dependOnInheritedWidgetOfExactType<DrawerControllerProvider>();
-    assert(provider != null, 'No DrawerControllerProvider found in context');
+        context.dependOnInheritedWidgetOfExactType<NovaDrawerControllerProvider>();
+    assert(provider != null, 'No NovaDrawerControllerProvider found in context');
     return provider!.notifier!;
   }
 
   /// Retrieves the controller without establishing a dependency.
-  static AdvancedDrawerController read(BuildContext context) {
+  static NovaDrawerController read(BuildContext context) {
     final provider = context
-        .getInheritedWidgetOfExactType<DrawerControllerProvider>();
-    assert(provider != null, 'No DrawerControllerProvider found in context');
+        .getInheritedWidgetOfExactType<NovaDrawerControllerProvider>();
+    assert(provider != null, 'No NovaDrawerControllerProvider found in context');
     return provider!.notifier!;
   }
 }

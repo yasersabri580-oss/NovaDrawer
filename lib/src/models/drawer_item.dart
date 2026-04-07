@@ -1,10 +1,10 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
 /// Data models for drawer menu items.
 ///
-/// Provides [DrawerItem] for representing individual menu entries,
-/// [DrawerSection] for grouping related items, and [DrawerItemBadge]
+/// Provides [NovaDrawerItem] for representing individual menu entries,
+/// [DrawerSection] for grouping related items, and [NovaDrawerItemBadge]
 /// for notification badges.
 library;
 
@@ -14,11 +14,11 @@ import 'package:flutter/material.dart';
 ///
 /// Badges can show counts, labels, or custom widgets to indicate
 /// notifications, updates, or status.
-class DrawerItemBadge {
-  /// Creates a [DrawerItemBadge].
+class NovaDrawerItemBadge {
+  /// Creates a [NovaDrawerItemBadge].
   ///
   /// At least one of [count], [label], or [customWidget] should be provided.
-  const DrawerItemBadge({
+  const NovaDrawerItemBadge({
     this.count,
     this.label,
     this.backgroundColor,
@@ -54,14 +54,14 @@ class DrawerItemBadge {
   }
 
   /// Creates a copy of this badge with the given fields replaced.
-  DrawerItemBadge copyWith({
+  NovaDrawerItemBadge copyWith({
     int? count,
     String? label,
     Color? backgroundColor,
     Color? textColor,
     Widget? customWidget,
   }) {
-    return DrawerItemBadge(
+    return NovaDrawerItemBadge(
       count: count ?? this.count,
       label: label ?? this.label,
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -78,22 +78,22 @@ class DrawerItemBadge {
 ///
 /// Example:
 /// ```dart
-/// DrawerItem(
+/// NovaDrawerItem(
 ///   id: 'home',
 ///   title: 'Home',
 ///   icon: Icons.home,
 ///   onTap: () => navigateTo('/home'),
 ///   children: [
-///     DrawerItem(id: 'dashboard', title: 'Dashboard', icon: Icons.dashboard),
-///     DrawerItem(id: 'analytics', title: 'Analytics', icon: Icons.analytics),
+///     NovaDrawerItem(id: 'dashboard', title: 'Dashboard', icon: Icons.dashboard),
+///     NovaDrawerItem(id: 'analytics', title: 'Analytics', icon: Icons.analytics),
 ///   ],
 /// )
 /// ```
-class DrawerItem {
-  /// Creates a [DrawerItem].
+class NovaDrawerItem {
+  /// Creates a [NovaDrawerItem].
   ///
   /// The [id] and [title] parameters are required. Use [children] for nested menus.
-  const DrawerItem({
+  const NovaDrawerItem({
     required this.id,
     required this.title,
     this.icon,
@@ -127,13 +127,13 @@ class DrawerItem {
   final IconData? selectedIcon;
 
   /// Child items for nested navigation.
-  final List<DrawerItem> children;
+  final List<NovaDrawerItem> children;
 
   /// Callback invoked when the item is tapped.
   final VoidCallback? onTap;
 
   /// Optional badge to display on this item.
-  final DrawerItemBadge? badge;
+  final NovaDrawerItemBadge? badge;
 
   /// Whether this item is enabled and interactive.
   final bool isEnabled;
@@ -175,14 +175,14 @@ class DrawerItem {
   IconData? get effectiveSelectedIcon => selectedIcon ?? icon;
 
   /// Creates a copy of this item with the given fields replaced.
-  DrawerItem copyWith({
+  NovaDrawerItem copyWith({
     String? id,
     String? title,
     IconData? icon,
     IconData? selectedIcon,
-    List<DrawerItem>? children,
+    List<NovaDrawerItem>? children,
     VoidCallback? onTap,
-    DrawerItemBadge? badge,
+    NovaDrawerItemBadge? badge,
     bool? isEnabled,
     bool? isVisible,
     String? route,
@@ -195,7 +195,7 @@ class DrawerItem {
     Widget? customWidget,
     Map<String, dynamic>? metadata,
   }) {
-    return DrawerItem(
+    return NovaDrawerItem(
       id: id ?? this.id,
       title: title ?? this.title,
       icon: icon ?? this.icon,
@@ -220,7 +220,7 @@ class DrawerItem {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is DrawerItem &&
+      other is NovaDrawerItem &&
           runtimeType == other.runtimeType &&
           id == other.id;
 
@@ -232,9 +232,9 @@ class DrawerItem {
 ///
 /// Sections provide visual separation and optional headers/footers
 /// for organizing menu items into logical groups.
-class DrawerSectionData {
-  /// Creates a [DrawerSectionData].
-  const DrawerSectionData({
+class NovaDrawerSectionData {
+  /// Creates a [NovaDrawerSectionData].
+  const NovaDrawerSectionData({
     required this.id,
     required this.items,
     this.title,
@@ -252,7 +252,7 @@ class DrawerSectionData {
   final String id;
 
   /// Items contained in this section.
-  final List<DrawerItem> items;
+  final List<NovaDrawerItem> items;
 
   /// Optional title displayed as section header.
   final String? title;
@@ -282,9 +282,9 @@ class DrawerSectionData {
   final EdgeInsetsGeometry? padding;
 
   /// Creates a copy of this section with the given fields replaced.
-  DrawerSectionData copyWith({
+  NovaDrawerSectionData copyWith({
     String? id,
-    List<DrawerItem>? items,
+    List<NovaDrawerItem>? items,
     String? title,
     IconData? icon,
     bool? isCollapsible,
@@ -295,7 +295,7 @@ class DrawerSectionData {
     bool? dividerBelow,
     EdgeInsetsGeometry? padding,
   }) {
-    return DrawerSectionData(
+    return NovaDrawerSectionData(
       id: id ?? this.id,
       items: items ?? this.items,
       title: title ?? this.title,

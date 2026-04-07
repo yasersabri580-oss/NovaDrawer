@@ -11,28 +11,28 @@ import 'package:flutter/material.dart';
 
 import '../models/content_config.dart';
 
-/// A card showing a row of [DrawerStatItem] values.
+/// A card showing a row of [NovaDrawerStatItem] values.
 ///
 /// Example:
 /// ```dart
-/// DrawerStatsCard(
+/// NovaDrawerStatsCard(
 ///   items: [
-///     DrawerStatItem(label: 'Projects', value: '12'),
-///     DrawerStatItem(label: 'Tasks', value: '48'),
-///     DrawerStatItem(label: 'Stars', value: '2.3k'),
+///     NovaDrawerStatItem(label: 'Projects', value: '12'),
+///     NovaDrawerStatItem(label: 'Tasks', value: '48'),
+///     NovaDrawerStatItem(label: 'Stars', value: '2.3k'),
 ///   ],
 /// )
 /// ```
-class DrawerStatsCard extends StatelessWidget {
-  /// Creates a [DrawerStatsCard].
-  const DrawerStatsCard({
+class NovaDrawerStatsCard extends StatelessWidget {
+  /// Creates a [NovaDrawerStatsCard].
+  const NovaDrawerStatsCard({
     super.key,
     required this.items,
     this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
   });
 
   /// The stat items to display.
-  final List<DrawerStatItem> items;
+  final List<NovaDrawerStatItem> items;
 
   /// Outer padding around the card.
   final EdgeInsetsGeometry padding;
@@ -74,7 +74,7 @@ class DrawerStatsCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(BuildContext context, DrawerStatItem item) {
+  Widget _buildStatItem(BuildContext context, NovaDrawerStatItem item) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 

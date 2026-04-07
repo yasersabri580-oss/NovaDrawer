@@ -4,9 +4,9 @@
 import 'package:flutter/widgets.dart';
 
 /// A stat item displayed in a user stats card.
-class DrawerStatItem {
+class NovaDrawerStatItem {
   /// Creates a stat item.
-  const DrawerStatItem({
+  const NovaDrawerStatItem({
     required this.label,
     required this.value,
     this.icon,
@@ -27,9 +27,9 @@ class DrawerStatItem {
 }
 
 /// A shortcut item for the shortcuts grid.
-class DrawerShortcut {
+class NovaDrawerShortcut {
   /// Creates a shortcut item.
-  const DrawerShortcut({
+  const NovaDrawerShortcut({
     required this.id,
     required this.label,
     required this.icon,
@@ -58,9 +58,9 @@ class DrawerShortcut {
 }
 
 /// A recent item entry.
-class DrawerRecentItem {
+class NovaDrawerRecentItem {
   /// Creates a recent item.
-  const DrawerRecentItem({
+  const NovaDrawerRecentItem({
     required this.id,
     required this.title,
     this.subtitle,
@@ -89,9 +89,9 @@ class DrawerRecentItem {
 }
 
 /// A filter chip for the drawer search/filter system.
-class DrawerFilterChip {
+class NovaDrawerFilterChip {
   /// Creates a filter chip.
-  const DrawerFilterChip({
+  const NovaDrawerFilterChip({
     required this.id,
     required this.label,
     this.isSelected = false,
@@ -120,9 +120,9 @@ class DrawerFilterChip {
 }
 
 /// App health / connection status for display in the drawer.
-class DrawerAppStatus {
+class NovaDrawerAppStatus {
   /// Creates an app status indicator.
-  const DrawerAppStatus({
+  const NovaDrawerAppStatus({
     this.isOnline = true,
     this.statusMessage,
     this.version,
@@ -147,9 +147,9 @@ class DrawerAppStatus {
 }
 
 /// A workspace or account for switching.
-class DrawerWorkspace {
+class NovaDrawerWorkspace {
   /// Creates a workspace item.
-  const DrawerWorkspace({
+  const NovaDrawerWorkspace({
     required this.id,
     required this.name,
     this.icon,

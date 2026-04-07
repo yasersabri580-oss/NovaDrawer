@@ -7,23 +7,23 @@
 /// and support for fully custom headers via [NovaHeaderConfig.customHeaderBuilder].
 ///
 /// ## Built-in header variants:
-/// - [ProfileHeaderClassic] — Standard cover + avatar + info layout
-/// - [ProfileHeaderGlassmorphism] — Frosted glass effect
-/// - [ProfileHeaderCompact] — Minimal single-row layout
-/// - [ProfileHeaderHero] — Large cover, magazine-style
-/// - [ProfileHeaderExpanded] — Full detail with expand/collapse
-/// - [ProfileHeaderAnimatedGradient] — Cycling gradient background
-/// - [ProfileHeaderAvatarStack] — Multiple account avatars
-/// - [ProfileHeaderMultiAction] — Prominent action buttons
-/// - [ProfileHeaderStatusAware] — Status-focused with breathing animation
-/// - [ProfileHeaderCollapsible] — Toggle between expanded/collapsed
+/// - [NovaProfileHeaderClassic] — Standard cover + avatar + info layout
+/// - [NovaProfileHeaderGlassmorphism] — Frosted glass effect
+/// - [NovaProfileHeaderCompact] — Minimal single-row layout
+/// - [NovaProfileHeaderHero] — Large cover, magazine-style
+/// - [NovaProfileHeaderExpanded] — Full detail with expand/collapse
+/// - [NovaProfileHeaderAnimatedGradient] — Cycling gradient background
+/// - [NovaProfileHeaderAvatarStack] — Multiple account avatars
+/// - [NovaProfileHeaderMultiAction] — Prominent action buttons
+/// - [NovaProfileHeaderStatusAware] — Status-focused with breathing animation
+/// - [NovaProfileHeaderCollapsible] — Toggle between expanded/collapsed
 ///
 /// ## Usage:
 /// ```dart
 /// NovaDrawerHeader(
 ///   config: NovaHeaderConfig(
-///     variant: HeaderVariant.classic,
-///     profile: HeaderUserProfile(name: 'John Doe', email: 'john@example.com'),
+///     variant: NovaHeaderVariant.classic,
+///     profile: NovaHeaderUserProfile(name: 'John Doe', email: 'john@example.com'),
 ///   ),
 /// )
 /// ```
@@ -50,7 +50,7 @@ import 'profile_header_collapsible.dart';
 /// This is the primary entry point for the header system. Developers can:
 /// 1. Use a built-in variant by setting [config.variant]
 /// 2. Provide a [config.customHeaderBuilder] to fully replace the header
-/// 3. Use individual variant widgets directly (e.g., [ProfileHeaderClassic])
+/// 3. Use individual variant widgets directly (e.g., [NovaProfileHeaderClassic])
 ///
 /// The header automatically handles:
 /// - Loading skeleton states
@@ -82,34 +82,34 @@ class NovaDrawerHeader extends StatelessWidget {
     // Loading state.
     if (config.isLoading) {
       final t = theme ?? Theme.of(context);
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: t,
-        height: config.headerHeight ?? HeaderWidgetUtils.kDefaultHeaderHeight,
+        height: config.headerHeight ?? NovaHeaderWidgetUtils.kDefaultHeaderHeight,
       );
     }
 
     // Route to the appropriate variant.
     switch (config.variant) {
-      case HeaderVariant.classic:
-        return ProfileHeaderClassic(config: config, theme: theme);
-      case HeaderVariant.glassmorphism:
-        return ProfileHeaderGlassmorphism(config: config, theme: theme);
-      case HeaderVariant.compact:
-        return ProfileHeaderCompact(config: config, theme: theme);
-      case HeaderVariant.hero:
-        return ProfileHeaderHero(config: config, theme: theme);
-      case HeaderVariant.expanded:
-        return ProfileHeaderExpanded(config: config, theme: theme);
-      case HeaderVariant.animatedGradient:
-        return ProfileHeaderAnimatedGradient(config: config, theme: theme);
-      case HeaderVariant.avatarStack:
-        return ProfileHeaderAvatarStack(config: config, theme: theme);
-      case HeaderVariant.multiAction:
-        return ProfileHeaderMultiAction(config: config, theme: theme);
-      case HeaderVariant.statusAware:
-        return ProfileHeaderStatusAware(config: config, theme: theme);
-      case HeaderVariant.collapsible:
-        return ProfileHeaderCollapsible(config: config, theme: theme);
+      case NovaHeaderVariant.classic:
+        return NovaProfileHeaderClassic(config: config, theme: theme);
+      case NovaHeaderVariant.glassmorphism:
+        return NovaProfileHeaderGlassmorphism(config: config, theme: theme);
+      case NovaHeaderVariant.compact:
+        return NovaProfileHeaderCompact(config: config, theme: theme);
+      case NovaHeaderVariant.hero:
+        return NovaProfileHeaderHero(config: config, theme: theme);
+      case NovaHeaderVariant.expanded:
+        return NovaProfileHeaderExpanded(config: config, theme: theme);
+      case NovaHeaderVariant.animatedGradient:
+        return NovaProfileHeaderAnimatedGradient(config: config, theme: theme);
+      case NovaHeaderVariant.avatarStack:
+        return NovaProfileHeaderAvatarStack(config: config, theme: theme);
+      case NovaHeaderVariant.multiAction:
+        return NovaProfileHeaderMultiAction(config: config, theme: theme);
+      case NovaHeaderVariant.statusAware:
+        return NovaProfileHeaderStatusAware(config: config, theme: theme);
+      case NovaHeaderVariant.collapsible:
+        return NovaProfileHeaderCollapsible(config: config, theme: theme);
     }
   }
 }

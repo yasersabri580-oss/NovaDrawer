@@ -12,10 +12,10 @@ class AnimationShowcaseScreen extends StatefulWidget {
 class _AnimationShowcaseScreenState extends State<AnimationShowcaseScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-  DrawerAnimationType _selectedType = DrawerAnimationType.slide;
+  NovaDrawerAnimationType _selectedType = NovaDrawerAnimationType.slide;
   bool _isForward = false;
 
-  static const _types = DrawerAnimationType.values;
+  static const _types = NovaDrawerAnimationType.values;
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _AnimationShowcaseScreenState extends State<AnimationShowcaseScreen>
                     Text('Animation Type',
                         style: theme.textTheme.titleMedium),
                     const SizedBox(height: 8),
-                    DropdownButtonFormField<DrawerAnimationType>(
+                    DropdownButtonFormField<NovaDrawerAnimationType>(
                       value: _selectedType,
                       isExpanded: true,
                       decoration: const InputDecoration(
@@ -134,10 +134,10 @@ class _AnimationShowcaseScreenState extends State<AnimationShowcaseScreen>
                     child: AnimatedBuilder(
                       animation: _controller,
                       builder: (context, _) {
-                        return DrawerAnimationWrapper(
+                        return NovaDrawerAnimationWrapper(
                           animation: _controller,
                           animationType: _selectedType,
-                          animationConfig: const DrawerAnimationConfig(
+                          animationConfig: const NovaDrawerAnimationConfig(
                             duration: Duration(milliseconds: 600),
                             curve: Curves.easeInOutCubic,
                           ),
@@ -186,27 +186,27 @@ class _AnimationShowcaseScreenState extends State<AnimationShowcaseScreen>
     );
   }
 
-  String _descriptionFor(DrawerAnimationType type) {
+  String _descriptionFor(NovaDrawerAnimationType type) {
     switch (type) {
-      case DrawerAnimationType.slide:
+      case NovaDrawerAnimationType.slide:
         return 'Slides in from the side';
-      case DrawerAnimationType.fade:
+      case NovaDrawerAnimationType.fade:
         return 'Fades in/out with opacity';
-      case DrawerAnimationType.scale:
+      case NovaDrawerAnimationType.scale:
         return 'Scales up/down from center';
-      case DrawerAnimationType.rotate:
+      case NovaDrawerAnimationType.rotate:
         return 'Rotates in/out with perspective';
-      case DrawerAnimationType.morph:
+      case NovaDrawerAnimationType.morph:
         return 'Morphs between shapes';
-      case DrawerAnimationType.elastic:
+      case NovaDrawerAnimationType.elastic:
         return 'Elastic bounce effect';
-      case DrawerAnimationType.spring:
+      case NovaDrawerAnimationType.spring:
         return 'Spring physics-based motion';
-      case DrawerAnimationType.shimmer:
+      case NovaDrawerAnimationType.shimmer:
         return 'Shimmer highlight sweep';
-      case DrawerAnimationType.blur:
+      case NovaDrawerAnimationType.blur:
         return 'Blur transition effect';
-      case DrawerAnimationType.gradient:
+      case NovaDrawerAnimationType.gradient:
         return 'Gradient color transition';
     }
   }

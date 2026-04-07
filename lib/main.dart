@@ -77,6 +77,7 @@ export 'src/animations/elastic_animation.dart';
 export 'src/animations/spring_animation.dart';
 export 'src/animations/shimmer_animation.dart';
 export 'src/animations/blur_animation.dart';
+export 'src/animations/floating_animation.dart';
 export 'src/animations/gradient_animation.dart';
 
 // ── Utilities ───────────────────────────────────────────────────────────

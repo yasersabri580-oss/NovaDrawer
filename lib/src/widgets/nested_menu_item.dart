@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Nested menu item widget for the AdvancedAppDrawer.
+/// Nested menu item widget for the NovaAppDrawer.
 ///
 /// Renders multi-level expandable menu items with animated
 /// expansion/collapse and proper indentation.
@@ -23,21 +23,21 @@ import 'drawer_item_widget.dart';
 ///
 /// Example:
 /// ```dart
-/// NestedMenuItem(
-///   item: DrawerItem(
+/// NovaNestedMenuItem(
+///   item: NovaDrawerItem(
 ///     id: 'settings',
 ///     title: 'Settings',
 ///     icon: Icons.settings,
 ///     children: [
-///       DrawerItem(id: 'account', title: 'Account'),
-///       DrawerItem(id: 'privacy', title: 'Privacy'),
+///       NovaDrawerItem(id: 'account', title: 'Account'),
+///       NovaDrawerItem(id: 'privacy', title: 'Privacy'),
 ///     ],
 ///   ),
 /// )
 /// ```
-class NestedMenuItem extends StatefulWidget {
-  /// Creates a [NestedMenuItem].
-  const NestedMenuItem({
+class NovaNestedMenuItem extends StatefulWidget {
+  /// Creates a [NovaNestedMenuItem].
+  const NovaNestedMenuItem({
     super.key,
     required this.item,
     this.isSelected = false,
@@ -49,7 +49,7 @@ class NestedMenuItem extends StatefulWidget {
   });
 
   /// The drawer item data (must have children).
-  final DrawerItem item;
+  final NovaDrawerItem item;
 
   /// Whether this item is selected.
   final bool isSelected;
@@ -58,22 +58,22 @@ class NestedMenuItem extends StatefulWidget {
   final int depth;
 
   /// Callback when a child item is tapped.
-  final void Function(DrawerItem item)? onItemTap;
+  final void Function(NovaDrawerItem item)? onItemTap;
 
   /// Theme overrides.
-  final AdvancedDrawerTheme? theme;
+  final NovaDrawerTheme? theme;
 
   /// Configuration.
-  final DrawerConfig? config;
+  final NovaDrawerConfig? config;
 
   /// Whether the drawer is in mini mode.
   final bool isMiniMode;
 
   @override
-  State<NestedMenuItem> createState() => _NestedMenuItemState();
+  State<NovaNestedMenuItem> createState() => _NovaNestedMenuItemState();
 }
 
-class _NestedMenuItemState extends State<NestedMenuItem>
+class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
     with SingleTickerProviderStateMixin {
   late AnimationController _expandController;
   late Animation<double> _expandAnimation;
@@ -97,7 +97,7 @@ class _NestedMenuItemState extends State<NestedMenuItem>
     );
 
     // Set initial expansion state
-    final controller = DrawerControllerProvider.read(context);
+    final controller = NovaDrawerControllerProvider.read(context);
     if (controller.isItemExpanded(widget.item.id) ||
         widget.item.initiallyExpanded) {
       _expandController.value = 1.0;
@@ -114,8 +114,8 @@ class _NestedMenuItemState extends State<NestedMenuItem>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final drawerTheme = widget.theme?.resolve(themeData) ??
-        const AdvancedDrawerTheme().resolve(themeData);
-    final controller = DrawerControllerProvider.of(context);
+        const NovaDrawerTheme().resolve(themeData);
+    final controller = NovaDrawerControllerProvider.of(context);
     final isExpanded = controller.isItemExpanded(widget.item.id);
 
     // Sync animation with controller state
@@ -137,7 +137,7 @@ class _NestedMenuItemState extends State<NestedMenuItem>
         // Parent item
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
-          child: DrawerItemWidget(
+          child: NovaDrawerItemWidget(
             item: widget.item,
             isSelected: widget.isSelected,
             depth: widget.depth,
@@ -161,8 +161,8 @@ class _NestedMenuItemState extends State<NestedMenuItem>
   }
 
   Widget _buildMiniNestedItem(
-    AdvancedDrawerTheme drawerTheme,
-    AdvancedDrawerController controller,
+    NovaDrawerTheme drawerTheme,
+    NovaDrawerController controller,
   ) {
     return PopupMenuButton<String>(
       tooltip: widget.item.title,
@@ -176,7 +176,7 @@ class _NestedMenuItemState extends State<NestedMenuItem>
         }
       },
       itemBuilder: (context) => _buildPopupItems(widget.item.children, 0),
-      child: DrawerItemWidget(
+      child: NovaDrawerItemWidget(
         item: widget.item,
         isSelected: widget.isSelected,
         isMiniMode: true,
@@ -187,7 +187,7 @@ class _NestedMenuItemState extends State<NestedMenuItem>
   }
 
   List<PopupMenuEntry<String>> _buildPopupItems(
-    List<DrawerItem> items,
+    List<NovaDrawerItem> items,
     int depth,
   ) {
     final entries = <PopupMenuEntry<String>>[];
@@ -220,8 +220,8 @@ class _NestedMenuItemState extends State<NestedMenuItem>
   }
 
   Widget _buildChildren(
-    AdvancedDrawerTheme drawerTheme,
-    AdvancedDrawerController controller,
+    NovaDrawerTheme drawerTheme,
+    NovaDrawerController controller,
   ) {
     final childDepth = widget.depth + 1;
     final visibleChildren = widget.item.children.where((item) {
@@ -242,14 +242,14 @@ class _NestedMenuItemState extends State<NestedMenuItem>
   }
 
   Widget _buildChildItem(
-    DrawerItem item,
+    NovaDrawerItem item,
     int depth,
-    AdvancedDrawerController controller,
+    NovaDrawerController controller,
   ) {
     final isSelected = controller.isSelected(item.id);
 
     if (item.hasChildren) {
-      return NestedMenuItem(
+      return NovaNestedMenuItem(
         item: item,
         isSelected: isSelected,
         depth: depth,
@@ -261,7 +261,7 @@ class _NestedMenuItemState extends State<NestedMenuItem>
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: DrawerItemWidget(
+      child: NovaDrawerItemWidget(
         item: item,
         isSelected: isSelected,
         depth: depth,
@@ -271,9 +271,9 @@ class _NestedMenuItemState extends State<NestedMenuItem>
           item.onTap?.call();
 
           // Close drawer on mobile
-          final config = widget.config ?? const DrawerConfig();
+          final config = widget.config ?? const NovaDrawerConfig();
           if (config.closeOnItemTap &&
-              controller.deviceType == DeviceType.mobile) {
+              controller.deviceType == NovaDeviceType.mobile) {
             controller.close();
           }
         },
@@ -283,13 +283,13 @@ class _NestedMenuItemState extends State<NestedMenuItem>
     );
   }
 
-  void _handleParentTap(AdvancedDrawerController controller) {
+  void _handleParentTap(NovaDrawerController controller) {
     controller.toggleItem(widget.item.id);
     // Also fire the item's onTap if it has one
     widget.item.onTap?.call();
   }
 
-  DrawerItem? _findItem(String id, List<DrawerItem> items) {
+  NovaDrawerItem? _findItem(String id, List<NovaDrawerItem> items) {
     for (final item in items) {
       if (item.id == id) return item;
       if (item.hasChildren) {

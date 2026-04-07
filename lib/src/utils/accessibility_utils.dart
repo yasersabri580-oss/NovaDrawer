@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Accessibility utilities for the AdvancedAppDrawer.
+/// Accessibility utilities for the NovaAppDrawer.
 ///
 /// Provides helper methods for semantic annotations, focus management,
 /// and screen-reader-friendly labeling.
@@ -14,17 +14,17 @@ import '../models/drawer_config.dart';
 import '../models/drawer_item.dart';
 
 /// Utility class for accessibility-related helpers.
-class AccessibilityUtils {
+class NovaAccessibilityUtils {
   /// Private constructor – all members are static.
-  const AccessibilityUtils._();
+  const NovaAccessibilityUtils._();
 
   /// Wraps a [child] widget with appropriate semantic annotations
   /// for a drawer item.
   static Widget wrapWithSemantics({
     required Widget child,
-    required DrawerItem item,
+    required NovaDrawerItem item,
     required bool isSelected,
-    required DrawerAccessibilityConfig config,
+    required NovaDrawerAccessibilityConfig config,
     int? indexInList,
     int? listLength,
   }) {
@@ -50,7 +50,7 @@ class AccessibilityUtils {
   /// keyboard navigation.
   static Widget wrapWithFocusTraversal({
     required Widget child,
-    required DrawerAccessibilityConfig config,
+    required NovaDrawerAccessibilityConfig config,
     FocusNode? focusNode,
   }) {
     if (!config.enableFocusTraversal) return child;
@@ -65,7 +65,7 @@ class AccessibilityUtils {
   /// accessibility settings.
   static Widget wrapWithScalableText({
     required Widget child,
-    required DrawerAccessibilityConfig config,
+    required NovaDrawerAccessibilityConfig config,
   }) {
     if (!config.enableScalableText) return child;
 
@@ -112,7 +112,7 @@ class AccessibilityUtils {
   }
 
   /// Generates a semantic label for a badge.
-  static String badgeLabel(DrawerItemBadge badge) {
+  static String badgeLabel(NovaDrawerItemBadge badge) {
     if (badge.count != null) return '${badge.count} notifications';
     if (badge.label != null) return badge.label!;
     return '';

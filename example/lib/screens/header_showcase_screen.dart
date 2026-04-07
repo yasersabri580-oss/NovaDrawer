@@ -9,38 +9,38 @@ class HeaderShowcaseScreen extends StatefulWidget {
 }
 
 class _HeaderShowcaseScreenState extends State<HeaderShowcaseScreen> {
-  final Map<HeaderVariant, bool> _collapsedStates = {
-    for (final v in HeaderVariant.values) v: false,
+  final Map<NovaHeaderVariant, bool> _collapsedStates = {
+    for (final v in NovaHeaderVariant.values) v: false,
   };
 
-  static const profile = HeaderUserProfile(
+  static const profile = NovaHeaderUserProfile(
     name: 'Jane Developer',
     email: 'jane@example.com',
     role: 'Senior Engineer',
-    status: UserStatus.online,
+    status: NovaUserStatus.online,
     notificationCount: 5,
   );
 
   static const accounts = [
-    HeaderUserProfile(name: 'Alice', status: UserStatus.online),
-    HeaderUserProfile(name: 'Bob', status: UserStatus.busy),
-    HeaderUserProfile(name: 'Carol', status: UserStatus.away),
+    NovaHeaderUserProfile(name: 'Alice', status: NovaUserStatus.online),
+    NovaHeaderUserProfile(name: 'Bob', status: NovaUserStatus.busy),
+    NovaHeaderUserProfile(name: 'Carol', status: NovaUserStatus.away),
   ];
 
-  late final List<HeaderAction> actions = [
-    HeaderAction(
+  late final List<NovaHeaderAction> actions = [
+    NovaHeaderAction(
       id: 'edit',
       icon: Icons.edit,
       tooltip: 'Edit profile',
       onTap: () => _showSnack('Edit tapped'),
     ),
-    HeaderAction(
+    NovaHeaderAction(
       id: 'settings',
       icon: Icons.settings,
       tooltip: 'Settings',
       onTap: () => _showSnack('Settings tapped'),
     ),
-    const HeaderAction(
+    const NovaHeaderAction(
       id: 'notifications',
       icon: Icons.notifications,
       badge: 3,
@@ -59,12 +59,12 @@ class _HeaderShowcaseScreenState extends State<HeaderShowcaseScreen> {
       appBar: AppBar(title: const Text('Header Variants')),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: HeaderVariant.values.map(_buildCard).toList(),
+        children: NovaHeaderVariant.values.map(_buildCard).toList(),
       ),
     );
   }
 
-  Widget _buildCard(HeaderVariant variant) {
+  Widget _buildCard(NovaHeaderVariant variant) {
     final isCollapsed = _collapsedStates[variant] ?? false;
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
@@ -79,7 +79,7 @@ class _HeaderShowcaseScreenState extends State<HeaderShowcaseScreen> {
     );
   }
 
-  Widget _buildLabel(HeaderVariant variant, bool isCollapsed) {
+  Widget _buildLabel(NovaHeaderVariant variant, bool isCollapsed) {
     return InkWell(
       onTap: () => setState(() {
         _collapsedStates[variant] = !isCollapsed;
@@ -104,51 +104,51 @@ class _HeaderShowcaseScreenState extends State<HeaderShowcaseScreen> {
     );
   }
 
-  Widget _buildHeader(HeaderVariant variant, bool isCollapsed) {
+  Widget _buildHeader(NovaHeaderVariant variant, bool isCollapsed) {
     return NovaDrawerHeader(
       config: _configFor(variant, isCollapsed),
     );
   }
 
-  NovaHeaderConfig _configFor(HeaderVariant variant, bool isCollapsed) {
+  NovaHeaderConfig _configFor(NovaHeaderVariant variant, bool isCollapsed) {
     switch (variant) {
-      case HeaderVariant.classic:
+      case NovaHeaderVariant.classic:
         return NovaHeaderConfig(
-          variant: HeaderVariant.classic,
+          variant: NovaHeaderVariant.classic,
           profile: profile,
           showCloseButton: false,
           showPinButton: false,
         );
 
-      case HeaderVariant.glassmorphism:
+      case NovaHeaderVariant.glassmorphism:
         return NovaHeaderConfig(
-          variant: HeaderVariant.glassmorphism,
+          variant: NovaHeaderVariant.glassmorphism,
           profile: profile,
           showCloseButton: false,
           showPinButton: false,
           gradientColors: const [Colors.deepPurple, Colors.indigo],
         );
 
-      case HeaderVariant.compact:
+      case NovaHeaderVariant.compact:
         return NovaHeaderConfig(
-          variant: HeaderVariant.compact,
+          variant: NovaHeaderVariant.compact,
           profile: profile,
           showCloseButton: false,
           showPinButton: false,
         );
 
-      case HeaderVariant.hero:
+      case NovaHeaderVariant.hero:
         return NovaHeaderConfig(
-          variant: HeaderVariant.hero,
+          variant: NovaHeaderVariant.hero,
           profile: profile,
           showCloseButton: false,
           showPinButton: false,
           coverHeight: 120,
         );
 
-      case HeaderVariant.expanded:
+      case NovaHeaderVariant.expanded:
         return NovaHeaderConfig(
-          variant: HeaderVariant.expanded,
+          variant: NovaHeaderVariant.expanded,
           profile: profile,
           showCloseButton: false,
           showPinButton: false,
@@ -156,9 +156,9 @@ class _HeaderShowcaseScreenState extends State<HeaderShowcaseScreen> {
           enableCollapseExpand: true,
         );
 
-      case HeaderVariant.animatedGradient:
+      case NovaHeaderVariant.animatedGradient:
         return NovaHeaderConfig(
-          variant: HeaderVariant.animatedGradient,
+          variant: NovaHeaderVariant.animatedGradient,
           profile: profile,
           showCloseButton: false,
           showPinButton: false,
@@ -169,36 +169,36 @@ class _HeaderShowcaseScreenState extends State<HeaderShowcaseScreen> {
           ],
         );
 
-      case HeaderVariant.avatarStack:
+      case NovaHeaderVariant.avatarStack:
         return NovaHeaderConfig(
-          variant: HeaderVariant.avatarStack,
+          variant: NovaHeaderVariant.avatarStack,
           profile: profile,
           accounts: accounts,
           showCloseButton: false,
           showPinButton: false,
         );
 
-      case HeaderVariant.multiAction:
+      case NovaHeaderVariant.multiAction:
         return NovaHeaderConfig(
-          variant: HeaderVariant.multiAction,
+          variant: NovaHeaderVariant.multiAction,
           profile: profile,
           actions: actions,
           showCloseButton: false,
           showPinButton: false,
         );
 
-      case HeaderVariant.statusAware:
+      case NovaHeaderVariant.statusAware:
         return NovaHeaderConfig(
-          variant: HeaderVariant.statusAware,
+          variant: NovaHeaderVariant.statusAware,
           profile: profile,
           showStatusIndicator: true,
           showCloseButton: false,
           showPinButton: false,
         );
 
-      case HeaderVariant.collapsible:
+      case NovaHeaderVariant.collapsible:
         return NovaHeaderConfig(
-          variant: HeaderVariant.collapsible,
+          variant: NovaHeaderVariant.collapsible,
           profile: profile,
           isCollapsed: isCollapsed,
           enableCollapseExpand: true,

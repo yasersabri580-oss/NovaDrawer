@@ -11,9 +11,9 @@ import 'header_utils.dart';
 /// Expanded state renders cover, large avatar, name, role, subtitle, action
 /// chips, and a bottom widget slot. Collapsed state shows a compact row.
 /// Uses [AnimatedContainer] and [AnimatedCrossFade] for smooth transitions.
-class ProfileHeaderExpanded extends StatefulWidget {
+class NovaProfileHeaderExpanded extends StatefulWidget {
   /// Creates an expanded profile header.
-  const ProfileHeaderExpanded({super.key, required this.config, this.theme});
+  const NovaProfileHeaderExpanded({super.key, required this.config, this.theme});
 
   /// Header configuration.
   final NovaHeaderConfig config;
@@ -22,17 +22,17 @@ class ProfileHeaderExpanded extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderExpanded> createState() => _ProfileHeaderExpandedState();
+  State<NovaProfileHeaderExpanded> createState() => _NovaProfileHeaderExpandedState();
 }
 
-class _ProfileHeaderExpandedState extends State<ProfileHeaderExpanded> {
+class _NovaProfileHeaderExpandedState extends State<NovaProfileHeaderExpanded> {
   static const _kDuration = Duration(milliseconds: 350);
   static const _kExpandedH = 280.0;
 
   NovaHeaderConfig get _c => widget.config;
   double get _expH => _c.headerHeight ?? _kExpandedH;
   double get _colH =>
-      _c.collapsedHeaderHeight ?? HeaderWidgetUtils.kDefaultCollapsedHeight;
+      _c.collapsedHeaderHeight ?? NovaHeaderWidgetUtils.kDefaultCollapsedHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class _ProfileHeaderExpandedState extends State<ProfileHeaderExpanded> {
     final h = collapsed ? _colH : _expH;
 
     if (_c.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(theme: theme, height: h);
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(theme: theme, height: h);
     }
     if (_c.customHeaderBuilder != null) {
       return _c.customHeaderBuilder!(context, _c);
@@ -67,20 +67,20 @@ class _ProfileHeaderExpandedState extends State<ProfileHeaderExpanded> {
   Widget _buildCollapsed(ThemeData theme) {
     final p = _c.profile;
     final r = _c.collapsedAvatarRadius ??
-        HeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
+        NovaHeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
     return SizedBox(
       height: _colH,
       child: Padding(
         padding: _c.padding ?? const EdgeInsets.symmetric(horizontal: 12),
         child: Row(children: [
-          HeaderWidgetUtils.buildAvatar(
+          NovaHeaderWidgetUtils.buildAvatar(
               profile: p, radius: r, showStatus: _c.showStatusIndicator,
               theme: theme, onTap: _c.onProfileTap),
           const SizedBox(width: 12),
-          Expanded(child: HeaderWidgetUtils.buildUserName(
+          Expanded(child: NovaHeaderWidgetUtils.buildUserName(
               name: p?.name, theme: theme)),
           if (_c.showNotificationBadge && (p?.notificationCount ?? 0) > 0)
-            HeaderWidgetUtils.buildNotificationBadge(
+            NovaHeaderWidgetUtils.buildNotificationBadge(
                 count: p!.notificationCount, theme: theme),
         ]),
       ),
@@ -89,7 +89,7 @@ class _ProfileHeaderExpandedState extends State<ProfileHeaderExpanded> {
 
   Widget _buildExpanded(ThemeData theme) {
     final p = _c.profile;
-    final avatarR = _c.avatarRadius ?? HeaderWidgetUtils.kDefaultAvatarRadius;
+    final avatarR = _c.avatarRadius ?? NovaHeaderWidgetUtils.kDefaultAvatarRadius;
     final coverH = _c.coverHeight ?? _expH * 0.35;
     return SizedBox(
       height: _expH,
@@ -105,7 +105,7 @@ class _ProfileHeaderExpandedState extends State<ProfileHeaderExpanded> {
                 children: [
                   const SizedBox(height: 8),
                   Row(children: [
-                    HeaderWidgetUtils.buildAvatar(
+                    NovaHeaderWidgetUtils.buildAvatar(
                         profile: p, radius: avatarR,
                         showStatus: _c.showStatusIndicator, theme: theme,
                         onTap: _c.onProfileTap),
@@ -113,19 +113,19 @@ class _ProfileHeaderExpandedState extends State<ProfileHeaderExpanded> {
                     Expanded(child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        HeaderWidgetUtils.buildUserName(name: p?.name,
+                        NovaHeaderWidgetUtils.buildUserName(name: p?.name,
                             theme: theme, style: theme.textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w700)),
                         if (p?.role != null)
-                          HeaderWidgetUtils.buildSubtitle(
+                          NovaHeaderWidgetUtils.buildSubtitle(
                               text: p!.role, theme: theme),
-                        HeaderWidgetUtils.buildSubtitle(
+                        NovaHeaderWidgetUtils.buildSubtitle(
                             text: p?.effectiveSubtitle, theme: theme),
                       ],
                     )),
                     if (_c.showNotificationBadge &&
                         (p?.notificationCount ?? 0) > 0)
-                      HeaderWidgetUtils.buildNotificationBadge(
+                      NovaHeaderWidgetUtils.buildNotificationBadge(
                           count: p!.notificationCount, theme: theme),
                   ]),
                   const SizedBox(height: 8),
@@ -150,7 +150,7 @@ class _ProfileHeaderExpandedState extends State<ProfileHeaderExpanded> {
         else Container(color: theme.colorScheme.primaryContainer,
             child: _c.profile?.coverWidget),
         Positioned(top: 0, left: 0, right: 0,
-          child: HeaderWidgetUtils.buildActionBar(context: context,
+          child: NovaHeaderWidgetUtils.buildActionBar(context: context,
               config: _c, theme: theme,
               iconColor: theme.colorScheme.onPrimaryContainer)),
       ]),
