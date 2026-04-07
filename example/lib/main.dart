@@ -1,11 +1,14 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaDrawer Contributors
 // Licensed under the MIT License.
 
-/// Example demo application for the AdvancedAppDrawer package.
+/// Example demo application for the NovaDrawer package.
 ///
-/// This demo showcases all major features:
+/// This demo showcases all major features including:
+/// - 10 header variants (classic, glassmorphism, compact, hero, etc.)
+/// - 10 drawer surface styles
+/// - Content widgets (search, stats, shortcuts, etc.)
+/// - 10+ animation types
 /// - Responsive layout (mobile, tablet, desktop)
-/// - Multiple animation types
 /// - Theming (light/dark mode)
 /// - Nested menu items
 /// - Dynamic data loading
@@ -22,29 +25,32 @@ import 'package:flutter/material.dart';
 
 import 'package:nova_drawer/main.dart';
 
+import 'screens/header_showcase_screen.dart';
+import 'screens/surface_showcase_screen.dart';
+import 'screens/content_showcase_screen.dart';
+import 'screens/animation_showcase_screen.dart';
+
 void main() {
-  runApp(const AdvancedAppDrawerDemoApp());
+  runApp(const NovaDrawerDemoApp());
 }
 
 /// Root application widget.
-class AdvancedAppDrawerDemoApp extends StatefulWidget {
-  const AdvancedAppDrawerDemoApp({super.key});
+class NovaDrawerDemoApp extends StatefulWidget {
+  const NovaDrawerDemoApp({super.key});
 
   @override
-  State<AdvancedAppDrawerDemoApp> createState() =>
-      _AdvancedAppDrawerDemoAppState();
+  State<NovaDrawerDemoApp> createState() => _NovaDrawerDemoAppState();
 }
 
-class _AdvancedAppDrawerDemoAppState extends State<AdvancedAppDrawerDemoApp> {
+class _NovaDrawerDemoAppState extends State<NovaDrawerDemoApp> {
   ThemeMode _themeMode = ThemeMode.system;
   bool _isRtl = false;
   DrawerAnimationType _animationType = DrawerAnimationType.slide;
 
   void _toggleTheme() {
     setState(() {
-      _themeMode = _themeMode == ThemeMode.dark
-          ? ThemeMode.light
-          : ThemeMode.dark;
+      _themeMode =
+          _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
     });
   }
 
@@ -63,7 +69,7 @@ class _AdvancedAppDrawerDemoAppState extends State<AdvancedAppDrawerDemoApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AdvancedAppDrawer Demo',
+      title: 'NovaDrawer Demo',
       debugShowCheckedModeBanner: false,
       themeMode: _themeMode,
       theme: ThemeData(
@@ -123,10 +129,12 @@ class DemoHomePage extends StatefulWidget {
 
 class _DemoHomePageState extends State<DemoHomePage> {
   late AdvancedDrawerController _drawerController;
+  String _selectedPageId = 'home';
   String _selectedPageTitle = 'Home';
   bool _showGradientBg = false;
   bool _showParticleBg = false;
   bool _useDynamicLoading = false;
+  HeaderVariant _headerVariant = HeaderVariant.classic;
 
   @override
   void initState() {
@@ -142,6 +150,22 @@ class _DemoHomePageState extends State<DemoHomePage> {
     _drawerController.dispose();
     super.dispose();
   }
+
+  // ── Sample user profile for the header ─────────────────────────────
+
+  static const _profile = HeaderUserProfile(
+    name: 'Jane Developer',
+    email: 'jane@novadev.io',
+    role: 'Senior Engineer',
+    status: UserStatus.online,
+    notificationCount: 5,
+  );
+
+  static const _accounts = [
+    HeaderUserProfile(name: 'Alice', email: 'alice@team.io', status: UserStatus.online),
+    HeaderUserProfile(name: 'Bob', email: 'bob@team.io', status: UserStatus.busy),
+    HeaderUserProfile(name: 'Carol', email: 'carol@team.io', status: UserStatus.away),
+  ];
 
   // ── Drawer Data ──────────────────────────────────────────────────────
 
@@ -237,6 +261,41 @@ class _DemoHomePageState extends State<DemoHomePage> {
           ],
         ),
         DrawerSectionData(
+          id: 'showcase',
+          title: 'Showcase',
+          icon: Icons.auto_awesome,
+          items: [
+            DrawerItem(
+              id: 'header_showcase',
+              title: 'Header Variants',
+              icon: Icons.account_circle_outlined,
+              selectedIcon: Icons.account_circle,
+              route: '/showcase/headers',
+            ),
+            DrawerItem(
+              id: 'surface_showcase',
+              title: 'Surface Styles',
+              icon: Icons.layers_outlined,
+              selectedIcon: Icons.layers,
+              route: '/showcase/surfaces',
+            ),
+            DrawerItem(
+              id: 'content_showcase',
+              title: 'Content Widgets',
+              icon: Icons.widgets_outlined,
+              selectedIcon: Icons.widgets,
+              route: '/showcase/content',
+            ),
+            DrawerItem(
+              id: 'animation_showcase',
+              title: 'Animations',
+              icon: Icons.animation_outlined,
+              selectedIcon: Icons.animation,
+              route: '/showcase/animations',
+            ),
+          ],
+        ),
+        DrawerSectionData(
           id: 'settings_section',
           title: 'Settings & Tools',
           items: [
@@ -260,7 +319,7 @@ class _DemoHomePageState extends State<DemoHomePage> {
               icon: Icons.info_outline,
               selectedIcon: Icons.info,
               route: '/about',
-              subtitle: 'v1.0.0',
+              subtitle: 'v2.0.0',
             ),
           ],
         ),
@@ -294,9 +353,8 @@ class _DemoHomePageState extends State<DemoHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final drawerTheme = widget.isDark
-        ? AdvancedDrawerTheme.dark()
-        : AdvancedDrawerTheme.light();
+    final drawerTheme =
+        widget.isDark ? AdvancedDrawerTheme.dark() : AdvancedDrawerTheme.light();
 
     final config = DrawerConfig(
       animationType: widget.currentAnimationType,
@@ -314,32 +372,46 @@ class _DemoHomePageState extends State<DemoHomePage> {
       ),
     );
 
+    // Build the new header using the header system.
+    final headerConfig = NovaHeaderConfig(
+      variant: _headerVariant,
+      profile: _profile,
+      accounts: _accounts,
+      showCloseButton: true,
+      showPinButton: true,
+      showEditProfileButton: true,
+      showStatusIndicator: true,
+      showNotificationBadge: true,
+      enableCollapseExpand: true,
+      gradientColors: const [Color(0xFF6366F1), Color(0xFF8B5CF6), Color(0xFFEC4899)],
+      actions: [
+        HeaderAction(
+          id: 'notifications',
+          icon: Icons.notifications_outlined,
+          tooltip: 'Notifications',
+          badge: 5,
+          onTap: () {},
+        ),
+        HeaderAction(
+          id: 'settings',
+          icon: Icons.settings_outlined,
+          tooltip: 'Settings',
+          onTap: () {},
+        ),
+      ],
+      onEditProfile: () {},
+      onSwitchAccount: () {},
+    );
+
     // Build the drawer widget
     final drawer = AdvancedAppDrawer(
       controller: _drawerController,
       sections: _sections,
-      header: DrawerHeaderWidget(
-        title: 'AdvancedAppDrawer',
-        subtitle: 'demo@example.com',
-        showPinButton: true,
-        showCloseButton: true,
-        avatar: CircleAvatar(
-          radius: 28,
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          child: Text(
-            'AD',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-        ),
-        theme: drawerTheme,
-      ),
+      header: NovaDrawerHeader(config: headerConfig),
       footer: _buildDrawerFooter(),
       onItemTap: (item) {
         setState(() {
+          _selectedPageId = item.id;
           _selectedPageTitle = item.title;
         });
       },
@@ -357,6 +429,7 @@ class _DemoHomePageState extends State<DemoHomePage> {
       config: config,
       onItemTap: (item) {
         setState(() {
+          _selectedPageId = item.id;
           _selectedPageTitle = item.title;
         });
       },
@@ -374,9 +447,8 @@ class _DemoHomePageState extends State<DemoHomePage> {
         actions: [
           // Theme toggle
           IconButton(
-            icon: Icon(widget.isDark
-                ? Icons.light_mode_outlined
-                : Icons.dark_mode_outlined),
+            icon: Icon(
+                widget.isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
             onPressed: widget.onToggleTheme,
             tooltip: 'Toggle theme',
           ),
@@ -393,29 +465,39 @@ class _DemoHomePageState extends State<DemoHomePage> {
   }
 
   Widget _buildDrawerFooter() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-      child: Row(
-        children: [
-          Icon(
-            Icons.logout,
-            size: 20,
-            color: Theme.of(context).colorScheme.error,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Divider(height: 1),
+        DrawerAppStatusWidget(
+          status: const DrawerAppStatus(
+            isOnline: true,
+            version: '2.0.0',
+            buildNumber: '42',
+            statusMessage: 'All systems operational',
           ),
-          const SizedBox(width: 12),
-          Text(
-            'Sign Out',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.error,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildBody(BuildContext context) {
+    // Route to showcase screens based on selected drawer item.
+    switch (_selectedPageId) {
+      case 'header_showcase':
+        return const HeaderShowcaseScreen();
+      case 'surface_showcase':
+        return const SurfaceShowcaseScreen();
+      case 'content_showcase':
+        return const ContentShowcaseScreen();
+      case 'animation_showcase':
+        return const AnimationShowcaseScreen();
+      default:
+        return _buildMainBody(context);
+    }
+  }
+
+  Widget _buildMainBody(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -423,6 +505,10 @@ class _DemoHomePageState extends State<DemoHomePage> {
         children: [
           // Current page indicator
           _buildPageIndicator(),
+          const SizedBox(height: 24),
+
+          // Header variant selector
+          _buildHeaderVariantSelector(),
           const SizedBox(height: 24),
 
           // Animation type selector
@@ -473,6 +559,45 @@ class _DemoHomePageState extends State<DemoHomePage> {
                       ),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderVariantSelector() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Header Variant',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Select a header style for the drawer',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: HeaderVariant.values.map((variant) {
+                final isSelected = variant == _headerVariant;
+                return ChoiceChip(
+                  label: Text(_headerVariantName(variant)),
+                  selected: isSelected,
+                  onSelected: (_) {
+                    setState(() => _headerVariant = variant);
+                  },
+                );
+              }).toList(),
             ),
           ],
         ),
@@ -623,9 +748,8 @@ class _DemoHomePageState extends State<DemoHomePage> {
                     'Device: ${deviceType.name.toUpperCase()}',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onPrimaryContainer,
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
                         ),
                   ),
                   const SizedBox(height: 4),
@@ -658,67 +782,30 @@ class _DemoHomePageState extends State<DemoHomePage> {
 
   Widget _buildFeatureShowcase() {
     final features = [
-      _FeatureItem(
-        icon: Icons.animation,
-        title: '10+ Animations',
-        description:
-            'Slide, fade, scale, rotate, morph, elastic, spring, shimmer, blur, gradient',
-      ),
-      _FeatureItem(
-        icon: Icons.devices,
-        title: 'Responsive',
-        description: 'Adapts to mobile, tablet, and desktop layouts',
-      ),
-      _FeatureItem(
-        icon: Icons.format_textdirection_r_to_l,
-        title: 'RTL Support',
-        description: 'Full right-to-left language support',
-      ),
-      _FeatureItem(
-        icon: Icons.account_tree,
-        title: 'Nested Menus',
-        description: 'Multi-level expandable menu items',
-      ),
-      _FeatureItem(
-        icon: Icons.cloud_download,
-        title: 'Dynamic Loading',
-        description: 'Load menu items from API with loading states',
-      ),
-      _FeatureItem(
-        icon: Icons.accessibility,
-        title: 'Accessibility',
-        description: 'Screen reader support, focus management, scalable text',
-      ),
-      _FeatureItem(
-        icon: Icons.palette,
-        title: 'Theming',
-        description: 'Full light/dark mode and custom theme support',
-      ),
-      _FeatureItem(
-        icon: Icons.view_sidebar,
-        title: 'Mini Drawer',
-        description: 'Collapsed icon-only mode for tablet/desktop',
-      ),
-      _FeatureItem(
-        icon: Icons.swipe,
-        title: 'Gestures',
-        description: 'Swipe to open/close with configurable sensitivity',
-      ),
-      _FeatureItem(
-        icon: Icons.auto_awesome,
-        title: 'Backgrounds',
-        description: 'Animated gradients, particle effects, and more',
-      ),
-      _FeatureItem(
-        icon: Icons.push_pin,
-        title: 'Pinnable',
-        description: 'Pin drawer open on tablet/desktop layouts',
-      ),
-      _FeatureItem(
-        icon: Icons.badge,
-        title: 'Badges',
-        description: 'Count and label badges on menu items',
-      ),
+      _FeatureItem(Icons.account_circle, 'Header System',
+          '10 header variants: classic, glassmorphism, hero, collapsible, and more'),
+      _FeatureItem(Icons.layers, 'Surface Styles',
+          '10 surface styles: glass, neumorphic, gradient, mesh, and more'),
+      _FeatureItem(Icons.widgets, 'Content Blocks',
+          'Search bar, stats card, shortcuts grid, recent items, filter chips'),
+      _FeatureItem(Icons.animation, '10+ Animations',
+          'Slide, fade, scale, rotate, morph, elastic, spring, shimmer, blur, gradient'),
+      _FeatureItem(Icons.devices, 'Responsive',
+          'Adapts to mobile, tablet, and desktop layouts'),
+      _FeatureItem(Icons.format_textdirection_r_to_l, 'RTL Support',
+          'Full right-to-left language support'),
+      _FeatureItem(Icons.account_tree, 'Nested Menus',
+          'Multi-level expandable menu items'),
+      _FeatureItem(Icons.cloud_download, 'Dynamic Loading',
+          'Load menu items from API with loading states'),
+      _FeatureItem(Icons.accessibility, 'Accessibility',
+          'Screen reader support, focus management, scalable text'),
+      _FeatureItem(Icons.palette, 'Theming',
+          'Full light/dark mode and custom theme support'),
+      _FeatureItem(Icons.view_sidebar, 'Mini Drawer',
+          'Collapsed icon-only mode for tablet/desktop'),
+      _FeatureItem(Icons.build, 'Builder APIs',
+          'Slot-based builder callbacks for deep customization'),
     ];
 
     return Column(
@@ -738,7 +825,6 @@ class _DemoHomePageState extends State<DemoHomePage> {
                 : constraints.maxWidth > 600
                     ? 3
                     : 2;
-
             return GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -757,11 +843,9 @@ class _DemoHomePageState extends State<DemoHomePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          feature.icon,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: 28,
-                        ),
+                        Icon(feature.icon,
+                            color: Theme.of(context).colorScheme.primary,
+                            size: 28),
                         const SizedBox(height: 8),
                         Text(
                           feature.title,
@@ -793,6 +877,31 @@ class _DemoHomePageState extends State<DemoHomePage> {
     );
   }
 
+  String _headerVariantName(HeaderVariant variant) {
+    switch (variant) {
+      case HeaderVariant.classic:
+        return 'Classic';
+      case HeaderVariant.glassmorphism:
+        return 'Glass';
+      case HeaderVariant.compact:
+        return 'Compact';
+      case HeaderVariant.hero:
+        return 'Hero';
+      case HeaderVariant.expanded:
+        return 'Expanded';
+      case HeaderVariant.animatedGradient:
+        return 'Gradient';
+      case HeaderVariant.avatarStack:
+        return 'Avatars';
+      case HeaderVariant.multiAction:
+        return 'Actions';
+      case HeaderVariant.statusAware:
+        return 'Status';
+      case HeaderVariant.collapsible:
+        return 'Collapsible';
+    }
+  }
+
   String _animationTypeName(DrawerAnimationType type) {
     switch (type) {
       case DrawerAnimationType.slide:
@@ -821,11 +930,7 @@ class _DemoHomePageState extends State<DemoHomePage> {
 
 /// Simple data class for feature showcase.
 class _FeatureItem {
-  const _FeatureItem({
-    required this.icon,
-    required this.title,
-    required this.description,
-  });
+  const _FeatureItem(this.icon, this.title, this.description);
 
   final IconData icon;
   final String title;
