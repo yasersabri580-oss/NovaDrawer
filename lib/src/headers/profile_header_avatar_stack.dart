@@ -187,7 +187,7 @@ class _ProfileHeaderAvatarStackState extends State<ProfileHeaderAvatarStack>
           acct.avatarUrl != null ? NetworkImage(acct.avatarUrl!) : null,
       child: acct.avatarUrl == null
           ? Text(
-              (acct.name ?? '?')[0].toUpperCase(),
+              (acct.name)[0].toUpperCase(),
               style: TextStyle(
                 fontSize: _kSmallRadius * 0.8,
                 color: theme.colorScheme.onSurface,

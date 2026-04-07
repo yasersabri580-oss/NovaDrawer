@@ -5,6 +5,8 @@
 ///
 /// Covers models, controllers, widgets, animations, and utilities.
 
+// ignore_for_file: dangling_library_doc_comments
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';

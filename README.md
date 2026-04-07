@@ -7,6 +7,7 @@ A **modern, production-grade, and highly responsive** app drawer system for Flut
 ## ✨ Features
 
 ### Core
+
 - **Fully responsive** layout that adapts seamlessly across mobile, tablet, and desktop
 - **LTR and RTL** language support
 - **Expandable and collapsible sections** with smooth transitions
@@ -14,6 +15,7 @@ A **modern, production-grade, and highly responsive** app drawer system for Flut
 - Dynamic width adjustment depending on screen size
 
 ### 🎨 Header System (10 variants)
+
 | Variant | Description |
 |---------|-------------|
 | `classic` | Standard cover + avatar + user info layout |
@@ -30,6 +32,7 @@ A **modern, production-grade, and highly responsive** app drawer system for Flut
 Each header supports: avatar, cover image, user name, role, email, status indicator, action buttons, notification badge, edit profile shortcut, RTL, theme awareness, loading skeleton state, and custom widget slots.
 
 ### 🏗️ Surface Styles (10 variants)
+
 | Style | Description |
 |-------|-------------|
 | `plain` | Flat background color |
@@ -44,6 +47,7 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 | `animatedMeshGradient` | Animated shifting gradient |
 
 ### 📦 Content Widgets
+
 - **DrawerSearchBar** — Animated focus state, clear button
 - **DrawerStatsCard** — Row of stat items with dividers
 - **DrawerShortcutsGrid** — Tappable shortcut grid with badges
@@ -53,6 +57,7 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 - **DrawerWorkspaceSwitcher** — Expandable workspace/account switcher
 
 ### 🎬 Animations (10+ types)
+
 | Animation | Description |
 |-----------|-------------|
 | `slide` | Slides in from the edge |
@@ -69,6 +74,7 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 All animations are smooth and performant. Developers can customize **duration, curve, and style**.
 
 ### 🔧 Customizability
+
 - Themeable colors, text styles, icons, shadows, and borders
 - **Slot-based builder APIs** for every component (header, items, sections, backgrounds, footer, etc.)
 - Inject **custom widgets** inside drawer sections
@@ -77,6 +83,7 @@ All animations are smooth and performant. Developers can customize **duration, c
 - Light and dark theme support
 
 ### 🚀 Advanced Features
+
 - **Dynamic data loading** (menu items fetched from API)
 - **Active route highlighting**
 - Built-in **accessibility support** (screen readers, focus order, scalable fonts)
@@ -428,6 +435,7 @@ The drawer automatically shows a shimmer loading state while fetching data.
 ## ♿ Accessibility
 
 Built-in accessibility features:
+
 - **Semantic labels** for screen readers
 - **Focus traversal** for keyboard navigation
 - **Scalable text** respecting system settings

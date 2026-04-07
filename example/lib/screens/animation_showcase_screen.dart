@@ -74,7 +74,7 @@ class _AnimationShowcaseScreenState extends State<AnimationShowcaseScreen>
                         style: theme.textTheme.titleMedium),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<DrawerAnimationType>(
-                      value: _selectedType,
+                      initialValue: _selectedType,
                       isExpanded: true,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),

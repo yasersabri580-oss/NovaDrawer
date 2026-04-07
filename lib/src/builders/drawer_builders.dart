@@ -4,8 +4,6 @@
 import 'package:flutter/material.dart';
 
 import '../models/drawer_item.dart';
-import '../models/drawer_config.dart';
-import '../models/drawer_theme.dart';
 import '../models/header_config.dart';
 import '../models/content_config.dart';
 

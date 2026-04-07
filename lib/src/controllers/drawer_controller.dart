@@ -11,7 +11,6 @@ library;
 import 'package:flutter/material.dart';
 
 import '../models/drawer_item.dart';
-import '../models/drawer_config.dart';
 import '../utils/responsive_utils.dart';
 
 /// Controller that manages the state of the AdvancedAppDrawer.

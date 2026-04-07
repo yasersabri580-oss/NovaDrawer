@@ -19,7 +19,6 @@ import '../animations/shimmer_animation.dart';
 import '../utils/responsive_utils.dart';
 import '../backgrounds/gradient_background.dart';
 import '../backgrounds/particle_background.dart';
-import 'drawer_header.dart';
 import 'drawer_section.dart';
 import 'drawer_item_widget.dart';
 import 'nested_menu_item.dart';

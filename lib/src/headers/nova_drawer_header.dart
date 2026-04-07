@@ -27,7 +27,7 @@
 ///   ),
 /// )
 /// ```
-library nova_drawer_headers;
+library;
 
 import 'package:flutter/material.dart';
 
