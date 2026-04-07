@@ -79,6 +79,7 @@ export 'src/animations/shimmer_animation.dart';
 export 'src/animations/blur_animation.dart';
 export 'src/animations/floating_animation.dart';
 export 'src/animations/gradient_animation.dart';
+export 'src/animations/wave_animation.dart';
 
 // ── Utilities ───────────────────────────────────────────────────────────
 export 'src/utils/responsive_utils.dart';
