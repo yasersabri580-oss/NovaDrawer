@@ -1,6 +1,43 @@
 # NovaDrawer
 
-A **modern, production-grade, and highly responsive** app drawer system for Flutter. Supports **mobile, tablet, and desktop** with 16+ animation types, 10 header variants, 10 surface styles, content widgets, nested menus, RTL support, theming, accessibility, slot-based builder APIs, and much more.
+<p align="center">
+  <a href="https://pub.dev/packages/nova_drawer"><img src="https://img.shields.io/pub/v/nova_drawer.svg" alt="pub.dev"></a>
+  <a href="https://github.com/yasersabri580-oss/NovaDrawer/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT License"></a>
+  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-%3E%3D3.22-blue.svg" alt="Flutter"></a>
+  <a href="https://dart.dev"><img src="https://img.shields.io/badge/Dart-%5E3.10-blue.svg" alt="Dart"></a>
+</p>
+
+<p align="center">
+  A <strong>modern, production-grade, and highly responsive</strong> app drawer system for Flutter.<br>
+  Supports <strong>mobile, tablet, and desktop</strong> with 16+ animation types, 10 header variants,<br>
+  10 surface styles, nested menus, RTL, accessibility, slot-based builders, and much more.
+</p>
+
+---
+
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Complete Example](#-complete-example)
+- [Header System](#-header-system)
+- [Surface Styles](#-surface-styles)
+- [Animations](#-animations)
+- [Content Widgets](#-content-widgets)
+- [Controller API](#-controller-api)
+- [Responsive Behavior](#-responsive-behavior)
+- [Theming](#-theming)
+- [Slot-Based Builder APIs](#-slot-based-builder-apis)
+- [Background Effects](#-background-effects)
+- [Gesture Controls](#-gesture-controls)
+- [Mini-Drawer Mode](#-mini-drawer-mode)
+- [Dynamic Data Loading](#-dynamic-data-loading)
+- [RTL Support](#-rtl-support)
+- [Accessibility](#-accessibility)
+- [Package Structure](#-package-structure)
+- [API Reference](#-api-reference)
+- [Migration Guide](#-migration-guide)
 
 ---
 
@@ -47,20 +84,6 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 | `animatedMeshGradient` | Animated shifting gradient |
 
 ### 📦 Content Widgets
-
-<<<<<<< HEAD
-
-- **DrawerSearchBar** — Animated focus state, clear button
-- **DrawerStatsCard** — Row of stat items with dividers
-- **DrawerShortcutsGrid** — Tappable shortcut grid with badges
-- **DrawerRecentItems** — Recent items list with timestamps
-- **DrawerFilterChips** — Horizontally scrollable filter chips
-- **DrawerAppStatusWidget** — Connection status and version info
-- **DrawerWorkspaceSwitcher** — Expandable workspace/account switcher
-
-### 🎬 Animations (10+ types)
-
-=======
 
 - **NovaDrawerStatsCard** — Row of stat items with dividers
 - **NovaDrawerShortcutsGrid** — Tappable shortcut grid with badges
@@ -135,140 +158,459 @@ flutter pub get
 
 ## 🚀 Quick Start
 
+The fastest way to add a drawer to your app:
+
 ### 1. Import the package
 
 ```dart
+// The barrel export lives at lib/main.dart
 import 'package:nova_drawer/main.dart';
 ```
 
 ### 2. Create a controller
 
 ```dart
-final controller = NovaDrawerController(
+final _controller = NovaDrawerController(
   initialSelectedItemId: 'home',
 );
 ```
 
-### 3. Define your menu structure
-
-```dart
-final sections = [
-  NovaDrawerSectionData(
-    id: 'main',
-    title: 'Navigation',
-    items: [
-      NovaDrawerItem(
-        id: 'home',
-        title: 'Home',
-        icon: Icons.home_outlined,
-        selectedIcon: Icons.home,
-        route: '/home',
-      ),
-      NovaDrawerItem(
-        id: 'dashboard',
-        title: 'Dashboard',
-        icon: Icons.dashboard_outlined,
-        badge: NovaDrawerItemBadge(count: 3),
-      ),
-      NovaDrawerItem(
-        id: 'settings',
-        title: 'Settings',
-        icon: Icons.settings_outlined,
-        children: [
-          NovaDrawerItem(id: 'account', title: 'Account', icon: Icons.person),
-          NovaDrawerItem(id: 'privacy', title: 'Privacy', icon: Icons.lock),
-        ],
-      ),
-    ],
-  ),
-];
-```
-
-### 4. Build the drawer
+### 3. Build the scaffold
 
 ```dart
 NovaDrawerScaffold(
-  controller: controller,
-  drawer: NovaAppDrawer(
-    controller: controller,
-    sections: sections,
-    header: NovaDrawerHeaderWidget(
-      title: 'My App',
-      subtitle: 'user@example.com',
-      avatar: CircleAvatar(child: Text('U')),
-      showPinButton: true,
+  controller: _controller,
+  appBar: AppBar(
+    title: const Text('My App'),
+    leading: IconButton(
+      icon: const Icon(Icons.menu),
+      onPressed: _controller.toggle,
     ),
-    onItemTap: (item) => print('Selected: ${item.title}'),
   ),
-  body: YourPageContent(),
-  appBar: AppBar(title: Text('My App')),
+  drawer: NovaAppDrawer(
+    controller: _controller,
+    sections: [
+      NovaDrawerSectionData(
+        id: 'main',
+        title: 'Navigation',
+        items: [
+          NovaDrawerItem(
+            id: 'home',
+            title: 'Home',
+            icon: Icons.home_outlined,
+            selectedIcon: Icons.home,
+            route: '/home',
+          ),
+          NovaDrawerItem(
+            id: 'profile',
+            title: 'Profile',
+            icon: Icons.person_outline,
+            selectedIcon: Icons.person,
+            badge: NovaDrawerItemBadge(count: 2),
+          ),
+        ],
+      ),
+    ],
+    header: NovaDrawerHeader(
+      config: NovaHeaderConfig(
+        variant: NovaHeaderVariant.classic,
+        profile: NovaHeaderUserProfile(
+          name: 'Jane Developer',
+          email: 'jane@example.com',
+          status: NovaUserStatus.online,
+        ),
+      ),
+    ),
+    onItemTap: (item) {
+      Navigator.pushNamed(context, item.route ?? '/');
+    },
+  ),
+  body: const Center(child: Text('Hello, NovaDrawer!')),
 )
+```
+
+---
+
+## 🔥 Complete Example
+
+The following is a full, self-contained Flutter app that showcases the most important NovaDrawer features:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:nova_drawer/main.dart'; // barrel export at lib/main.dart
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'NovaDrawer Demo',
+      theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
+      home: const HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  // ── 1. Create controller ──────────────────────────────────────────────
+  final _controller = NovaDrawerController(
+    initialSelectedItemId: 'home',
+  );
+
+  String _currentPage = 'Home';
+
+  // ── 2. Define sections with nested items and badges ───────────────────
+  late final _sections = [
+    NovaDrawerSectionData(
+      id: 'main',
+      title: 'Main',
+      items: [
+        NovaDrawerItem(
+          id: 'home',
+          title: 'Home',
+          icon: Icons.home_outlined,
+          selectedIcon: Icons.home,
+          route: '/home',
+          onTap: () => setState(() => _currentPage = 'Home'),
+        ),
+        NovaDrawerItem(
+          id: 'dashboard',
+          title: 'Dashboard',
+          icon: Icons.dashboard_outlined,
+          selectedIcon: Icons.dashboard,
+          badge: const NovaDrawerItemBadge(count: 3),
+          onTap: () => setState(() => _currentPage = 'Dashboard'),
+        ),
+        NovaDrawerItem(
+          id: 'messages',
+          title: 'Messages',
+          icon: Icons.chat_bubble_outline,
+          selectedIcon: Icons.chat_bubble,
+          badge: const NovaDrawerItemBadge(label: 'NEW'),
+          onTap: () => setState(() => _currentPage = 'Messages'),
+        ),
+      ],
+    ),
+    NovaDrawerSectionData(
+      id: 'workspace',
+      title: 'Workspace',
+      items: [
+        // Nested menu with sub-items
+        NovaDrawerItem(
+          id: 'projects',
+          title: 'Projects',
+          icon: Icons.folder_outlined,
+          selectedIcon: Icons.folder,
+          initiallyExpanded: true,
+          children: [
+            NovaDrawerItem(
+              id: 'active',
+              title: 'Active',
+              icon: Icons.circle,
+              onTap: () => setState(() => _currentPage = 'Active Projects'),
+            ),
+            NovaDrawerItem(
+              id: 'archived',
+              title: 'Archived',
+              icon: Icons.archive_outlined,
+              onTap: () => setState(() => _currentPage = 'Archived'),
+            ),
+          ],
+        ),
+        NovaDrawerItem(
+          id: 'team',
+          title: 'Team',
+          icon: Icons.group_outlined,
+          selectedIcon: Icons.group,
+          onTap: () => setState(() => _currentPage = 'Team'),
+        ),
+      ],
+    ),
+    NovaDrawerSectionData(
+      id: 'account',
+      title: 'Account',
+      items: [
+        NovaDrawerItem(
+          id: 'settings',
+          title: 'Settings',
+          icon: Icons.settings_outlined,
+          selectedIcon: Icons.settings,
+          onTap: () => setState(() => _currentPage = 'Settings'),
+        ),
+        NovaDrawerItem(
+          id: 'logout',
+          title: 'Sign Out',
+          icon: Icons.logout,
+          isEnabled: true,
+          onTap: () => _showLogoutDialog(context),
+        ),
+      ],
+    ),
+  ];
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Sign Out'),
+        content: const Text('Are you sure you want to sign out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Sign Out'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // ── 3. Build with NovaDrawerScaffold ──────────────────────────────
+    return NovaDrawerScaffold(
+      controller: _controller,
+
+      // App bar with hamburger menu
+      appBar: AppBar(
+        title: Text(_currentPage),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: _controller.toggle,
+        ),
+      ),
+
+      // ── 4. Configure the drawer ──────────────────────────────────────
+      drawer: NovaAppDrawer(
+        controller: _controller,
+        sections: _sections,
+
+        // ── 5. Hero-style header with user profile ───────────────────
+        header: NovaDrawerHeader(
+          config: NovaHeaderConfig(
+            variant: NovaHeaderVariant.hero,
+            profile: const NovaHeaderUserProfile(
+              name: 'Jane Developer',
+              email: 'jane@acme.io',
+              role: 'Senior Engineer',
+              status: NovaUserStatus.online,
+              notificationCount: 5,
+              avatarUrl: 'https://i.pravatar.cc/150?img=47',
+            ),
+            showCloseButton: true,
+            showPinButton: true,
+            showEditProfileButton: true,
+            actions: [
+              NovaHeaderAction(
+                id: 'notifications',
+                icon: Icons.notifications_outlined,
+                badge: 5,
+                tooltip: 'Notifications',
+                onTap: () {},
+              ),
+              NovaHeaderAction(
+                id: 'settings',
+                icon: Icons.settings_outlined,
+                tooltip: 'Settings',
+                onTap: () {},
+              ),
+            ],
+            onProfileTap: () {},
+            onEditProfile: () {},
+          ),
+        ),
+
+        // ── 6. Content widgets above and below the menu ──────────────
+        // (inject via section headerWidget / footerWidget or as items)
+        footer: Column(
+          children: [
+            // Stats bar
+            NovaDrawerStatsCard(
+              stats: const [
+                NovaDrawerStatItem(label: 'Projects', value: '12'),
+                NovaDrawerStatItem(label: 'Tasks', value: '48'),
+                NovaDrawerStatItem(label: 'Done', value: '89%'),
+              ],
+            ),
+            // App status
+            NovaDrawerAppStatusWidget(
+              status: const NovaDrawerAppStatus(
+                isOnline: true,
+                version: '2.4.1',
+                statusMessage: 'All systems operational',
+              ),
+            ),
+          ],
+        ),
+
+        // ── 7. Animation ─────────────────────────────────────────────
+        config: const NovaDrawerConfig(
+          animationType: NovaDrawerAnimationType.spring,
+          animationConfig: NovaDrawerAnimationConfig(
+            duration: Duration(milliseconds: 380),
+          ),
+          displayMode: NovaDrawerDisplayMode.auto,
+          isPinnable: true,
+          gestureConfig: NovaDrawerGestureConfig(
+            enableSwipeToOpen: true,
+            enableSwipeToClose: true,
+            swipeEdgeWidth: 24.0,
+          ),
+          accessibilityConfig: NovaDrawerAccessibilityConfig(
+            enableSemantics: true,
+            drawerLabel: 'Main navigation drawer',
+          ),
+        ),
+
+        // ── 8. Surface style ─────────────────────────────────────────
+        // Pass the surface via the theme or use NovaDrawerSurface widget.
+        theme: const NovaDrawerTheme(
+          selectedItemColor: Color(0xFF6366F1),
+          selectedItemBackgroundColor: Color(0x1A6366F1),
+          itemBorderRadius: BorderRadius.all(Radius.circular(12)),
+          elevation: 6.0,
+        ),
+
+        // ── 9. Callback ───────────────────────────────────────────────
+        onItemTap: (item) {
+          _controller.selectItem(item.id);
+        },
+      ),
+
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.auto_awesome, size: 48, color: Colors.indigo),
+            const SizedBox(height: 16),
+            Text(
+              _currentPage,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const SizedBox(height: 8),
+            const Text('Swipe from the left edge to open the drawer'),
+          ],
+        ),
+      ),
+    );
+  }
+}
 ```
 
 ---
 
 ## 🎭 Header System
 
-### Using the header system
+### Switching between header variants
 
-Replace the old `NovaDrawerHeaderWidget` with the new `NovaDrawerHeader`:
-
-```dart
-NovaAppDrawer(
-  controller: controller,
-  sections: sections,
-  header: NovaDrawerHeader(
-    config: NovaHeaderConfig(
-      variant: NovaHeaderVariant.classic,
-      profile: NovaHeaderUserProfile(
-        name: 'Jane Developer',
-        email: 'jane@example.com',
-        role: 'Senior Engineer',
-        status: NovaUserStatus.online,
-        notificationCount: 5,
-      ),
-      showCloseButton: true,
-      showPinButton: true,
-      actions: [
-        NovaHeaderAction(id: 'settings', icon: Icons.settings, tooltip: 'Settings'),
-        NovaHeaderAction(id: 'notifications', icon: Icons.notifications, badge: 3),
-      ],
-    ),
-  ),
-)
-```
-
-### Switch header variant
-
-Just change the `variant` parameter:
+All 10 variants share the same `NovaHeaderConfig`. Change a single parameter to switch styles:
 
 ```dart
+// Classic — avatar + name + subtitle
+NovaHeaderConfig(variant: NovaHeaderVariant.classic, profile: profile)
+
+// Glassmorphism — frosted glass with blur overlay
+NovaHeaderConfig(variant: NovaHeaderVariant.glassmorphism, profile: profile)
+
+// Compact — icon-only row, ideal for mini/side drawers
+NovaHeaderConfig(variant: NovaHeaderVariant.compact, profile: profile)
+
+// Hero — large cover photo with magazine-style layout
+NovaHeaderConfig(variant: NovaHeaderVariant.hero, profile: profile)
+
+// Expanded — shows additional details and extra actions
+NovaHeaderConfig(variant: NovaHeaderVariant.expanded, profile: profile)
+
+// Animated gradient — cycling colour background
 NovaHeaderConfig(
-  variant: NovaHeaderVariant.glassmorphism, // or hero, compact, collapsible, etc.
-  profile: myProfile,
+  variant: NovaHeaderVariant.animatedGradient,
+  profile: profile,
+  gradientColors: [Colors.indigo, Colors.purple, Colors.pink],
 )
-```
 
-### Account switcher with avatar stack
-
-```dart
+// Avatar stack — multi-account overlay avatars
 NovaHeaderConfig(
   variant: NovaHeaderVariant.avatarStack,
   profile: primaryUser,
   accounts: [
     NovaHeaderUserProfile(name: 'Alice', status: NovaUserStatus.online),
-    NovaHeaderUserProfile(name: 'Bob', status: NovaUserStatus.busy),
+    NovaHeaderUserProfile(name: 'Bob',   status: NovaUserStatus.busy),
+    NovaHeaderUserProfile(name: 'Carol', status: NovaUserStatus.away),
   ],
-  onSwitchAccount: () => showAccountPicker(),
+  onSwitchAccount: () => showAccountPicker(context),
+)
+
+// Multi-action — big action buttons row
+NovaHeaderConfig(
+  variant: NovaHeaderVariant.multiAction,
+  profile: profile,
+  actions: [
+    NovaHeaderAction(id: 'edit',   icon: Icons.edit,           label: 'Edit',    onTap: () {}),
+    NovaHeaderAction(id: 'share',  icon: Icons.share,          label: 'Share',   onTap: () {}),
+    NovaHeaderAction(id: 'logout', icon: Icons.logout,         label: 'Sign Out',
+        isDestructive: true, onTap: () {}),
+  ],
+)
+
+// Status-aware — breathing animation on online indicator
+NovaHeaderConfig(
+  variant: NovaHeaderVariant.statusAware,
+  profile: profile.copyWith(status: NovaUserStatus.online),
+)
+
+// Collapsible — toggles between full and mini header
+NovaHeaderConfig(
+  variant: NovaHeaderVariant.collapsible,
+  profile: profile,
+  enableCollapseExpand: true,
+  isCollapsed: false,
 )
 ```
 
-### Custom header builder
+### Loading skeleton state
+
+```dart
+NovaHeaderConfig(
+  variant: NovaHeaderVariant.classic,
+  profile: myProfile,
+  isLoading: isLoadingUser, // Shows skeleton shimmer while true
+)
+```
+
+### Fully custom header
 
 ```dart
 NovaHeaderConfig(
   customHeaderBuilder: (context, config) {
-    return MyCustomHeader(profile: config.profile);
+    return Container(
+      height: 180,
+      color: Colors.teal,
+      child: Center(
+        child: Text(
+          config.profile?.name ?? '',
+          style: const TextStyle(color: Colors.white, fontSize: 24),
+        ),
+      ),
+    );
   },
 )
 ```
@@ -277,44 +619,183 @@ NovaHeaderConfig(
 
 ## 🏗️ Surface Styles
 
-Wrap your drawer content with a surface style:
+`NovaDrawerSurface` wraps any child with one of the 10 built-in surface styles:
 
 ```dart
 NovaDrawerSurface(
   config: NovaDrawerSurfaceConfig(
     style: NovaDrawerSurfaceStyle.glassmorphism,
-    blurSigma: 15.0,
-    opacity: 0.8,
+    blurSigma: 18.0,
+    opacity: 0.75,
+    borderRadius: BorderRadius.circular(20),
   ),
-  child: myDrawerContent,
+  child: myContent,
 )
+```
+
+**Quick surface showcase:**
+
+```dart
+// Glassmorphism
+NovaDrawerSurfaceConfig(style: NovaDrawerSurfaceStyle.glassmorphism, blurSigma: 15)
+
+// Deep premium shadow
+NovaDrawerSurfaceConfig(style: NovaDrawerSurfaceStyle.premiumShadow, elevation: 16)
+
+// Gradient fill
+NovaDrawerSurfaceConfig(
+  style: NovaDrawerSurfaceStyle.gradient,
+  gradientColors: [Color(0xFF1E3A5F), Color(0xFF4A1942)],
+)
+
+// Neumorphic soft-UI
+NovaDrawerSurfaceConfig(
+  style: NovaDrawerSurfaceStyle.neumorphic,
+  backgroundColor: Color(0xFFE0E5EC),
+)
+
+// Animated mesh gradient
+NovaDrawerSurfaceConfig(
+  style: NovaDrawerSurfaceStyle.animatedMeshGradient,
+  meshColors: [Colors.blue, Colors.purple, Colors.pink, Colors.cyan],
+)
+
+// Image-backed
+NovaDrawerSurfaceConfig(
+  style: NovaDrawerSurfaceStyle.imageBacked,
+  backgroundImage: AssetImage('assets/drawer_bg.jpg'),
+  backgroundImageFit: BoxFit.cover,
+)
+```
+
+---
+
+## 🎬 Animations
+
+### Choosing an animation type
+
+```dart
+NovaDrawerConfig(
+  animationType: NovaDrawerAnimationType.elastic, // 16 types available
+  animationConfig: NovaDrawerAnimationConfig(
+    duration: Duration(milliseconds: 420),
+    curve: Curves.easeOutBack,
+  ),
+)
+```
+
+### Physics-based spring animation
+
+```dart
+NovaDrawerConfig(
+  animationType: NovaDrawerAnimationType.spring,
+  animationConfig: NovaDrawerAnimationConfig(
+    springDamping: 0.65,
+    springStiffness: 250.0,
+  ),
+)
+```
+
+### Wave / Curtain / Parallax
+
+```dart
+// Wave distortion
+NovaDrawerConfig(animationType: NovaDrawerAnimationType.wave)
+
+// Theatrical curtain split
+NovaDrawerConfig(animationType: NovaDrawerAnimationType.curtain)
+
+// Multi-layer depth parallax
+NovaDrawerConfig(animationType: NovaDrawerAnimationType.parallax)
 ```
 
 ---
 
 ## 📦 Content Widgets
 
-### Search bar
-
-> **Note:** `NovaDrawerSearchBar` is now powered by the [`search_plus`](https://pub.dev/packages/search_plus) package, providing advanced search capabilities out of the box.
-
-```dart
-NovaDrawerSearchBar<String>.simple(
-  items: ['Home', 'Settings', 'Profile'],
-  searchableFields: (item) => [item],
-  toResult: (item) => SearchResult(id: item, title: item, data: item),
-  hintText: 'Search menu…',
-  onChanged: (query) => filterDrawerItems(query),
-)
-```
-
 ### Stats card
 
 ```dart
 NovaDrawerStatsCard(
-  stats: [
-    NovaDrawerStatItem(label: 'Projects', value: '42'),
-    NovaDrawerStatItem(label: 'Tasks', value: '128'),
+  stats: const [
+    NovaDrawerStatItem(label: 'Projects', value: '12', icon: Icons.folder),
+    NovaDrawerStatItem(label: 'Tasks',    value: '48', icon: Icons.task_alt),
+    NovaDrawerStatItem(label: 'Messages', value: '7',  icon: Icons.chat_bubble),
+  ],
+)
+```
+
+### Shortcuts grid
+
+```dart
+NovaDrawerShortcutsGrid(
+  shortcuts: [
+    NovaDrawerShortcut(
+      id: 'new_doc',
+      label: 'New Doc',
+      icon: Icons.add_box_outlined,
+      color: Colors.blue,
+      onTap: () {},
+    ),
+    NovaDrawerShortcut(
+      id: 'upload',
+      label: 'Upload',
+      icon: Icons.cloud_upload_outlined,
+      color: Colors.green,
+      badge: 2,
+      onTap: () {},
+    ),
+    NovaDrawerShortcut(
+      id: 'calendar',
+      label: 'Calendar',
+      icon: Icons.calendar_today_outlined,
+      color: Colors.orange,
+      onTap: () {},
+    ),
+    NovaDrawerShortcut(
+      id: 'analytics',
+      label: 'Analytics',
+      icon: Icons.bar_chart,
+      color: Colors.purple,
+      onTap: () {},
+    ),
+  ],
+)
+```
+
+### Recent items
+
+```dart
+NovaDrawerRecentItems(
+  items: [
+    NovaDrawerRecentItem(
+      id: 'r1',
+      title: 'Q3 Report.pdf',
+      subtitle: 'Edited 2h ago',
+      icon: Icons.picture_as_pdf,
+      timestamp: DateTime.now().subtract(const Duration(hours: 2)),
+      onTap: () {},
+    ),
+    NovaDrawerRecentItem(
+      id: 'r2',
+      title: 'Sprint Planning',
+      subtitle: 'Meeting notes',
+      icon: Icons.description_outlined,
+      timestamp: DateTime.now().subtract(const Duration(days: 1)),
+      onTap: () {},
+    ),
+  ],
+)
+```
+
+### Filter chips
+
+```dart
+NovaDrawerFilterChipsWidget(
+  chips: [
+    NovaDrawerFilterChip(id: 'all',    label: 'All',    isSelected: true,  onSelected: (_) {}),
+    NovaDrawerFilterChip(id: 'active', label: 'Active',                    onSelected: (_) {}),
+    NovaDrawerFilterChip(id: 'done',   label: 'Done',                      onSelected: (_) {}),
   ],
 )
 ```
@@ -324,180 +805,290 @@ NovaDrawerStatsCard(
 ```dart
 NovaDrawerWorkspaceSwitcher(
   workspaces: [
-    NovaDrawerWorkspace(id: '1', name: 'Personal', isActive: true),
-    NovaDrawerWorkspace(id: '2', name: 'Work'),
+    NovaDrawerWorkspace(
+      id: 'personal',
+      name: 'Personal',
+      icon: Icons.person,
+      isActive: true,
+      onSelect: () {},
+    ),
+    NovaDrawerWorkspace(
+      id: 'acme',
+      name: 'Acme Corp',
+      icon: Icons.business,
+      onSelect: () {},
+    ),
+    NovaDrawerWorkspace(
+      id: 'startup',
+      name: 'My Startup',
+      icon: Icons.rocket_launch,
+      onSelect: () {},
+    ),
   ],
 )
 ```
 
----
-
-## 🔌 Builder APIs
-
-Customize every component with builder callbacks:
+### App status footer
 
 ```dart
-NovaDrawerBuilders(
-  headerBuilder: (context, config) => MyCustomHeader(config: config),
-  itemBuilder: (context, item, isSelected) => MyCustomItem(item: item),
-  footerBuilder: (context) => MyCustomFooter(),
-  loadingBuilder: (context) => MyCustomLoader(),
-  errorBuilder: (context, msg, retry) => MyErrorWidget(msg, retry),
-  emptyStateBuilder: (context) => MyEmptyState(),
-)
-```
-
----
-
-## 🎨 Theming
-
-### Light/Dark themes
-
-```dart
-NovaAppDrawer(
-  theme: NovaDrawerTheme.light(), // or .dark()
-  // ...
-)
-```
-
-### Custom theme
-
-```dart
-NovaAppDrawer(
-  theme: NovaDrawerTheme(
-    backgroundColor: Colors.white,
-    selectedItemColor: Colors.indigo,
-    selectedItemBackgroundColor: Colors.indigo.withOpacity(0.1),
-    elevation: 4.0,
-    itemBorderRadius: BorderRadius.circular(12),
-    headerBackgroundColor: Colors.indigo,
-    headerTextColor: Colors.white,
-  ),
-  // ...
-)
-```
-
----
-
-## 🎬 Animations
-
-### Change animation type
-
-```dart
-NovaDrawerConfig(
-  animationType: NovaDrawerAnimationType.elastic,
-  animationConfig: NovaDrawerAnimationConfig(
-    duration: Duration(milliseconds: 400),
-    curve: Curves.easeOutBack,
-    springDamping: 0.7,
-    springStiffness: 200,
-    elasticPeriod: 0.4,
+NovaDrawerAppStatusWidget(
+  status: const NovaDrawerAppStatus(
+    isOnline: true,
+    version: '2.4.1',
+    buildNumber: '142',
+    statusMessage: 'Connected · Last sync 5 min ago',
   ),
 )
 ```
 
-### Staggered item animations
+---
+
+## 🎛️ Controller API
+
+`NovaDrawerController` is a `ChangeNotifier`. Use it directly or provide it via `NovaDrawerControllerProvider`.
 
 ```dart
-NovaDrawerAnimationConfig(
-  enableStaggeredAnimations: true,
-  itemStaggerDelay: Duration(milliseconds: 50),
+final controller = NovaDrawerController(
+  initialSelectedItemId: 'home',
+  initiallyOpen: false,
+  initiallyPinned: false,  // useful for desktop default
+);
+
+// Open / close
+controller.open();
+controller.close();
+controller.toggle();
+
+// Pin (tablet/desktop persistent mode)
+controller.pin();
+controller.unpin();
+controller.togglePin();
+
+// Mini mode (icon-only sidebar)
+controller.toMini();
+controller.fromMini();
+controller.toggleMini();
+
+// Item selection
+controller.selectItem('settings');
+controller.selectByRoute('/settings/account');  // auto-expands parents
+controller.clearSelection();
+
+// Section expand/collapse
+controller.expandSection('workspace');
+controller.collapseSection('workspace');
+controller.toggleSection('workspace');
+
+// Nested item expand/collapse
+controller.expandItem('projects');
+controller.collapseItem('projects');
+
+// Visibility / enable
+controller.disableItem('logout');
+controller.enableItem('logout');
+controller.hideItem('admin');
+controller.showItem('admin');
+
+// Read state
+print(controller.isOpen);
+print(controller.isPinned);
+print(controller.isMini);
+print(controller.selectedItemId);
+print(controller.isLoading);
+```
+
+### Accessing the controller from descendants
+
+```dart
+// Provide at the top:
+NovaDrawerControllerProvider(
+  controller: _controller,
+  child: MyDrawerContent(),
 )
+
+// Read anywhere below:
+final ctrl = NovaDrawerControllerProvider.of(context);   // subscribes
+final ctrl = NovaDrawerControllerProvider.read(context); // one-shot read
 ```
 
 ---
 
 ## 📱 Responsive Behavior
 
-The drawer automatically adapts based on screen size:
-
 | Device | Breakpoint | Default Mode |
 |--------|-----------|--------------|
-| Mobile | < 600px | Overlay (slides over content) |
-| Tablet | 600-1024px | Push (pushes content aside) |
-| Desktop | > 1024px | Side (persistent alongside content) |
+| Mobile | < 600 px | Overlay (slides over content) |
+| Tablet | 600–1024 px | Push (pushes content aside) |
+| Desktop | > 1024 px | Side (persistent alongside content) |
 
 ### Custom breakpoints
 
 ```dart
 NovaDrawerConfig(
-  breakpoints: NovaDrawerBreakpoints(
-    mobile: 500,
-    tablet: 900,
+  breakpoints: const NovaDrawerBreakpoints(
+    mobile: 540,
+    tablet: 960,
   ),
 )
 ```
 
-### Force a display mode
+### Force a specific mode
 
 ```dart
-NovaDrawerConfig(
-  displayMode: NovaDrawerDisplayMode.side, // Always side-by-side
-)
+NovaDrawerConfig(displayMode: NovaDrawerDisplayMode.side)   // Always persistent
+NovaDrawerConfig(displayMode: NovaDrawerDisplayMode.overlay) // Always overlay
+NovaDrawerConfig(displayMode: NovaDrawerDisplayMode.push)    // Always push
+NovaDrawerConfig(displayMode: NovaDrawerDisplayMode.mini)    // Always mini
 ```
 
 ---
 
-## 🔗 Dynamic Data Loading
+## 🎨 Theming
+
+### Using the built-in theme
 
 ```dart
-// Load items from API
-await controller.loadItems(() async {
-  final response = await http.get(Uri.parse('/api/menu'));
-  final data = json.decode(response.body) as List;
-  return data.map((item) => NovaDrawerItem(
-    id: item['id'],
-    title: item['title'],
-    icon: iconFromString(item['icon']),
-  )).toList();
-});
-```
-
-The drawer automatically shows a shimmer loading state while fetching data.
-
----
-
-## ♿ Accessibility
-
-Built-in accessibility features:
-
-- **Semantic labels** for screen readers
-- **Focus traversal** for keyboard navigation
-- **Scalable text** respecting system settings
-- **Minimum touch targets** (48px)
-- **Announcements** on drawer open/close
-
-```dart
-NovaDrawerConfig(
-  accessibilityConfig: NovaDrawerAccessibilityConfig(
-    enableSemantics: true,
-    enableFocusTraversal: true,
-    enableScalableText: true,
-    minimumTouchTarget: 48.0,
-    drawerLabel: 'Main navigation',
+NovaAppDrawer(
+  theme: const NovaDrawerTheme(
+    backgroundColor: Color(0xFF1E1E2E),
+    selectedItemColor: Color(0xFF89B4FA),
+    selectedItemBackgroundColor: Color(0x2089B4FA),
+    unselectedItemColor: Color(0xFFCDD6F4),
+    headerBackgroundColor: Color(0xFF181825),
+    itemBorderRadius: BorderRadius.all(Radius.circular(10)),
+    itemTextStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+    sectionTitleStyle: TextStyle(fontSize: 11, letterSpacing: 1.2),
+    elevation: 8.0,
+    iconSize: 22.0,
+    itemHeight: 48.0,
+    expandedDrawerWidth: 280.0,
+    miniDrawerWidth: 64.0,
   ),
 )
 ```
 
 ---
 
-## 📐 Mini-Drawer Mode
+## 🔌 Slot-Based Builder APIs
 
-On tablet/desktop, the drawer can collapse to a mini icon-only view:
+Override any part of the drawer with custom widgets:
 
 ```dart
-NovaDrawerConfig(
-  showMiniOnCollapse: true,
-  enableHoverExpand: true, // Expand on mouse hover
-  hoverExpandDelay: Duration(milliseconds: 500),
+NovaAppDrawer(
+  controller: _controller,
+  sections: _sections,
+  builders: NovaDrawerBuilders(
+    // Replace the default item rendering
+    itemBuilder: (context, item, isSelected) {
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.indigo.withOpacity(0.15) : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ListTile(
+          leading: Icon(item.icon, color: isSelected ? Colors.indigo : null),
+          title: Text(item.title),
+          selected: isSelected,
+        ),
+      );
+    },
+
+    // Custom section header
+    sectionBuilder: (context, section) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Text(
+          section.title?.toUpperCase() ?? '',
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1.5,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    },
+
+    // Custom loading placeholder
+    loadingBuilder: (context) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32),
+          child: CircularProgressIndicator(),
+        ),
+      );
+    },
+
+    // Custom empty state
+    emptyStateBuilder: (context) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.inbox, size: 48, color: Colors.grey),
+            SizedBox(height: 8),
+            Text('No menu items', style: TextStyle(color: Colors.grey)),
+          ],
+        ),
+      );
+    },
+
+    // Custom error state
+    errorBuilder: (context, message, onRetry) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, color: Colors.red),
+            Text(message ?? 'Error'),
+            if (onRetry != null)
+              TextButton(onPressed: onRetry, child: const Text('Retry')),
+          ],
+        ),
+      );
+    },
+
+    // Custom footer
+    footerBuilder: (context) {
+      return const Padding(
+        padding: EdgeInsets.all(16),
+        child: Text('v1.0.0 · NovaDrawer', style: TextStyle(color: Colors.grey)),
+      );
+    },
+  ),
 )
 ```
 
+---
+
+## 🎆 Background Effects
+
+### Animated gradient background
+
 ```dart
-// Programmatic control
-controller.toMini();    // Collapse to mini
-controller.fromMini();  // Expand from mini
-controller.toggleMini();
+NovaAppDrawer(
+  controller: _controller,
+  sections: _sections,
+  enableGradientBackground: true,
+  gradientColors: const [
+    Color(0xFF0F2027),
+    Color(0xFF203A43),
+    Color(0xFF2C5364),
+  ],
+)
+```
+
+### Particle effects
+
+```dart
+NovaAppDrawer(
+  controller: _controller,
+  sections: _sections,
+  enableParticleBackground: true,
+  particleColor: Colors.white,
+  particleCount: 30,
+)
 ```
 
 ---
@@ -506,66 +1097,138 @@ controller.toggleMini();
 
 ```dart
 NovaDrawerConfig(
-  gestureConfig: NovaDrawerGestureConfig(
-    enableSwipeToOpen: true,
-    enableSwipeToClose: true,
-    swipeEdgeWidth: 20.0,
-    swipeSensitivity: 0.5,
+  gestureConfig: const NovaDrawerGestureConfig(
+    enableSwipeToOpen: true,     // Swipe from left edge to open
+    enableSwipeToClose: true,    // Swipe drawer to close
+    swipeEdgeWidth: 24.0,        // Detection edge width in logical px
+    swipeSensitivity: 0.5,       // 0.0 = very sensitive, 1.0 = very resistant
+    enableDragHandle: true,      // Show a visible drag handle
+    dragHandleColor: Colors.grey,
   ),
 )
 ```
 
 ---
 
-## 📌 Pinning
+## 📐 Mini-Drawer Mode
 
-Pin the drawer open on tablet/desktop:
+On tablet/desktop the drawer can collapse to a slim icon-only sidebar:
 
 ```dart
-// In header
-NovaDrawerHeaderWidget(
-  showPinButton: true,
+NovaDrawerConfig(
+  showMiniOnCollapse: true,
+  enableHoverExpand: true,                          // Expand on mouse hover
+  hoverExpandDelay: const Duration(milliseconds: 400),
 )
 
-// Programmatic
-controller.pin();
-controller.unpin();
-controller.togglePin();
+// Programmatic control
+_controller.toMini();    // Collapse to icon-only
+_controller.fromMini();  // Expand back
+_controller.toggleMini();
+```
+
+You can also use `NovaMiniDrawer` directly for a fixed sidebar:
+
+```dart
+NovaMiniDrawer(
+  controller: _controller,
+  items: iconOnlyItems,
+  width: 64,
+)
 ```
 
 ---
 
-## 🎆 Background Effects
+## 🔗 Dynamic Data Loading
 
-### Animated gradient
-
-```dart
-NovaAppDrawer(
-  enableGradientBackground: true,
-  gradientColors: [Colors.blue.shade900, Colors.purple.shade900],
-)
-```
-
-### Particle effects
+The drawer shows a shimmer skeleton automatically while loading:
 
 ```dart
-NovaAppDrawer(
-  enableParticleBackground: true,
-  particleColor: Colors.white,
-  particleCount: 20,
-)
+// Required imports for the dynamic loading example:
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+
+// Load items from an API
+await _controller.loadItems(() async {
+  final response = await http.get(Uri.parse('https://api.example.com/menu'));
+  final data = (jsonDecode(response.body) as List).cast<Map<String, dynamic>>();
+  return data
+      .map((e) => NovaDrawerItem(
+            id: e['id'] as String,
+            title: e['title'] as String,
+            icon: Icons.circle,
+          ))
+      .toList();
+});
+
+// Load sections from an API
+await _controller.loadSections(() async {
+  // ... fetch and return List<NovaDrawerSectionData>
+});
+
+// Error state is stored in controller.errorMessage
+if (_controller.errorMessage != null) {
+  print('Failed: ${_controller.errorMessage}');
+}
 ```
 
 ---
 
 ## 🌐 RTL Support
 
-RTL is automatically detected from `Directionality`. You can also wrap with:
+RTL is automatically inferred from `Directionality`. To force RTL:
 
 ```dart
 Directionality(
   textDirection: TextDirection.rtl,
-  child: NovaDrawerScaffold(/* ... */),
+  child: NovaDrawerScaffold(
+    controller: _controller,
+    drawer: NovaAppDrawer(
+      controller: _controller,
+      config: const NovaDrawerConfig(rtlSupport: true),
+      sections: _sections,
+    ),
+    body: myBody,
+  ),
+)
+```
+
+---
+
+## ♿ Accessibility
+
+NovaDrawer is built with accessibility first:
+
+- **Semantic labels** for screen readers (TalkBack / VoiceOver)
+- **Focus traversal** for keyboard and switch-access navigation
+- **Scalable text** respects system font size settings
+- **Minimum touch targets** (48 × 48 logical pixels)
+- **Drawer open/close announcements** for screen readers
+
+```dart
+NovaDrawerConfig(
+  accessibilityConfig: const NovaDrawerAccessibilityConfig(
+    enableSemantics: true,
+    enableFocusTraversal: true,
+    enableScalableText: true,
+    minimumTouchTarget: 48.0,
+    announceOnOpen: true,
+    announceOnClose: true,
+    drawerLabel: 'Main navigation drawer',
+    closeButtonLabel: 'Close navigation drawer',
+  ),
+)
+```
+
+Custom semantic labels per item:
+
+```dart
+NovaDrawerItem(
+  id: 'inbox',
+  title: 'Inbox',
+  icon: Icons.inbox,
+  badge: const NovaDrawerItemBadge(count: 12),
+  semanticLabel: 'Inbox, 12 unread messages',
 )
 ```
 
@@ -575,157 +1238,180 @@ Directionality(
 
 ```
 lib/
-  main.dart                          # Barrel export file
+  main.dart                     # Barrel export (library nova_drawer)
   src/
     models/
-      drawer_item.dart               # NovaDrawerItem, NovaDrawerSectionData, Badge
-      drawer_theme.dart              # NovaDrawerTheme
-      drawer_config.dart             # NovaDrawerConfig, enums, sub-configs
-      header_config.dart             # NovaHeaderConfig, NovaHeaderUserProfile, NovaHeaderAction
-      surface_config.dart            # NovaDrawerSurfaceConfig, NovaDrawerSurface widget
-      content_config.dart            # Content models (stats, shortcuts, etc.)
+      drawer_item.dart          # NovaDrawerItem · NovaDrawerSectionData · NovaDrawerItemBadge
+      drawer_theme.dart         # NovaDrawerTheme · NovaDrawerBadgeTheme
+      drawer_config.dart        # NovaDrawerConfig · NovaDrawerAnimationType · NovaDrawerDisplayMode
+      header_config.dart        # NovaHeaderConfig · NovaHeaderUserProfile · NovaHeaderAction
+      surface_config.dart       # NovaDrawerSurfaceConfig · NovaDrawerSurface
+      content_config.dart       # NovaDrawerStatItem · NovaDrawerShortcut · NovaDrawerRecentItem
+                                # NovaDrawerFilterChip · NovaDrawerAppStatus · NovaDrawerWorkspace
     controllers/
-      drawer_controller.dart         # NovaDrawerController
+      drawer_controller.dart    # NovaDrawerController · NovaDrawerControllerProvider
     headers/
-      nova_drawer_header.dart        # Main header router widgets
-      header_utils.dart              # Shared header utilities
-      profile_header_classic.dart    # Classic variant
-      profile_header_glassmorphism.dart # Glassmorphism variant
-      profile_header_compact.dart    # Compact variant
-      profile_header_hero.dart       # Hero variant
-      profile_header_expanded.dart   # Expanded variant
-      profile_header_animated_gradient.dart # Animated gradient variant
-      profile_header_avatar_stack.dart # Avatar stack variant
-      profile_header_multi_action.dart # Multi-action variant
-      profile_header_status_aware.dart # Status-aware variant
-      profile_header_collapsible.dart # Collapsible variant
+      nova_drawer_header.dart   # NovaDrawerHeader (routes to variant widgets)
+      header_utils.dart         # NovaHeaderWidgetUtils (shared helpers)
+      profile_header_*.dart     # 10 individual header variant widgets
     builders/
-      drawer_builders.dart           # Slot-based builder callbacks
+      drawer_builders.dart      # NovaDrawerBuilders (slot callbacks)
     widgets/
-      advanced_app_drawer.dart       # Main drawer widget (NovaAppDrawer)
-      drawer_header.dart             # Legacy header widget (NovaDrawerHeaderWidget)
-      drawer_item_widget.dart        # Individual item widget
-      drawer_section.dart            # Collapsible section widget
-      nested_menu_item.dart          # Nested expandable items (NovaNestedMenuItem)
-      mini_drawer.dart               # Mini/collapsed drawer (NovaMiniDrawer)
-      drawer_scaffold.dart           # Responsive scaffold (NovaDrawerScaffold)
-      drawer_search_bar.dart         # Search bar powered by search_plus (NovaDrawerSearchBar)
-      drawer_stats_card.dart         # User stats card (NovaDrawerStatsCard)
-      drawer_shortcuts_grid.dart     # Shortcuts grid (NovaDrawerShortcutsGrid)
-      drawer_recent_items.dart       # Recent items list (NovaDrawerRecentItems)
-      drawer_filter_chips.dart       # Filter chips row (NovaDrawerFilterChipsWidget)
-      drawer_app_status.dart         # App status footer (NovaDrawerAppStatusWidget)
-      drawer_workspace_switcher.dart # Workspace/account switcher (NovaDrawerWorkspaceSwitcher)
+      advanced_app_drawer.dart  # NovaAppDrawer (main widget)
+      drawer_header.dart        # NovaDrawerHeaderWidget (legacy)
+      drawer_item_widget.dart   # NovaDrawerItemWidget
+      drawer_section.dart       # NovaDrawerSectionWidget
+      nested_menu_item.dart     # NovaNestedMenuItem
+      mini_drawer.dart          # NovaMiniDrawer
+      drawer_scaffold.dart      # NovaDrawerScaffold
+      drawer_stats_card.dart    # NovaDrawerStatsCard
+      drawer_shortcuts_grid.dart# NovaDrawerShortcutsGrid
+      drawer_recent_items.dart  # NovaDrawerRecentItems
+      drawer_filter_chips.dart  # NovaDrawerFilterChipsWidget
+      drawer_app_status.dart    # NovaDrawerAppStatusWidget
+      drawer_workspace_switcher.dart # NovaDrawerWorkspaceSwitcher
     animations/
-      animation_config.dart          # Animation configuration
-      animation_wrapper.dart         # Unified animation wrapper
-      slide_animation.dart           # Slide transitions
-      fade_animation.dart            # Fade transitions
-      scale_animation.dart           # Scale transitions
-      rotate_animation.dart          # Rotation transitions
-      morph_animation.dart           # Shape morphing
-      elastic_animation.dart         # Elastic bounce
-      spring_animation.dart          # Spring physics
-      shimmer_animation.dart         # Shimmer effect
-      blur_animation.dart            # Blur transitions
-      gradient_animation.dart        # Gradient transitions
-      floating_animation.dart        # Floating overlay
-      floating_bounce_animation.dart # Floating bounce
-      floating_reveal_animation.dart # Floating reveal
-      wave_animation.dart            # Wave distortion
-      parallax_animation.dart        # Parallax depth
-      curtain_animation.dart         # Curtain open/close
+      animation_config.dart     # NovaDrawerAnimationConfig
+      animation_wrapper.dart    # NovaDrawerAnimationWrapper
+      *_animation.dart          # 16 individual animation implementations
     utils/
-      responsive_utils.dart          # Responsive breakpoints (NovaResponsiveUtils)
-      accessibility_utils.dart       # Accessibility helpers (NovaAccessibilityUtils)
+      responsive_utils.dart     # NovaResponsiveUtils · NovaDeviceType
+      accessibility_utils.dart  # NovaAccessibilityUtils
     backgrounds/
-      gradient_background.dart       # Animated gradient (NovaGradientBackground)
-      particle_background.dart       # Particle effects (NovaParticleBackground)
-    deprecated_aliases.dart          # Backward-compatible typedefs for old names
-example/
-  lib/
-    main.dart                        # Full demo app
-    screens/
-      header_showcase_screen.dart    # All 10 header variants
-      surface_showcase_screen.dart   # All 10 surface styles
-      content_showcase_screen.dart   # Content widgets demo
-      animation_showcase_screen.dart # Animation types demo
-test/
-  widget_test.dart                   # Comprehensive tests
+      gradient_background.dart  # NovaGradientBackground
+      particle_background.dart  # NovaParticleBackground
+    deprecated_aliases.dart     # @Deprecated typedefs for backward compatibility
 ```
 
 ---
 
 ## 🔧 API Reference
 
-### NovaDrawerController
+### `NovaDrawerController`
 
 | Method | Description |
 |--------|-------------|
 | `open()` | Opens the drawer |
-| `close()` | Closes the drawer |
+| `close()` | Closes the drawer (no-op when pinned) |
 | `toggle()` | Toggles open/close |
-| `pin()` / `unpin()` | Pin/unpin drawer |
-| `toMini()` / `fromMini()` | Mini mode control |
-| `selectItem(id)` | Select an item |
-| `selectByRoute(path)` | Select by route path |
-| `expandItem(id)` | Expand nested item |
-| `collapseItem(id)` | Collapse nested item |
-| `loadItems(loader)` | Dynamic data loading |
-| `disableItem(id)` | Disable an item |
-| `hideItem(id)` | Hide an item |
-
-### NovaHeaderConfig
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `variant` | `NovaHeaderVariant` | Header visual style |
-| `profile` | `NovaHeaderUserProfile?` | User profile data |
-| `actions` | `List<NovaHeaderAction>` | Action buttons |
-| `showCloseButton` | `bool` | Show close button |
-| `showPinButton` | `bool` | Show pin button |
-| `isLoading` | `bool` | Show skeleton |
-| `isCollapsed` | `bool` | Collapsed state |
-| `accounts` | `List<NovaHeaderUserProfile>` | For avatar stack |
-| `customHeaderBuilder` | `Function?` | Custom header |
-
-### NovaHeaderVariant
-
-`classic` · `glassmorphism` · `compact` · `hero` · `expanded` · `animatedGradient` · `avatarStack` · `multiAction` · `statusAware` · `collapsible`
-
-### NovaDrawerSurfaceStyle
-
-`plain` · `elevated` · `glassmorphism` · `blurred` · `gradient` · `premiumShadow` · `outlinedMinimal` · `neumorphic` · `imageBacked` · `animatedMeshGradient`
-
-### NovaDrawerItem
+| `pin()` / `unpin()` / `togglePin()` | Persistent pin control |
+| `toMini()` / `fromMini()` / `toggleMini()` | Mini/icon-only mode |
+| `selectItem(id)` | Select item by ID |
+| `selectByRoute(path)` | Select item by route, auto-expands parents |
+| `clearSelection()` | Clear active selection |
+| `expandSection(id)` / `collapseSection(id)` | Section expand/collapse |
+| `expandItem(id)` / `collapseItem(id)` | Nested item expand/collapse |
+| `disableItem(id)` / `enableItem(id)` | Item enable state |
+| `hideItem(id)` / `showItem(id)` | Item visibility |
+| `setItems(items)` | Bulk-set items |
+| `setSections(sections)` | Bulk-set sections |
+| `loadItems(loader)` | Async dynamic item loading |
+| `loadSections(loader)` | Async dynamic section loading |
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `id` | `String` | Unique identifier |
-| `title` | `String` | Display title |
-| `icon` | `IconData?` | Icon |
-| `selectedIcon` | `IconData?` | Icon when selected |
-| `children` | `List<NovaDrawerItem>` | Nested items |
+| `isOpen` | `bool` | Whether drawer is open |
+| `isPinned` | `bool` | Whether drawer is pinned |
+| `isMini` | `bool` | Whether in mini mode |
+| `isAnimating` | `bool` | Animation in progress |
+| `isLoading` | `bool` | Data load in progress |
+| `errorMessage` | `String?` | Last load error |
+| `selectedItemId` | `String?` | Active item ID |
+
+---
+
+### `NovaAppDrawer`
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `controller` | `NovaDrawerController` | required | Drawer state manager |
+| `sections` | `List<NovaDrawerSectionData>` | `[]` | Grouped menu items |
+| `items` | `List<NovaDrawerItem>` | `[]` | Flat item list (when no sections) |
+| `header` | `Widget?` | `null` | Header widget |
+| `footer` | `Widget?` | `null` | Footer widget |
+| `onItemTap` | `Function(NovaDrawerItem)?` | `null` | Item tap callback |
+| `theme` | `NovaDrawerTheme?` | `null` | Visual theme |
+| `config` | `NovaDrawerConfig` | `NovaDrawerConfig()` | Behavior configuration |
+| `builders` | `NovaDrawerBuilders?` | `null` | Slot-based custom builders |
+| `width` | `double?` | auto | Override drawer width |
+| `enableGradientBackground` | `bool` | `false` | Animated gradient backdrop |
+| `gradientColors` | `List<Color>?` | `null` | Gradient color stops |
+| `enableParticleBackground` | `bool` | `false` | Particle effect backdrop |
+| `particleColor` | `Color?` | `null` | Particle color |
+| `particleCount` | `int` | `20` | Number of particles |
+
+---
+
+### `NovaHeaderConfig`
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `variant` | `NovaHeaderVariant` | `classic` | Header style |
+| `profile` | `NovaHeaderUserProfile?` | `null` | User data |
+| `actions` | `List<NovaHeaderAction>` | `[]` | Action buttons |
+| `showCloseButton` | `bool` | `true` | Show × button |
+| `showPinButton` | `bool` | `true` | Show pin button |
+| `showEditProfileButton` | `bool` | `false` | Show edit shortcut |
+| `showStatusIndicator` | `bool` | `true` | Show online status dot |
+| `showNotificationBadge` | `bool` | `true` | Show notification count |
+| `isLoading` | `bool` | `false` | Show skeleton shimmer |
+| `isCollapsed` | `bool` | `false` | Collapsed state |
+| `enableCollapseExpand` | `bool` | `false` | Allow toggling |
+| `accounts` | `List<NovaHeaderUserProfile>` | `[]` | Extra accounts for stack |
+| `gradientColors` | `List<Color>?` | `null` | For `animatedGradient` variant |
+| `customHeaderBuilder` | `Widget Function?` | `null` | Fully custom header |
+
+---
+
+### `NovaDrawerItem`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `String` | **Required** unique identifier |
+| `title` | `String` | **Required** display text |
+| `icon` | `IconData?` | Default icon |
+| `selectedIcon` | `IconData?` | Icon when selected (falls back to `icon`) |
+| `children` | `List<NovaDrawerItem>` | Nested sub-items |
 | `badge` | `NovaDrawerItemBadge?` | Notification badge |
-| `route` | `String?` | Route path |
-| `subtitle` | `String?` | Subtitle text |
+| `route` | `String?` | Route path for `selectByRoute()` |
+| `subtitle` | `String?` | Secondary text |
+| `tooltip` | `String?` | Hover tooltip |
+| `semanticLabel` | `String?` | Screen reader label |
 | `onTap` | `VoidCallback?` | Tap callback |
+| `isEnabled` | `bool` | Interactive state |
+| `isVisible` | `bool` | Visibility |
+| `initiallyExpanded` | `bool` | Start expanded (nested) |
+| `customWidget` | `Widget?` | Replace entire item rendering |
+| `leading` | `Widget?` | Custom leading widget |
+| `trailing` | `Widget?` | Custom trailing widget |
+| `metadata` | `Map<String, dynamic>?` | Arbitrary extra data |
 
-### NovaDrawerAnimationType
+---
 
+### Enumerations
+
+**`NovaDrawerAnimationType`**
 `slide` · `fade` · `scale` · `rotate` · `morph` · `elastic` · `spring` · `shimmer` · `blur` · `gradient` · `floating` · `floatingBounce` · `floatingReveal` · `wave` · `parallax` · `curtain`
 
-### NovaDrawerDisplayMode
-
+**`NovaDrawerDisplayMode`**
 `auto` · `overlay` · `push` · `side` · `mini`
+
+**`NovaHeaderVariant`**
+`classic` · `glassmorphism` · `compact` · `hero` · `expanded` · `animatedGradient` · `avatarStack` · `multiAction` · `statusAware` · `collapsible`
+
+**`NovaDrawerSurfaceStyle`**
+`plain` · `elevated` · `glassmorphism` · `blurred` · `gradient` · `premiumShadow` · `outlinedMinimal` · `neumorphic` · `imageBacked` · `animatedMeshGradient`
+
+**`NovaUserStatus`**
+`online` · `offline` · `busy` · `away` · `unknown`
 
 ---
 
 ## 🔄 Migration Guide
 
-All public APIs have been renamed from the old `Drawer*` / `Advanced*` prefix convention to the new unified `Nova*` prefix. The old names are still available as **deprecated typedefs** in `deprecated_aliases.dart` for backward compatibility, but will be removed in a future release.
+All public APIs were renamed from the old `Drawer*` / `Advanced*` prefix to the unified `Nova*` prefix. The old names remain available as **deprecated typedefs** in `deprecated_aliases.dart` and will be removed in v2.
 
-### Naming changes
+### Key renames
 
 | Old Name | New Name |
 |----------|----------|
@@ -744,7 +1430,6 @@ All public APIs have been renamed from the old `Drawer*` / `Advanced*` prefix co
 | `DrawerGestureConfig` | `NovaDrawerGestureConfig` |
 | `DrawerAccessibilityConfig` | `NovaDrawerAccessibilityConfig` |
 | `DrawerHeaderWidget` | `NovaDrawerHeaderWidget` |
-| `DrawerSearchBar` | `NovaDrawerSearchBar` |
 | `DrawerStatsCard` | `NovaDrawerStatsCard` |
 | `DrawerStatItem` | `NovaDrawerStatItem` |
 | `DrawerShortcutsGrid` | `NovaDrawerShortcutsGrid` |
@@ -773,16 +1458,14 @@ All public APIs have been renamed from the old `Drawer*` / `Advanced*` prefix co
 | `AccessibilityUtils` | `NovaAccessibilityUtils` |
 | `DeviceType` | `NovaDeviceType` |
 
-### Using deprecated aliases
-
-If you are migrating from an older version, the old names still work thanks to `deprecated_aliases.dart`. Simply import the package as usual and you will see deprecation warnings guiding you to the new names:
+Old names still compile but produce deprecation warnings:
 
 ```dart
-// Old code still compiles but shows deprecation warnings
-final controller = AdvancedDrawerController(); // ⚠️ Deprecated — use NovaDrawerController
+// ⚠️ Shows deprecation warning — will be removed in v2
+final c = AdvancedDrawerController();
 
-// Updated code
-final controller = NovaDrawerController();
+// ✅ Correct
+final c = NovaDrawerController();
 ```
 
 ---
@@ -790,3 +1473,4 @@ final controller = NovaDrawerController();
 ## 📄 License
 
 MIT License. See [LICENSE](LICENSE) for details.
+
