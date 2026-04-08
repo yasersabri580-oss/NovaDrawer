@@ -163,6 +163,7 @@ The fastest way to add a drawer to your app:
 ### 1. Import the package
 
 ```dart
+// The barrel export lives at lib/main.dart
 import 'package:nova_drawer/main.dart';
 ```
 
@@ -236,7 +237,7 @@ The following is a full, self-contained Flutter app that showcases the most impo
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:nova_drawer/main.dart';
+import 'package:nova_drawer/main.dart'; // barrel export at lib/main.dart
 
 void main() => runApp(const MyApp());
 
@@ -1143,6 +1144,10 @@ NovaMiniDrawer(
 The drawer shows a shimmer skeleton automatically while loading:
 
 ```dart
+// Required imports for the dynamic loading example:
+// import 'dart:convert';
+// import 'package:http/http.dart' as http;
+
 // Load items from an API
 await _controller.loadItems(() async {
   final response = await http.get(Uri.parse('https://api.example.com/menu'));
