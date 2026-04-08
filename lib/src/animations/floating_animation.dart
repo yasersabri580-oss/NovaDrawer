@@ -1,6 +1,8 @@
 // Copyright (c) 2024 NovaDrawer Contributors
 // Licensed under the MIT License.
 
+// ignore_for_file: deprecated_member_use
+
 /// Floating drawer animations for the NovaAppDrawer.
 ///
 /// Provides floating, bounce, and circular-reveal effects that make
@@ -56,10 +58,7 @@ class NovaFloatingDrawerAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final curvedAnimation = CurvedAnimation(
-      parent: animation,
-      curve: curve,
-    );
+    final curvedAnimation = CurvedAnimation(parent: animation, curve: curve);
 
     return AnimatedBuilder(
       animation: curvedAnimation,
@@ -72,7 +71,7 @@ class NovaFloatingDrawerAnimation extends StatelessWidget {
         return Transform(
           transform: Matrix4.identity()
             ..translateByVector3(Vector3(0.0, translateY, 0.0))
-            ..scaleByDouble(scale),
+            ..scale(scale, scale, 1.0),
           alignment: Alignment.center,
           child: DecoratedBox(
             decoration: BoxDecoration(
@@ -162,7 +161,7 @@ class NovaFloatingBounceAnimation extends StatelessWidget {
         return Transform(
           transform: Matrix4.identity()
             ..translateByVector3(Vector3(0.0, translateY, 0.0))
-            ..scaleByDouble(scale),
+            ..scale(scale, scale, 1.0),
           alignment: Alignment.center,
           child: DecoratedBox(
             decoration: BoxDecoration(
@@ -241,10 +240,7 @@ class NovaFloatingRevealAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final curvedAnimation = CurvedAnimation(
-      parent: animation,
-      curve: curve,
-    );
+    final curvedAnimation = CurvedAnimation(parent: animation, curve: curve);
 
     return AnimatedBuilder(
       animation: curvedAnimation,
@@ -266,10 +262,7 @@ class NovaFloatingRevealAnimation extends StatelessWidget {
           child: Opacity(
             opacity: t.clamp(0.0, 1.0),
             child: ClipPath(
-              clipper: _CircularRevealClipper(
-                fraction: t,
-                origin: origin,
-              ),
+              clipper: _CircularRevealClipper(fraction: t, origin: origin),
               child: child,
             ),
           ),
@@ -285,10 +278,7 @@ class NovaFloatingRevealAnimation extends StatelessWidget {
 /// At [fraction] 0.0 the circle has zero radius; at 1.0 it is large
 /// enough to cover the entire child.
 class _CircularRevealClipper extends CustomClipper<Path> {
-  const _CircularRevealClipper({
-    required this.fraction,
-    required this.origin,
-  });
+  const _CircularRevealClipper({required this.fraction, required this.origin});
 
   /// Current reveal fraction (0.0 – 1.0).
   final double fraction;
@@ -307,9 +297,7 @@ class _CircularRevealClipper extends CustomClipper<Path> {
     final maxRadius = _maxCornerDistance(center, size);
 
     final path = Path()
-      ..addOval(
-        Rect.fromCircle(center: center, radius: maxRadius * fraction),
-      );
+      ..addOval(Rect.fromCircle(center: center, radius: maxRadius * fraction));
     return path;
   }
 

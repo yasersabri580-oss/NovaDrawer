@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nova_drawer/main.dart';
+import 'package:nova_drawer/nova_drawer.dart';
 
 class HeaderShowcaseScreen extends StatefulWidget {
   const HeaderShowcaseScreen({super.key});

@@ -1,4 +1,4 @@
-// Copyright (c) 2024 NovaDrawer Contributors
+// Copyright (c) 2026 NovaDrawer Contributors
 // Licensed under the MIT License.
 
 /// NovaDrawer – A modern, fully dynamic, and highly responsive

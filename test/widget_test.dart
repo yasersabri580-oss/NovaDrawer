@@ -12,7 +12,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:nova_drawer/main.dart';
+import 'package:nova_drawer/nova_drawer.dart';
 
 // ═══════════════════════════════════════════════════════════════════════
 // MODEL TESTS
