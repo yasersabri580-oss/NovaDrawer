@@ -1,134 +1,162 @@
 // Copyright (c) 2024 NovaDrawer Contributors
 // Licensed under the MIT License.
 
-/// A search bar widget with animated focus state for the drawer.
+/// A search bar widget powered by the `search_plus` package for the drawer.
 ///
-/// Provides a text input with search icon, clear button,
-/// and smooth border/elevation animation on focus.
+/// Wraps [SearchPlusBar] from `search_plus` with drawer-friendly defaults,
+/// providing debounced search, animated focus, history support, and theming.
 library;
 
-import 'package:flutter/material.dart';
 
-/// A search bar with animated focus state for use inside the drawer.
+import 'package:flutter/material.dart';
+import 'package:search_plus/search_plus.dart';
+
+/// A drawer search bar powered by the `search_plus` package.
+///
+/// Uses [SearchPlusController] and [SearchPlusBar] under the hood to provide
+/// debounced, themeable search with optional history, suggestions, and
+/// overlay results — all within the drawer context.
 ///
 /// Example:
 /// ```dart
-/// DrawerSearchBar(
+/// NovaDrawerSearchBar<String>(
+///   controller: mySearchController,
 ///   hintText: 'Search items…',
-///   onChanged: (query) => filterItems(query),
-///   onSubmitted: (query) => performSearch(query),
+///   onResultSelected: (result) => navigateTo(result.data),
 /// )
 /// ```
-class DrawerSearchBar extends StatefulWidget {
-  /// Creates a [DrawerSearchBar].
-  const DrawerSearchBar({
+///
+/// For a simple callback-based usage without a controller:
+/// ```dart
+/// NovaDrawerSearchBar<String>.simple(
+///   items: ['Home', 'Settings', 'Profile'],
+///   searchableFields: (item) => [item],
+///   toResult: (item) => SearchResult(id: item, title: item, data: item),
+///   hintText: 'Search menu…',
+///   onChanged: (query) => filterDrawerItems(query),
+/// )
+/// ```
+class NovaDrawerSearchBar<T> extends StatefulWidget {
+  /// Creates a [NovaDrawerSearchBar] with an externally managed controller.
+  const NovaDrawerSearchBar({
     super.key,
-    this.controller,
+    required this.controller,
     this.hintText = 'Search…',
+    this.onResultSelected,
     this.onChanged,
-    this.onSubmitted,
+    this.showOverlayResults = false,
     this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-  });
+    this.animationConfig,
+    this.themeData,
+  }) : _items = null,
+       _searchableFields = null,
+       _toResult = null;
 
-  /// Optional external text controller.
-  final TextEditingController? controller;
+  /// Creates a simple [NovaDrawerSearchBar] with a built-in local adapter.
+  ///
+  /// Automatically creates and manages a [SearchPlusController] with a
+  /// [LocalSearchAdapter] from the provided [items].
+  const NovaDrawerSearchBar.simple({
+    super.key,
+    required List<T> items,
+    required List<String> Function(T) searchableFields,
+    required SearchResult<T> Function(T) toResult,
+    this.hintText = 'Search…',
+    this.onResultSelected,
+    this.onChanged,
+    this.showOverlayResults = false,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+    this.animationConfig,
+    this.themeData,
+  }) : controller = null,
+       _items = items,
+       _searchableFields = searchableFields,
+       _toResult = toResult;
+
+  /// External search controller. If null, a simple local adapter is created.
+  final SearchPlusController<T>? controller;
 
   /// Placeholder text shown when the field is empty.
   final String hintText;
 
-  /// Called each time the text changes.
+  /// Called when a search result is selected.
+  final void Function(SearchResult<T> result)? onResultSelected;
+
+  /// Called each time the search query text changes.
   final ValueChanged<String>? onChanged;
 
-  /// Called when the user submits the search (e.g. presses Enter).
-  final ValueChanged<String>? onSubmitted;
+  /// Whether to show an overlay dropdown with search results.
+  final bool showOverlayResults;
 
   /// Outer padding around the search bar.
   final EdgeInsetsGeometry padding;
 
+  /// Optional animation configuration for search results.
+  final SearchAnimationConfig? animationConfig;
+
+  /// Optional theme data to customize the search bar appearance.
+  final SearchPlusThemeData? themeData;
+
+  // Private fields for the simple constructor.
+  final List<T>? _items;
+  final List<String> Function(T)? _searchableFields;
+  final SearchResult<T> Function(T)? _toResult;
+
   @override
-  State<DrawerSearchBar> createState() => _DrawerSearchBarState();
+  State<NovaDrawerSearchBar<T>> createState() => _NovaDrawerSearchBarState<T>();
 }
 
-class _DrawerSearchBarState extends State<DrawerSearchBar> {
-  late final TextEditingController _controller;
-  bool _ownsController = false;
-  bool _hasFocus = false;
+class _NovaDrawerSearchBarState<T> extends State<NovaDrawerSearchBar<T>> {
+  SearchPlusController<T>? _ownedController;
+
+  SearchPlusController<T> get _controller =>
+      widget.controller ?? _ownedController!;
 
   @override
   void initState() {
     super.initState();
-    if (widget.controller != null) {
-      _controller = widget.controller!;
-    } else {
-      _controller = TextEditingController();
-      _ownsController = true;
+    if (widget.controller == null) {
+      _ownedController = SearchPlusController<T>(
+        adapter: LocalSearchAdapter<T>(
+          items: widget._items!,
+          searchableFields: widget._searchableFields!,
+          toResult: widget._toResult!,
+        ),
+      );
     }
-    _controller.addListener(_onTextChanged);
+ 
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_onTextChanged);
-    if (_ownsController) _controller.dispose();
+  
+    _ownedController?.dispose();
     super.dispose();
   }
 
-  void _onTextChanged() => setState(() {});
-
+ 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    Widget searchBar = SearchPlusBar(
 
-    return Padding(
-      padding: widget.padding,
-      child: Focus(
-        onFocusChange: (focused) => setState(() => _hasFocus = focused),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeInOut,
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest.withAlpha(
-              _hasFocus ? 200 : 100,
-            ),
-            borderRadius: BorderRadius.circular(12.0),
-            border: Border.all(
-              color: _hasFocus
-                  ? colorScheme.primary.withAlpha(180)
-                  : colorScheme.outline.withAlpha(60),
-              width: _hasFocus ? 1.5 : 1.0,
-            ),
-          ),
-          child: TextField(
-            controller: _controller,
-            onChanged: widget.onChanged,
-            onSubmitted: widget.onSubmitted,
-            style: Theme.of(context).textTheme.bodyMedium,
-            decoration: InputDecoration(
-              hintText: widget.hintText,
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: 10.0,
-              ),
-              prefixIcon: Icon(
-                Icons.search,
-                size: 20.0,
-                color: _hasFocus ? colorScheme.primary : colorScheme.onSurfaceVariant,
-              ),
-              suffixIcon: _controller.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear, size: 18.0),
-                      onPressed: () {
-                        _controller.clear();
-                        widget.onChanged?.call('');
-                      },
-                      tooltip: 'Clear search',
-                    )
-                  : null,
-            ),
-          ),
-        ),
-      ),
+      controller: widget.controller ?? _ownedController!,
+      hintText: widget.hintText,
+      onChanged: widget.onChanged?.call, 
+      
+      onSubmitted: widget.onResultSelected != null
+          ? (query) {
+           
+                widget.onResultSelected!(SearchResult(id: query, title: query));
+              
+            }
+          : null,
+
     );
+
+    if (widget.themeData != null) {
+      searchBar = SearchTheme(data: widget.themeData!, child: searchBar);
+    }
+
+    return Padding(padding: widget.padding, child: searchBar);
   }
 }

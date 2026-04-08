@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Shimmer animation for the AdvancedAppDrawer.
+/// Shimmer animation for the NovaAppDrawer.
 ///
 /// Provides a shimmering loading/highlight effect that sweeps
 /// across the drawer surface during transitions.
@@ -16,22 +16,22 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// ShimmerDrawerAnimation(
+/// NovaShimmerDrawerAnimation(
 ///   animation: controller,
 ///   child: drawerContent,
 ///   baseColor: Colors.grey[300]!,
 ///   highlightColor: Colors.grey[100]!,
 /// )
 /// ```
-class ShimmerDrawerAnimation extends StatelessWidget {
-  /// Creates a [ShimmerDrawerAnimation].
-  const ShimmerDrawerAnimation({
+class NovaShimmerDrawerAnimation extends StatelessWidget {
+  /// Creates a [NovaShimmerDrawerAnimation].
+  const NovaShimmerDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
     this.baseColor,
     this.highlightColor,
-    this.direction = ShimmerDirection.leftToRight,
+    this.direction = NovaShimmerDirection.leftToRight,
     this.curve = Curves.linear,
   });
 
@@ -48,7 +48,7 @@ class ShimmerDrawerAnimation extends StatelessWidget {
   final Color? highlightColor;
 
   /// Direction of the shimmer sweep.
-  final ShimmerDirection direction;
+  final NovaShimmerDirection direction;
 
   /// Easing curve for the shimmer movement.
   final Curve curve;
@@ -97,16 +97,16 @@ class ShimmerDrawerAnimation extends StatelessWidget {
     final Alignment end;
 
     switch (direction) {
-      case ShimmerDirection.leftToRight:
+      case NovaShimmerDirection.leftToRight:
         begin = Alignment(-1.0 + 3.0 * animationValue, 0.0);
         end = Alignment(1.0 + 3.0 * animationValue, 0.0);
-      case ShimmerDirection.rightToLeft:
+      case NovaShimmerDirection.rightToLeft:
         begin = Alignment(1.0 - 3.0 * animationValue, 0.0);
         end = Alignment(-1.0 - 3.0 * animationValue, 0.0);
-      case ShimmerDirection.topToBottom:
+      case NovaShimmerDirection.topToBottom:
         begin = Alignment(0.0, -1.0 + 3.0 * animationValue);
         end = Alignment(0.0, 1.0 + 3.0 * animationValue);
-      case ShimmerDirection.bottomToTop:
+      case NovaShimmerDirection.bottomToTop:
         begin = Alignment(0.0, 1.0 - 3.0 * animationValue);
         end = Alignment(0.0, -1.0 - 3.0 * animationValue);
     }
@@ -121,7 +121,7 @@ class ShimmerDrawerAnimation extends StatelessWidget {
 }
 
 /// Direction of the shimmer sweep.
-enum ShimmerDirection {
+enum NovaShimmerDirection {
   /// Shimmer moves from left to right.
   leftToRight,
 
@@ -138,15 +138,15 @@ enum ShimmerDirection {
 /// A continuous shimmer effect that loops indefinitely.
 ///
 /// Useful for loading state placeholders in the drawer.
-class ContinuousShimmer extends StatefulWidget {
-  /// Creates a [ContinuousShimmer].
-  const ContinuousShimmer({
+class NovaContinuousShimmer extends StatefulWidget {
+  /// Creates a [NovaContinuousShimmer].
+  const NovaContinuousShimmer({
     super.key,
     required this.child,
     this.baseColor,
     this.highlightColor,
     this.duration = const Duration(milliseconds: 1500),
-    this.direction = ShimmerDirection.leftToRight,
+    this.direction = NovaShimmerDirection.leftToRight,
     this.enabled = true,
   });
 
@@ -163,16 +163,16 @@ class ContinuousShimmer extends StatefulWidget {
   final Duration duration;
 
   /// Shimmer direction.
-  final ShimmerDirection direction;
+  final NovaShimmerDirection direction;
 
   /// Whether the shimmer animation is active.
   final bool enabled;
 
   @override
-  State<ContinuousShimmer> createState() => _ContinuousShimmerState();
+  State<NovaContinuousShimmer> createState() => _NovaContinuousShimmerState();
 }
 
-class _ContinuousShimmerState extends State<ContinuousShimmer>
+class _NovaContinuousShimmerState extends State<NovaContinuousShimmer>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -189,7 +189,7 @@ class _ContinuousShimmerState extends State<ContinuousShimmer>
   }
 
   @override
-  void didUpdateWidget(ContinuousShimmer oldWidget) {
+  void didUpdateWidget(NovaContinuousShimmer oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.enabled != oldWidget.enabled) {
       if (widget.enabled) {
@@ -216,7 +216,7 @@ class _ContinuousShimmerState extends State<ContinuousShimmer>
   Widget build(BuildContext context) {
     if (!widget.enabled) return widget.child;
 
-    return ShimmerDrawerAnimation(
+    return NovaShimmerDrawerAnimation(
       animation: _controller,
       baseColor: widget.baseColor,
       highlightColor: widget.highlightColor,

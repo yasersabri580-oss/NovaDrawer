@@ -45,12 +45,13 @@ class NovaDrawerDemoApp extends StatefulWidget {
 class _NovaDrawerDemoAppState extends State<NovaDrawerDemoApp> {
   ThemeMode _themeMode = ThemeMode.system;
   bool _isRtl = false;
-  DrawerAnimationType _animationType = DrawerAnimationType.slide;
+  NovaDrawerAnimationType _animationType = NovaDrawerAnimationType.slide;
 
   void _toggleTheme() {
     setState(() {
-      _themeMode =
-          _themeMode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+      _themeMode = _themeMode == ThemeMode.dark
+          ? ThemeMode.light
+          : ThemeMode.dark;
     });
   }
 
@@ -60,7 +61,7 @@ class _NovaDrawerDemoAppState extends State<NovaDrawerDemoApp> {
     });
   }
 
-  void _setAnimationType(DrawerAnimationType type) {
+  void _setAnimationType(NovaDrawerAnimationType type) {
     setState(() {
       _animationType = type;
     });
@@ -118,8 +119,8 @@ class DemoHomePage extends StatefulWidget {
 
   final VoidCallback onToggleTheme;
   final VoidCallback onToggleRtl;
-  final void Function(DrawerAnimationType) onAnimationTypeChanged;
-  final DrawerAnimationType currentAnimationType;
+  final void Function(NovaDrawerAnimationType) onAnimationTypeChanged;
+  final NovaDrawerAnimationType currentAnimationType;
   final bool isRtl;
   final bool isDark;
 
@@ -128,18 +129,18 @@ class DemoHomePage extends StatefulWidget {
 }
 
 class _DemoHomePageState extends State<DemoHomePage> {
-  late AdvancedDrawerController _drawerController;
+  late NovaDrawerController _drawerController;
   String _selectedPageId = 'home';
   String _selectedPageTitle = 'Home';
   bool _showGradientBg = false;
   bool _showParticleBg = false;
   bool _useDynamicLoading = false;
-  HeaderVariant _headerVariant = HeaderVariant.classic;
+  NovaHeaderVariant _headerVariant = NovaHeaderVariant.classic;
 
   @override
   void initState() {
     super.initState();
-    _drawerController = AdvancedDrawerController(
+    _drawerController = NovaDrawerController(
       initialSelectedItemId: 'home',
       initiallyOpen: false,
     );
@@ -153,196 +154,208 @@ class _DemoHomePageState extends State<DemoHomePage> {
 
   // ── Sample user profile for the header ─────────────────────────────
 
-  static const _profile = HeaderUserProfile(
+  static const _profile = NovaHeaderUserProfile(
     name: 'Jane Developer',
     email: 'jane@novadev.io',
     role: 'Senior Engineer',
-    status: UserStatus.online,
+    status: NovaUserStatus.online,
     notificationCount: 5,
   );
 
   static const _accounts = [
-    HeaderUserProfile(name: 'Alice', email: 'alice@team.io', status: UserStatus.online),
-    HeaderUserProfile(name: 'Bob', email: 'bob@team.io', status: UserStatus.busy),
-    HeaderUserProfile(name: 'Carol', email: 'carol@team.io', status: UserStatus.away),
+    NovaHeaderUserProfile(
+      name: 'Alice',
+      email: 'alice@team.io',
+      status: NovaUserStatus.online,
+    ),
+    NovaHeaderUserProfile(
+      name: 'Bob',
+      email: 'bob@team.io',
+      status: NovaUserStatus.busy,
+    ),
+    NovaHeaderUserProfile(
+      name: 'Carol',
+      email: 'carol@team.io',
+      status: NovaUserStatus.away,
+    ),
   ];
 
   // ── Drawer Data ──────────────────────────────────────────────────────
 
-  List<DrawerSectionData> get _sections => [
-        DrawerSectionData(
-          id: 'main',
-          title: 'Main',
-          items: [
-            DrawerItem(
-              id: 'home',
-              title: 'Home',
-              icon: Icons.home_outlined,
-              selectedIcon: Icons.home,
-              route: '/home',
-              badge: const DrawerItemBadge(count: 3),
-            ),
-            DrawerItem(
-              id: 'dashboard',
-              title: 'Dashboard',
-              icon: Icons.dashboard_outlined,
-              selectedIcon: Icons.dashboard,
-              route: '/dashboard',
-            ),
-            DrawerItem(
-              id: 'analytics',
-              title: 'Analytics',
-              icon: Icons.analytics_outlined,
-              selectedIcon: Icons.analytics,
-              route: '/analytics',
-              badge: const DrawerItemBadge(label: 'NEW'),
-            ),
-          ],
+  List<NovaDrawerSectionData> get _sections => [
+    NovaDrawerSectionData(
+      id: 'main',
+      title: 'Main',
+      items: [
+        NovaDrawerItem(
+          id: 'home',
+          title: 'Home',
+          icon: Icons.home_outlined,
+          selectedIcon: Icons.home,
+          route: '/home',
+          badge: const NovaDrawerItemBadge(count: 3),
         ),
-        DrawerSectionData(
-          id: 'content',
-          title: 'Content',
-          items: [
-            DrawerItem(
-              id: 'messages',
-              title: 'Messages',
-              icon: Icons.message_outlined,
-              selectedIcon: Icons.message,
-              route: '/messages',
-              badge: const DrawerItemBadge(count: 42),
+        NovaDrawerItem(
+          id: 'dashboard',
+          title: 'Dashboard',
+          icon: Icons.dashboard_outlined,
+          selectedIcon: Icons.dashboard,
+          route: '/dashboard',
+        ),
+        NovaDrawerItem(
+          id: 'analytics',
+          title: 'Analytics',
+          icon: Icons.analytics_outlined,
+          selectedIcon: Icons.analytics,
+          route: '/analytics',
+          badge: const NovaDrawerItemBadge(label: 'NEW'),
+        ),
+      ],
+    ),
+    NovaDrawerSectionData(
+      id: 'content',
+      title: 'Content',
+      items: [
+        NovaDrawerItem(
+          id: 'messages',
+          title: 'Messages',
+          icon: Icons.message_outlined,
+          selectedIcon: Icons.message,
+          route: '/messages',
+          badge: const NovaDrawerItemBadge(count: 42),
+        ),
+        NovaDrawerItem(
+          id: 'files',
+          title: 'Files & Media',
+          icon: Icons.folder_outlined,
+          selectedIcon: Icons.folder,
+          children: [
+            NovaDrawerItem(
+              id: 'documents',
+              title: 'Documents',
+              icon: Icons.description_outlined,
+              route: '/files/documents',
             ),
-            DrawerItem(
-              id: 'files',
-              title: 'Files & Media',
-              icon: Icons.folder_outlined,
-              selectedIcon: Icons.folder,
+            NovaDrawerItem(
+              id: 'images',
+              title: 'Images',
+              icon: Icons.image_outlined,
+              route: '/files/images',
+            ),
+            NovaDrawerItem(
+              id: 'videos',
+              title: 'Videos',
+              icon: Icons.video_library_outlined,
+              route: '/files/videos',
               children: [
-                DrawerItem(
-                  id: 'documents',
-                  title: 'Documents',
-                  icon: Icons.description_outlined,
-                  route: '/files/documents',
+                NovaDrawerItem(
+                  id: 'recent_videos',
+                  title: 'Recent',
+                  icon: Icons.access_time,
+                  route: '/files/videos/recent',
                 ),
-                DrawerItem(
-                  id: 'images',
-                  title: 'Images',
-                  icon: Icons.image_outlined,
-                  route: '/files/images',
-                ),
-                DrawerItem(
-                  id: 'videos',
-                  title: 'Videos',
-                  icon: Icons.video_library_outlined,
-                  route: '/files/videos',
-                  children: [
-                    DrawerItem(
-                      id: 'recent_videos',
-                      title: 'Recent',
-                      icon: Icons.access_time,
-                      route: '/files/videos/recent',
-                    ),
-                    DrawerItem(
-                      id: 'favorites_videos',
-                      title: 'Favorites',
-                      icon: Icons.star_outline,
-                      route: '/files/videos/favorites',
-                    ),
-                  ],
+                NovaDrawerItem(
+                  id: 'favorites_videos',
+                  title: 'Favorites',
+                  icon: Icons.star_outline,
+                  route: '/files/videos/favorites',
                 ),
               ],
             ),
-            DrawerItem(
-              id: 'calendar',
-              title: 'Calendar',
-              icon: Icons.calendar_today_outlined,
-              selectedIcon: Icons.calendar_today,
-              route: '/calendar',
-            ),
           ],
         ),
-        DrawerSectionData(
-          id: 'showcase',
-          title: 'Showcase',
-          icon: Icons.auto_awesome,
-          items: [
-            DrawerItem(
-              id: 'header_showcase',
-              title: 'Header Variants',
-              icon: Icons.account_circle_outlined,
-              selectedIcon: Icons.account_circle,
-              route: '/showcase/headers',
-            ),
-            DrawerItem(
-              id: 'surface_showcase',
-              title: 'Surface Styles',
-              icon: Icons.layers_outlined,
-              selectedIcon: Icons.layers,
-              route: '/showcase/surfaces',
-            ),
-            DrawerItem(
-              id: 'content_showcase',
-              title: 'Content Widgets',
-              icon: Icons.widgets_outlined,
-              selectedIcon: Icons.widgets,
-              route: '/showcase/content',
-            ),
-            DrawerItem(
-              id: 'animation_showcase',
-              title: 'Animations',
-              icon: Icons.animation_outlined,
-              selectedIcon: Icons.animation,
-              route: '/showcase/animations',
-            ),
-          ],
+        NovaDrawerItem(
+          id: 'calendar',
+          title: 'Calendar',
+          icon: Icons.calendar_today_outlined,
+          selectedIcon: Icons.calendar_today,
+          route: '/calendar',
         ),
-        DrawerSectionData(
-          id: 'settings_section',
-          title: 'Settings & Tools',
-          items: [
-            DrawerItem(
-              id: 'settings',
-              title: 'Settings',
-              icon: Icons.settings_outlined,
-              selectedIcon: Icons.settings,
-              route: '/settings',
-            ),
-            DrawerItem(
-              id: 'help',
-              title: 'Help & Support',
-              icon: Icons.help_outline,
-              selectedIcon: Icons.help,
-              route: '/help',
-            ),
-            DrawerItem(
-              id: 'about',
-              title: 'About',
-              icon: Icons.info_outline,
-              selectedIcon: Icons.info,
-              route: '/about',
-              subtitle: 'v2.0.0',
-            ),
-          ],
+      ],
+    ),
+    NovaDrawerSectionData(
+      id: 'showcase',
+      title: 'Showcase',
+      icon: Icons.auto_awesome,
+      items: [
+        NovaDrawerItem(
+          id: 'header_showcase',
+          title: 'Header Variants',
+          icon: Icons.account_circle_outlined,
+          selectedIcon: Icons.account_circle,
+          route: '/showcase/headers',
         ),
-      ];
+        NovaDrawerItem(
+          id: 'surface_showcase',
+          title: 'Surface Styles',
+          icon: Icons.layers_outlined,
+          selectedIcon: Icons.layers,
+          route: '/showcase/surfaces',
+        ),
+        NovaDrawerItem(
+          id: 'content_showcase',
+          title: 'Content Widgets',
+          icon: Icons.widgets_outlined,
+          selectedIcon: Icons.widgets,
+          route: '/showcase/content',
+        ),
+        NovaDrawerItem(
+          id: 'animation_showcase',
+          title: 'Animations',
+          icon: Icons.animation_outlined,
+          selectedIcon: Icons.animation,
+          route: '/showcase/animations',
+        ),
+      ],
+    ),
+    NovaDrawerSectionData(
+      id: 'settings_section',
+      title: 'Settings & Tools',
+      items: [
+        NovaDrawerItem(
+          id: 'settings',
+          title: 'Settings',
+          icon: Icons.settings_outlined,
+          selectedIcon: Icons.settings,
+          route: '/settings',
+        ),
+        NovaDrawerItem(
+          id: 'help',
+          title: 'Help & Support',
+          icon: Icons.help_outline,
+          selectedIcon: Icons.help,
+          route: '/help',
+        ),
+        NovaDrawerItem(
+          id: 'about',
+          title: 'About',
+          icon: Icons.info_outline,
+          selectedIcon: Icons.info,
+          route: '/about',
+          subtitle: 'v2.0.0',
+        ),
+      ],
+    ),
+  ];
 
   /// Simulates loading drawer items from an API.
-  Future<List<DrawerItem>> _loadDynamicItems() async {
+  Future<List<NovaDrawerItem>> _loadDynamicItems() async {
     await Future<void>.delayed(const Duration(seconds: 2));
     return [
-      DrawerItem(
+      NovaDrawerItem(
         id: 'dynamic_1',
         title: 'Dynamic Item 1',
         icon: Icons.cloud_outlined,
         route: '/dynamic/1',
       ),
-      DrawerItem(
+      NovaDrawerItem(
         id: 'dynamic_2',
         title: 'Dynamic Item 2',
         icon: Icons.cloud_download_outlined,
         route: '/dynamic/2',
-        badge: const DrawerItemBadge(label: 'API'),
+        badge: const NovaDrawerItemBadge(label: 'API'),
       ),
-      DrawerItem(
+      NovaDrawerItem(
         id: 'dynamic_3',
         title: 'Dynamic Item 3',
         icon: Icons.cloud_upload_outlined,
@@ -353,19 +366,20 @@ class _DemoHomePageState extends State<DemoHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final drawerTheme =
-        widget.isDark ? AdvancedDrawerTheme.dark() : AdvancedDrawerTheme.light();
+    final drawerTheme = widget.isDark
+        ? NovaDrawerTheme.dark()
+        : NovaDrawerTheme.light();
 
-    final config = DrawerConfig(
+    final config = NovaDrawerConfig(
       animationType: widget.currentAnimationType,
-      displayMode: DrawerDisplayMode.auto,
+      displayMode: NovaDrawerDisplayMode.auto,
       isPinnable: true,
       showMiniOnCollapse: true,
-      gestureConfig: const DrawerGestureConfig(
+      gestureConfig: const NovaDrawerGestureConfig(
         enableSwipeToOpen: true,
         enableSwipeToClose: true,
       ),
-      animationConfig: const DrawerAnimationConfig(
+      animationConfig: const NovaDrawerAnimationConfig(
         duration: Duration(milliseconds: 350),
         curve: Curves.easeOutCubic,
         enableStaggeredAnimations: true,
@@ -383,16 +397,20 @@ class _DemoHomePageState extends State<DemoHomePage> {
       showStatusIndicator: true,
       showNotificationBadge: true,
       enableCollapseExpand: true,
-      gradientColors: const [Color(0xFF6366F1), Color(0xFF8B5CF6), Color(0xFFEC4899)],
+      gradientColors: const [
+        Color(0xFF6366F1),
+        Color(0xFF8B5CF6),
+        Color(0xFFEC4899),
+      ],
       actions: [
-        HeaderAction(
+        NovaHeaderAction(
           id: 'notifications',
           icon: Icons.notifications_outlined,
           tooltip: 'Notifications',
           badge: 5,
           onTap: () {},
         ),
-        HeaderAction(
+        NovaHeaderAction(
           id: 'settings',
           icon: Icons.settings_outlined,
           tooltip: 'Settings',
@@ -404,7 +422,7 @@ class _DemoHomePageState extends State<DemoHomePage> {
     );
 
     // Build the drawer widget
-    final drawer = AdvancedAppDrawer(
+    final drawer = NovaAppDrawer(
       controller: _drawerController,
       sections: _sections,
       header: NovaDrawerHeader(config: headerConfig),
@@ -422,7 +440,7 @@ class _DemoHomePageState extends State<DemoHomePage> {
       particleCount: 15,
     );
 
-    return DrawerScaffoldWidget(
+    return NovaDrawerScaffold(
       controller: _drawerController,
       drawer: drawer,
       theme: drawerTheme,
@@ -448,7 +466,10 @@ class _DemoHomePageState extends State<DemoHomePage> {
           // Theme toggle
           IconButton(
             icon: Icon(
-                widget.isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
+              widget.isDark
+                  ? Icons.light_mode_outlined
+                  : Icons.dark_mode_outlined,
+            ),
             onPressed: widget.onToggleTheme,
             tooltip: 'Toggle theme',
           ),
@@ -469,8 +490,8 @@ class _DemoHomePageState extends State<DemoHomePage> {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Divider(height: 1),
-        DrawerAppStatusWidget(
-          status: const DrawerAppStatus(
+        NovaDrawerAppStatusWidget(
+          status: const NovaDrawerAppStatus(
             isOnline: true,
             version: '2.0.0',
             buildNumber: '42',
@@ -555,8 +576,8 @@ class _DemoHomePageState extends State<DemoHomePage> {
                 Text(
                   _selectedPageTitle,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -575,9 +596,9 @@ class _DemoHomePageState extends State<DemoHomePage> {
           children: [
             Text(
               'Header Variant',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
@@ -588,7 +609,7 @@ class _DemoHomePageState extends State<DemoHomePage> {
             Wrap(
               spacing: 8.0,
               runSpacing: 8.0,
-              children: HeaderVariant.values.map((variant) {
+              children: NovaHeaderVariant.values.map((variant) {
                 final isSelected = variant == _headerVariant;
                 return ChoiceChip(
                   label: Text(_headerVariantName(variant)),
@@ -614,9 +635,9 @@ class _DemoHomePageState extends State<DemoHomePage> {
           children: [
             Text(
               'Animation Type',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
@@ -627,7 +648,7 @@ class _DemoHomePageState extends State<DemoHomePage> {
             Wrap(
               spacing: 8.0,
               runSpacing: 8.0,
-              children: DrawerAnimationType.values.map((type) {
+              children: NovaDrawerAnimationType.values.map((type) {
                 final isSelected = type == widget.currentAnimationType;
                 return ChoiceChip(
                   label: Text(_animationTypeName(type)),
@@ -651,9 +672,9 @@ class _DemoHomePageState extends State<DemoHomePage> {
           children: [
             Text(
               'Background Effects',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             SwitchListTile(
@@ -683,9 +704,9 @@ class _DemoHomePageState extends State<DemoHomePage> {
           children: [
             Text(
               'Dynamic Loading',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
@@ -722,7 +743,7 @@ class _DemoHomePageState extends State<DemoHomePage> {
 
   Widget _buildResponsiveInfoCard(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final deviceType = ResponsiveUtils.getDeviceType(width);
+    final deviceType = NovaResponsiveUtils.getDeviceType(width);
 
     return Card(
       color: Theme.of(context).colorScheme.primaryContainer,
@@ -731,11 +752,11 @@ class _DemoHomePageState extends State<DemoHomePage> {
         child: Row(
           children: [
             Icon(
-              deviceType == DeviceType.mobile
+              deviceType == NovaDeviceType.mobile
                   ? Icons.phone_android
-                  : deviceType == DeviceType.tablet
-                      ? Icons.tablet_mac
-                      : Icons.desktop_mac,
+                  : deviceType == NovaDeviceType.tablet
+                  ? Icons.tablet_mac
+                  : Icons.desktop_mac,
               size: 48,
               color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
@@ -747,28 +768,25 @@ class _DemoHomePageState extends State<DemoHomePage> {
                   Text(
                     'Device: ${deviceType.name.toUpperCase()}',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Width: ${width.toStringAsFixed(0)}px',
                     style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onPrimaryContainer
-                          .withAlpha(179),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onPrimaryContainer.withAlpha(179),
                     ),
                   ),
                   Text(
-                    'Mode: ${ResponsiveUtils.resolveDisplayMode(DrawerDisplayMode.auto, deviceType).name}',
+                    'Mode: ${NovaResponsiveUtils.resolveDisplayMode(NovaDrawerDisplayMode.auto, deviceType).name}',
                     style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onPrimaryContainer
-                          .withAlpha(179),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onPrimaryContainer.withAlpha(179),
                     ),
                   ),
                 ],
@@ -782,30 +800,66 @@ class _DemoHomePageState extends State<DemoHomePage> {
 
   Widget _buildFeatureShowcase() {
     final features = [
-      _FeatureItem(Icons.account_circle, 'Header System',
-          '10 header variants: classic, glassmorphism, hero, collapsible, and more'),
-      _FeatureItem(Icons.layers, 'Surface Styles',
-          '10 surface styles: glass, neumorphic, gradient, mesh, and more'),
-      _FeatureItem(Icons.widgets, 'Content Blocks',
-          'Search bar, stats card, shortcuts grid, recent items, filter chips'),
-      _FeatureItem(Icons.animation, '10+ Animations',
-          'Slide, fade, scale, rotate, morph, elastic, spring, shimmer, blur, gradient'),
-      _FeatureItem(Icons.devices, 'Responsive',
-          'Adapts to mobile, tablet, and desktop layouts'),
-      _FeatureItem(Icons.format_textdirection_r_to_l, 'RTL Support',
-          'Full right-to-left language support'),
-      _FeatureItem(Icons.account_tree, 'Nested Menus',
-          'Multi-level expandable menu items'),
-      _FeatureItem(Icons.cloud_download, 'Dynamic Loading',
-          'Load menu items from API with loading states'),
-      _FeatureItem(Icons.accessibility, 'Accessibility',
-          'Screen reader support, focus management, scalable text'),
-      _FeatureItem(Icons.palette, 'Theming',
-          'Full light/dark mode and custom theme support'),
-      _FeatureItem(Icons.view_sidebar, 'Mini Drawer',
-          'Collapsed icon-only mode for tablet/desktop'),
-      _FeatureItem(Icons.build, 'Builder APIs',
-          'Slot-based builder callbacks for deep customization'),
+      _FeatureItem(
+        Icons.account_circle,
+        'Header System',
+        '10 header variants: classic, glassmorphism, hero, collapsible, and more',
+      ),
+      _FeatureItem(
+        Icons.layers,
+        'Surface Styles',
+        '10 surface styles: glass, neumorphic, gradient, mesh, and more',
+      ),
+      _FeatureItem(
+        Icons.widgets,
+        'Content Blocks',
+        'Search bar, stats card, shortcuts grid, recent items, filter chips',
+      ),
+      _FeatureItem(
+        Icons.animation,
+        '10+ Animations',
+        'Slide, fade, scale, rotate, morph, elastic, spring, shimmer, blur, gradient',
+      ),
+      _FeatureItem(
+        Icons.devices,
+        'Responsive',
+        'Adapts to mobile, tablet, and desktop layouts',
+      ),
+      _FeatureItem(
+        Icons.format_textdirection_r_to_l,
+        'RTL Support',
+        'Full right-to-left language support',
+      ),
+      _FeatureItem(
+        Icons.account_tree,
+        'Nested Menus',
+        'Multi-level expandable menu items',
+      ),
+      _FeatureItem(
+        Icons.cloud_download,
+        'Dynamic Loading',
+        'Load menu items from API with loading states',
+      ),
+      _FeatureItem(
+        Icons.accessibility,
+        'Accessibility',
+        'Screen reader support, focus management, scalable text',
+      ),
+      _FeatureItem(
+        Icons.palette,
+        'Theming',
+        'Full light/dark mode and custom theme support',
+      ),
+      _FeatureItem(
+        Icons.view_sidebar,
+        'Mini Drawer',
+        'Collapsed icon-only mode for tablet/desktop',
+      ),
+      _FeatureItem(
+        Icons.build,
+        'Builder APIs',
+        'Slot-based builder callbacks for deep customization',
+      ),
     ];
 
     return Column(
@@ -813,9 +867,9 @@ class _DemoHomePageState extends State<DemoHomePage> {
       children: [
         Text(
           'Features',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         LayoutBuilder(
@@ -823,8 +877,8 @@ class _DemoHomePageState extends State<DemoHomePage> {
             final crossAxisCount = constraints.maxWidth > 900
                 ? 4
                 : constraints.maxWidth > 600
-                    ? 3
-                    : 2;
+                ? 3
+                : 2;
             return GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -843,15 +897,15 @@ class _DemoHomePageState extends State<DemoHomePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(feature.icon,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 28),
+                        Icon(
+                          feature.icon,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: 28,
+                        ),
                         const SizedBox(height: 8),
                         Text(
                           feature.title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
+                          style: Theme.of(context).textTheme.titleSmall
                               ?.copyWith(fontWeight: FontWeight.bold),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -877,53 +931,55 @@ class _DemoHomePageState extends State<DemoHomePage> {
     );
   }
 
-  String _headerVariantName(HeaderVariant variant) {
+  String _headerVariantName(NovaHeaderVariant variant) {
     switch (variant) {
-      case HeaderVariant.classic:
+      case NovaHeaderVariant.classic:
         return 'Classic';
-      case HeaderVariant.glassmorphism:
+      case NovaHeaderVariant.glassmorphism:
         return 'Glass';
-      case HeaderVariant.compact:
+      case NovaHeaderVariant.compact:
         return 'Compact';
-      case HeaderVariant.hero:
+      case NovaHeaderVariant.hero:
         return 'Hero';
-      case HeaderVariant.expanded:
+      case NovaHeaderVariant.expanded:
         return 'Expanded';
-      case HeaderVariant.animatedGradient:
+      case NovaHeaderVariant.animatedGradient:
         return 'Gradient';
-      case HeaderVariant.avatarStack:
+      case NovaHeaderVariant.avatarStack:
         return 'Avatars';
-      case HeaderVariant.multiAction:
+      case NovaHeaderVariant.multiAction:
         return 'Actions';
-      case HeaderVariant.statusAware:
+      case NovaHeaderVariant.statusAware:
         return 'Status';
-      case HeaderVariant.collapsible:
+      case NovaHeaderVariant.collapsible:
         return 'Collapsible';
     }
   }
 
-  String _animationTypeName(DrawerAnimationType type) {
+  String _animationTypeName(NovaDrawerAnimationType type) {
     switch (type) {
-      case DrawerAnimationType.slide:
+      case NovaDrawerAnimationType.slide:
         return 'Slide';
-      case DrawerAnimationType.fade:
+      case NovaDrawerAnimationType.fade:
         return 'Fade';
-      case DrawerAnimationType.scale:
+      case NovaDrawerAnimationType.scale:
         return 'Scale';
-      case DrawerAnimationType.rotate:
+      case NovaDrawerAnimationType.rotate:
         return 'Rotate';
-      case DrawerAnimationType.morph:
+      case NovaDrawerAnimationType.morph:
         return 'Morph';
-      case DrawerAnimationType.elastic:
+      case NovaDrawerAnimationType.elastic:
         return 'Elastic';
-      case DrawerAnimationType.spring:
+      case NovaDrawerAnimationType.spring:
         return 'Spring';
-      case DrawerAnimationType.shimmer:
+      case NovaDrawerAnimationType.shimmer:
         return 'Shimmer';
-      case DrawerAnimationType.blur:
+      case NovaDrawerAnimationType.blur:
         return 'Blur';
-      case DrawerAnimationType.gradient:
+      case NovaDrawerAnimationType.gradient:
         return 'Gradient';
+      default:
+        return 'Blue';
     }
   }
 }

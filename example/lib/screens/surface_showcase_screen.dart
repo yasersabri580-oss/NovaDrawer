@@ -4,7 +4,7 @@ import 'package:nova_drawer/main.dart';
 class SurfaceShowcaseScreen extends StatelessWidget {
   const SurfaceShowcaseScreen({super.key});
 
-  static const _styles = DrawerSurfaceStyle.values;
+  static const _styles = NovaDrawerSurfaceStyle.values;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class SurfaceShowcaseScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(BuildContext context, DrawerSurfaceStyle style) {
+  Widget _buildCard(BuildContext context, NovaDrawerSurfaceStyle style) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       clipBehavior: Clip.antiAlias,
@@ -34,7 +34,7 @@ class SurfaceShowcaseScreen extends StatelessWidget {
           ),
           SizedBox(
             height: 140,
-            child: DrawerSurface(
+            child: NovaDrawerSurface(
               config: _configFor(style, context),
               child: Center(
                 child: Column(
@@ -66,69 +66,69 @@ class SurfaceShowcaseScreen extends StatelessWidget {
     );
   }
 
-  DrawerSurfaceConfig _configFor(DrawerSurfaceStyle style, BuildContext ctx) {
+  NovaDrawerSurfaceConfig _configFor(NovaDrawerSurfaceStyle style, BuildContext ctx) {
     switch (style) {
-      case DrawerSurfaceStyle.plain:
-        return const DrawerSurfaceConfig(style: DrawerSurfaceStyle.plain);
+      case NovaDrawerSurfaceStyle.plain:
+        return const NovaDrawerSurfaceConfig(style: NovaDrawerSurfaceStyle.plain);
 
-      case DrawerSurfaceStyle.elevated:
-        return const DrawerSurfaceConfig(
-          style: DrawerSurfaceStyle.elevated,
+      case NovaDrawerSurfaceStyle.elevated:
+        return const NovaDrawerSurfaceConfig(
+          style: NovaDrawerSurfaceStyle.elevated,
           elevation: 8,
         );
 
-      case DrawerSurfaceStyle.glassmorphism:
-        return const DrawerSurfaceConfig(
-          style: DrawerSurfaceStyle.glassmorphism,
+      case NovaDrawerSurfaceStyle.glassmorphism:
+        return const NovaDrawerSurfaceConfig(
+          style: NovaDrawerSurfaceStyle.glassmorphism,
           blurSigma: 12,
           opacity: 0.15,
         );
 
-      case DrawerSurfaceStyle.blurred:
-        return const DrawerSurfaceConfig(
-          style: DrawerSurfaceStyle.blurred,
+      case NovaDrawerSurfaceStyle.blurred:
+        return const NovaDrawerSurfaceConfig(
+          style: NovaDrawerSurfaceStyle.blurred,
           blurSigma: 15,
         );
 
-      case DrawerSurfaceStyle.gradient:
-        return const DrawerSurfaceConfig(
-          style: DrawerSurfaceStyle.gradient,
+      case NovaDrawerSurfaceStyle.gradient:
+        return const NovaDrawerSurfaceConfig(
+          style: NovaDrawerSurfaceStyle.gradient,
           gradientColors: [Colors.deepPurple, Colors.indigo, Colors.blue],
           gradientBegin: Alignment.topLeft,
           gradientEnd: Alignment.bottomRight,
         );
 
-      case DrawerSurfaceStyle.premiumShadow:
-        return const DrawerSurfaceConfig(
-          style: DrawerSurfaceStyle.premiumShadow,
+      case NovaDrawerSurfaceStyle.premiumShadow:
+        return const NovaDrawerSurfaceConfig(
+          style: NovaDrawerSurfaceStyle.premiumShadow,
           elevation: 12,
           shadowColor: Colors.black54,
         );
 
-      case DrawerSurfaceStyle.outlinedMinimal:
-        return DrawerSurfaceConfig(
-          style: DrawerSurfaceStyle.outlinedMinimal,
+      case NovaDrawerSurfaceStyle.outlinedMinimal:
+        return NovaDrawerSurfaceConfig(
+          style: NovaDrawerSurfaceStyle.outlinedMinimal,
           border: Border.all(
             color: Theme.of(ctx).colorScheme.outline,
           ),
         );
 
-      case DrawerSurfaceStyle.neumorphic:
-        return const DrawerSurfaceConfig(
-          style: DrawerSurfaceStyle.neumorphic,
+      case NovaDrawerSurfaceStyle.neumorphic:
+        return const NovaDrawerSurfaceConfig(
+          style: NovaDrawerSurfaceStyle.neumorphic,
           elevation: 4,
         );
 
-      case DrawerSurfaceStyle.imageBacked:
-        return const DrawerSurfaceConfig(
-          style: DrawerSurfaceStyle.imageBacked,
+      case NovaDrawerSurfaceStyle.imageBacked:
+        return const NovaDrawerSurfaceConfig(
+          style: NovaDrawerSurfaceStyle.imageBacked,
           backgroundImage: AssetImage('assets/placeholder.png'),
           opacity: 0.3,
         );
 
-      case DrawerSurfaceStyle.animatedMeshGradient:
-        return const DrawerSurfaceConfig(
-          style: DrawerSurfaceStyle.animatedMeshGradient,
+      case NovaDrawerSurfaceStyle.animatedMeshGradient:
+        return const NovaDrawerSurfaceConfig(
+          style: NovaDrawerSurfaceStyle.animatedMeshGradient,
           meshColors: [
             Colors.purple,
             Colors.blue,
@@ -139,52 +139,52 @@ class SurfaceShowcaseScreen extends StatelessWidget {
     }
   }
 
-  IconData _iconFor(DrawerSurfaceStyle style) {
+  IconData _iconFor(NovaDrawerSurfaceStyle style) {
     switch (style) {
-      case DrawerSurfaceStyle.plain:
+      case NovaDrawerSurfaceStyle.plain:
         return Icons.rectangle_outlined;
-      case DrawerSurfaceStyle.elevated:
+      case NovaDrawerSurfaceStyle.elevated:
         return Icons.layers;
-      case DrawerSurfaceStyle.glassmorphism:
+      case NovaDrawerSurfaceStyle.glassmorphism:
         return Icons.blur_on;
-      case DrawerSurfaceStyle.blurred:
+      case NovaDrawerSurfaceStyle.blurred:
         return Icons.blur_circular;
-      case DrawerSurfaceStyle.gradient:
+      case NovaDrawerSurfaceStyle.gradient:
         return Icons.gradient;
-      case DrawerSurfaceStyle.premiumShadow:
+      case NovaDrawerSurfaceStyle.premiumShadow:
         return Icons.wb_shade;
-      case DrawerSurfaceStyle.outlinedMinimal:
+      case NovaDrawerSurfaceStyle.outlinedMinimal:
         return Icons.crop_square;
-      case DrawerSurfaceStyle.neumorphic:
+      case NovaDrawerSurfaceStyle.neumorphic:
         return Icons.rounded_corner;
-      case DrawerSurfaceStyle.imageBacked:
+      case NovaDrawerSurfaceStyle.imageBacked:
         return Icons.image;
-      case DrawerSurfaceStyle.animatedMeshGradient:
+      case NovaDrawerSurfaceStyle.animatedMeshGradient:
         return Icons.auto_awesome;
     }
   }
 
-  String _descriptionFor(DrawerSurfaceStyle style) {
+  String _descriptionFor(NovaDrawerSurfaceStyle style) {
     switch (style) {
-      case DrawerSurfaceStyle.plain:
+      case NovaDrawerSurfaceStyle.plain:
         return 'Flat surface with background color';
-      case DrawerSurfaceStyle.elevated:
+      case NovaDrawerSurfaceStyle.elevated:
         return 'Raised surface with shadow';
-      case DrawerSurfaceStyle.glassmorphism:
+      case NovaDrawerSurfaceStyle.glassmorphism:
         return 'Frosted glass transparency effect';
-      case DrawerSurfaceStyle.blurred:
+      case NovaDrawerSurfaceStyle.blurred:
         return 'Background-blurred surface';
-      case DrawerSurfaceStyle.gradient:
+      case NovaDrawerSurfaceStyle.gradient:
         return 'Linear gradient fill';
-      case DrawerSurfaceStyle.premiumShadow:
+      case NovaDrawerSurfaceStyle.premiumShadow:
         return 'Deep, premium shadow styling';
-      case DrawerSurfaceStyle.outlinedMinimal:
+      case NovaDrawerSurfaceStyle.outlinedMinimal:
         return 'Clean outline, no fill';
-      case DrawerSurfaceStyle.neumorphic:
+      case NovaDrawerSurfaceStyle.neumorphic:
         return 'Soft neumorphic surface';
-      case DrawerSurfaceStyle.imageBacked:
+      case NovaDrawerSurfaceStyle.imageBacked:
         return 'Image as background';
-      case DrawerSurfaceStyle.animatedMeshGradient:
+      case NovaDrawerSurfaceStyle.animatedMeshGradient:
         return 'Animated mesh gradient';
     }
   }

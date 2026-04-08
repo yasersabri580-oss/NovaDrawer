@@ -4,7 +4,7 @@
 import 'package:flutter/widgets.dart';
 
 /// Enum representing the online/offline/busy status of a user.
-enum UserStatus {
+enum NovaUserStatus {
   /// User is currently online.
   online,
 
@@ -22,7 +22,7 @@ enum UserStatus {
 }
 
 /// Enum representing the visual variant of a drawer header.
-enum HeaderVariant {
+enum NovaHeaderVariant {
   /// Classic profile header with avatar, name, and subtitle.
   classic,
 
@@ -55,9 +55,9 @@ enum HeaderVariant {
 }
 
 /// Configuration for a header action button.
-class HeaderAction {
+class NovaHeaderAction {
   /// Creates a header action.
-  const HeaderAction({
+  const NovaHeaderAction({
     required this.id,
     required this.icon,
     this.label,
@@ -97,7 +97,7 @@ class HeaderAction {
   final Widget? customWidget;
 
   /// Creates a copy with the given fields replaced.
-  HeaderAction copyWith({
+  NovaHeaderAction copyWith({
     String? id,
     IconData? icon,
     String? label,
@@ -108,7 +108,7 @@ class HeaderAction {
     bool? isEnabled,
     Widget? customWidget,
   }) {
-    return HeaderAction(
+    return NovaHeaderAction(
       id: id ?? this.id,
       icon: icon ?? this.icon,
       label: label ?? this.label,
@@ -123,9 +123,9 @@ class HeaderAction {
 }
 
 /// User account data for the header.
-class HeaderUserProfile {
+class NovaHeaderUserProfile {
   /// Creates a user profile for the header.
-  const HeaderUserProfile({
+  const NovaHeaderUserProfile({
     required this.name,
     this.email,
     this.role,
@@ -135,7 +135,7 @@ class HeaderUserProfile {
     this.avatarWidget,
     this.coverUrl,
     this.coverWidget,
-    this.status = UserStatus.unknown,
+    this.status = NovaUserStatus.unknown,
     this.notificationCount = 0,
     this.metadata = const {},
   });
@@ -168,7 +168,7 @@ class HeaderUserProfile {
   final Widget? coverWidget;
 
   /// Current user status.
-  final UserStatus status;
+  final NovaUserStatus status;
 
   /// Number of unread notifications.
   final int notificationCount;
@@ -180,7 +180,7 @@ class HeaderUserProfile {
   String? get effectiveSubtitle => subtitle ?? email ?? phone;
 
   /// Creates a copy with the given fields replaced.
-  HeaderUserProfile copyWith({
+  NovaHeaderUserProfile copyWith({
     String? name,
     String? email,
     String? role,
@@ -190,11 +190,11 @@ class HeaderUserProfile {
     Widget? avatarWidget,
     String? coverUrl,
     Widget? coverWidget,
-    UserStatus? status,
+    NovaUserStatus? status,
     int? notificationCount,
     Map<String, dynamic>? metadata,
   }) {
-    return HeaderUserProfile(
+    return NovaHeaderUserProfile(
       name: name ?? this.name,
       email: email ?? this.email,
       role: role ?? this.role,
@@ -218,7 +218,7 @@ class HeaderUserProfile {
 class NovaHeaderConfig {
   /// Creates a header configuration.
   const NovaHeaderConfig({
-    this.variant = HeaderVariant.classic,
+    this.variant = NovaHeaderVariant.classic,
     this.profile,
     this.actions = const [],
     this.showCloseButton = true,
@@ -248,13 +248,13 @@ class NovaHeaderConfig {
   });
 
   /// The visual variant of the header.
-  final HeaderVariant variant;
+  final NovaHeaderVariant variant;
 
   /// The primary user profile to display.
-  final HeaderUserProfile? profile;
+  final NovaHeaderUserProfile? profile;
 
   /// Action buttons to display in the header.
-  final List<HeaderAction> actions;
+  final List<NovaHeaderAction> actions;
 
   /// Whether to show the close drawer button.
   final bool showCloseButton;
@@ -327,13 +327,13 @@ class NovaHeaderConfig {
   final double? coverHeight;
 
   /// Additional accounts for account switcher.
-  final List<HeaderUserProfile> accounts;
+  final List<NovaHeaderUserProfile> accounts;
 
   /// Creates a copy with the given fields replaced.
   NovaHeaderConfig copyWith({
-    HeaderVariant? variant,
-    HeaderUserProfile? profile,
-    List<HeaderAction>? actions,
+    NovaHeaderVariant? variant,
+    NovaHeaderUserProfile? profile,
+    List<NovaHeaderAction>? actions,
     bool? showCloseButton,
     bool? showPinButton,
     bool? showEditProfileButton,
@@ -357,7 +357,7 @@ class NovaHeaderConfig {
     double? collapsedAvatarRadius,
     List<Color>? gradientColors,
     double? coverHeight,
-    List<HeaderUserProfile>? accounts,
+    List<NovaHeaderUserProfile>? accounts,
   }) {
     return NovaHeaderConfig(
       variant: variant ?? this.variant,

@@ -1,6 +1,6 @@
 # NovaDrawer
 
-A **modern, production-grade, and highly responsive** app drawer system for Flutter. Supports **mobile, tablet, and desktop** with 10+ animation types, 10 header variants, 10 surface styles, content widgets, nested menus, RTL support, theming, accessibility, slot-based builder APIs, and much more.
+A **modern, production-grade, and highly responsive** app drawer system for Flutter. Supports **mobile, tablet, and desktop** with 16+ animation types, 10 header variants, 10 surface styles, content widgets, nested menus, RTL support, theming, accessibility, slot-based builder APIs, and much more.
 
 ---
 
@@ -47,6 +47,7 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 | `animatedMeshGradient` | Animated shifting gradient |
 
 ### 📦 Content Widgets
+<<<<<<< HEAD
 
 - **DrawerSearchBar** — Animated focus state, clear button
 - **DrawerStatsCard** — Row of stat items with dividers
@@ -58,6 +59,17 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 
 ### 🎬 Animations (10+ types)
 
+=======
+- **NovaDrawerSearchBar** — Powered by `search_plus`, with animated focus state, clear button
+- **NovaDrawerStatsCard** — Row of stat items with dividers
+- **NovaDrawerShortcutsGrid** — Tappable shortcut grid with badges
+- **NovaDrawerRecentItems** — Recent items list with timestamps
+- **NovaDrawerFilterChipsWidget** — Horizontally scrollable filter chips
+- **NovaDrawerAppStatusWidget** — Connection status and version info
+- **NovaDrawerWorkspaceSwitcher** — Expandable workspace/account switcher
+
+### 🎬 Animations (16+ types)
+>>>>>>> 185de8de1cdee738b7ee508fa861e1b3f6e7b769
 | Animation | Description |
 |-----------|-------------|
 | `slide` | Slides in from the edge |
@@ -70,6 +82,12 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 | `shimmer` | Loading/highlight sweep |
 | `blur` | Gaussian blur transition |
 | `gradient` | Color gradient transition |
+| `floating` | Floating overlay with shadow depth |
+| `floatingBounce` | Floating entry with bounce settle |
+| `floatingReveal` | Floating progressive reveal |
+| `wave` | Wave distortion transition |
+| `parallax` | Parallax depth layers |
+| `curtain` | Theatrical curtain open/close |
 
 All animations are smooth and performant. Developers can customize **duration, curve, and style**.
 
@@ -124,7 +142,7 @@ import 'package:nova_drawer/main.dart';
 ### 2. Create a controller
 
 ```dart
-final controller = AdvancedDrawerController(
+final controller = NovaDrawerController(
   initialSelectedItemId: 'home',
 );
 ```
@@ -133,30 +151,30 @@ final controller = AdvancedDrawerController(
 
 ```dart
 final sections = [
-  DrawerSectionData(
+  NovaDrawerSectionData(
     id: 'main',
     title: 'Navigation',
     items: [
-      DrawerItem(
+      NovaDrawerItem(
         id: 'home',
         title: 'Home',
         icon: Icons.home_outlined,
         selectedIcon: Icons.home,
         route: '/home',
       ),
-      DrawerItem(
+      NovaDrawerItem(
         id: 'dashboard',
         title: 'Dashboard',
         icon: Icons.dashboard_outlined,
-        badge: DrawerItemBadge(count: 3),
+        badge: NovaDrawerItemBadge(count: 3),
       ),
-      DrawerItem(
+      NovaDrawerItem(
         id: 'settings',
         title: 'Settings',
         icon: Icons.settings_outlined,
         children: [
-          DrawerItem(id: 'account', title: 'Account', icon: Icons.person),
-          DrawerItem(id: 'privacy', title: 'Privacy', icon: Icons.lock),
+          NovaDrawerItem(id: 'account', title: 'Account', icon: Icons.person),
+          NovaDrawerItem(id: 'privacy', title: 'Privacy', icon: Icons.lock),
         ],
       ),
     ],
@@ -167,12 +185,12 @@ final sections = [
 ### 4. Build the drawer
 
 ```dart
-DrawerScaffoldWidget(
+NovaDrawerScaffold(
   controller: controller,
-  drawer: AdvancedAppDrawer(
+  drawer: NovaAppDrawer(
     controller: controller,
     sections: sections,
-    header: DrawerHeaderWidget(
+    header: NovaDrawerHeaderWidget(
       title: 'My App',
       subtitle: 'user@example.com',
       avatar: CircleAvatar(child: Text('U')),
@@ -191,27 +209,27 @@ DrawerScaffoldWidget(
 
 ### Using the header system
 
-Replace the old `DrawerHeaderWidget` with the new `NovaDrawerHeader`:
+Replace the old `NovaDrawerHeaderWidget` with the new `NovaDrawerHeader`:
 
 ```dart
-AdvancedAppDrawer(
+NovaAppDrawer(
   controller: controller,
   sections: sections,
   header: NovaDrawerHeader(
     config: NovaHeaderConfig(
-      variant: HeaderVariant.classic,
-      profile: HeaderUserProfile(
+      variant: NovaHeaderVariant.classic,
+      profile: NovaHeaderUserProfile(
         name: 'Jane Developer',
         email: 'jane@example.com',
         role: 'Senior Engineer',
-        status: UserStatus.online,
+        status: NovaUserStatus.online,
         notificationCount: 5,
       ),
       showCloseButton: true,
       showPinButton: true,
       actions: [
-        HeaderAction(id: 'settings', icon: Icons.settings, tooltip: 'Settings'),
-        HeaderAction(id: 'notifications', icon: Icons.notifications, badge: 3),
+        NovaHeaderAction(id: 'settings', icon: Icons.settings, tooltip: 'Settings'),
+        NovaHeaderAction(id: 'notifications', icon: Icons.notifications, badge: 3),
       ],
     ),
   ),
@@ -224,7 +242,7 @@ Just change the `variant` parameter:
 
 ```dart
 NovaHeaderConfig(
-  variant: HeaderVariant.glassmorphism, // or hero, compact, collapsible, etc.
+  variant: NovaHeaderVariant.glassmorphism, // or hero, compact, collapsible, etc.
   profile: myProfile,
 )
 ```
@@ -233,11 +251,11 @@ NovaHeaderConfig(
 
 ```dart
 NovaHeaderConfig(
-  variant: HeaderVariant.avatarStack,
+  variant: NovaHeaderVariant.avatarStack,
   profile: primaryUser,
   accounts: [
-    HeaderUserProfile(name: 'Alice', status: UserStatus.online),
-    HeaderUserProfile(name: 'Bob', status: UserStatus.busy),
+    NovaHeaderUserProfile(name: 'Alice', status: NovaUserStatus.online),
+    NovaHeaderUserProfile(name: 'Bob', status: NovaUserStatus.busy),
   ],
   onSwitchAccount: () => showAccountPicker(),
 )
@@ -260,9 +278,9 @@ NovaHeaderConfig(
 Wrap your drawer content with a surface style:
 
 ```dart
-DrawerSurface(
-  config: DrawerSurfaceConfig(
-    style: DrawerSurfaceStyle.glassmorphism,
+NovaDrawerSurface(
+  config: NovaDrawerSurfaceConfig(
+    style: NovaDrawerSurfaceStyle.glassmorphism,
     blurSigma: 15.0,
     opacity: 0.8,
   ),
@@ -276,20 +294,25 @@ DrawerSurface(
 
 ### Search bar
 
+> **Note:** `NovaDrawerSearchBar` is now powered by the [`search_plus`](https://pub.dev/packages/search_plus) package, providing advanced search capabilities out of the box.
+
 ```dart
-DrawerSearchBar(
-  hintText: 'Search...',
-  onChanged: (query) => filterItems(query),
+NovaDrawerSearchBar<String>.simple(
+  items: ['Home', 'Settings', 'Profile'],
+  searchableFields: (item) => [item],
+  toResult: (item) => SearchResult(id: item, title: item, data: item),
+  hintText: 'Search menu…',
+  onChanged: (query) => filterDrawerItems(query),
 )
 ```
 
 ### Stats card
 
 ```dart
-DrawerStatsCard(
+NovaDrawerStatsCard(
   stats: [
-    DrawerStatItem(label: 'Projects', value: '42'),
-    DrawerStatItem(label: 'Tasks', value: '128'),
+    NovaDrawerStatItem(label: 'Projects', value: '42'),
+    NovaDrawerStatItem(label: 'Tasks', value: '128'),
   ],
 )
 ```
@@ -297,10 +320,10 @@ DrawerStatsCard(
 ### Workspace switcher
 
 ```dart
-DrawerWorkspaceSwitcher(
+NovaDrawerWorkspaceSwitcher(
   workspaces: [
-    DrawerWorkspace(id: '1', name: 'Personal', isActive: true),
-    DrawerWorkspace(id: '2', name: 'Work'),
+    NovaDrawerWorkspace(id: '1', name: 'Personal', isActive: true),
+    NovaDrawerWorkspace(id: '2', name: 'Work'),
   ],
 )
 ```
@@ -312,7 +335,7 @@ DrawerWorkspaceSwitcher(
 Customize every component with builder callbacks:
 
 ```dart
-DrawerBuilders(
+NovaDrawerBuilders(
   headerBuilder: (context, config) => MyCustomHeader(config: config),
   itemBuilder: (context, item, isSelected) => MyCustomItem(item: item),
   footerBuilder: (context) => MyCustomFooter(),
@@ -329,8 +352,8 @@ DrawerBuilders(
 ### Light/Dark themes
 
 ```dart
-AdvancedAppDrawer(
-  theme: AdvancedDrawerTheme.light(), // or .dark()
+NovaAppDrawer(
+  theme: NovaDrawerTheme.light(), // or .dark()
   // ...
 )
 ```
@@ -338,8 +361,8 @@ AdvancedAppDrawer(
 ### Custom theme
 
 ```dart
-AdvancedAppDrawer(
-  theme: AdvancedDrawerTheme(
+NovaAppDrawer(
+  theme: NovaDrawerTheme(
     backgroundColor: Colors.white,
     selectedItemColor: Colors.indigo,
     selectedItemBackgroundColor: Colors.indigo.withOpacity(0.1),
@@ -359,9 +382,9 @@ AdvancedAppDrawer(
 ### Change animation type
 
 ```dart
-DrawerConfig(
-  animationType: DrawerAnimationType.elastic,
-  animationConfig: DrawerAnimationConfig(
+NovaDrawerConfig(
+  animationType: NovaDrawerAnimationType.elastic,
+  animationConfig: NovaDrawerAnimationConfig(
     duration: Duration(milliseconds: 400),
     curve: Curves.easeOutBack,
     springDamping: 0.7,
@@ -374,7 +397,7 @@ DrawerConfig(
 ### Staggered item animations
 
 ```dart
-DrawerAnimationConfig(
+NovaDrawerAnimationConfig(
   enableStaggeredAnimations: true,
   itemStaggerDelay: Duration(milliseconds: 50),
 )
@@ -395,8 +418,8 @@ The drawer automatically adapts based on screen size:
 ### Custom breakpoints
 
 ```dart
-DrawerConfig(
-  breakpoints: DrawerBreakpoints(
+NovaDrawerConfig(
+  breakpoints: NovaDrawerBreakpoints(
     mobile: 500,
     tablet: 900,
   ),
@@ -406,8 +429,8 @@ DrawerConfig(
 ### Force a display mode
 
 ```dart
-DrawerConfig(
-  displayMode: DrawerDisplayMode.side, // Always side-by-side
+NovaDrawerConfig(
+  displayMode: NovaDrawerDisplayMode.side, // Always side-by-side
 )
 ```
 
@@ -420,7 +443,7 @@ DrawerConfig(
 await controller.loadItems(() async {
   final response = await http.get(Uri.parse('/api/menu'));
   final data = json.decode(response.body) as List;
-  return data.map((item) => DrawerItem(
+  return data.map((item) => NovaDrawerItem(
     id: item['id'],
     title: item['title'],
     icon: iconFromString(item['icon']),
@@ -443,8 +466,8 @@ Built-in accessibility features:
 - **Announcements** on drawer open/close
 
 ```dart
-DrawerConfig(
-  accessibilityConfig: DrawerAccessibilityConfig(
+NovaDrawerConfig(
+  accessibilityConfig: NovaDrawerAccessibilityConfig(
     enableSemantics: true,
     enableFocusTraversal: true,
     enableScalableText: true,
@@ -461,7 +484,7 @@ DrawerConfig(
 On tablet/desktop, the drawer can collapse to a mini icon-only view:
 
 ```dart
-DrawerConfig(
+NovaDrawerConfig(
   showMiniOnCollapse: true,
   enableHoverExpand: true, // Expand on mouse hover
   hoverExpandDelay: Duration(milliseconds: 500),
@@ -480,8 +503,8 @@ controller.toggleMini();
 ## 👆 Gesture Controls
 
 ```dart
-DrawerConfig(
-  gestureConfig: DrawerGestureConfig(
+NovaDrawerConfig(
+  gestureConfig: NovaDrawerGestureConfig(
     enableSwipeToOpen: true,
     enableSwipeToClose: true,
     swipeEdgeWidth: 20.0,
@@ -498,7 +521,7 @@ Pin the drawer open on tablet/desktop:
 
 ```dart
 // In header
-DrawerHeaderWidget(
+NovaDrawerHeaderWidget(
   showPinButton: true,
 )
 
@@ -515,7 +538,7 @@ controller.togglePin();
 ### Animated gradient
 
 ```dart
-AdvancedAppDrawer(
+NovaAppDrawer(
   enableGradientBackground: true,
   gradientColors: [Colors.blue.shade900, Colors.purple.shade900],
 )
@@ -524,7 +547,7 @@ AdvancedAppDrawer(
 ### Particle effects
 
 ```dart
-AdvancedAppDrawer(
+NovaAppDrawer(
   enableParticleBackground: true,
   particleColor: Colors.white,
   particleCount: 20,
@@ -540,7 +563,7 @@ RTL is automatically detected from `Directionality`. You can also wrap with:
 ```dart
 Directionality(
   textDirection: TextDirection.rtl,
-  child: DrawerScaffoldWidget(/* ... */),
+  child: NovaDrawerScaffold(/* ... */),
 )
 ```
 
@@ -553,14 +576,14 @@ lib/
   main.dart                          # Barrel export file
   src/
     models/
-      drawer_item.dart               # DrawerItem, DrawerSectionData, Badge
-      drawer_theme.dart              # AdvancedDrawerTheme
-      drawer_config.dart             # DrawerConfig, enums, sub-configs
-      header_config.dart             # NovaHeaderConfig, HeaderUserProfile, HeaderAction
-      surface_config.dart            # DrawerSurfaceConfig, DrawerSurface widget
+      drawer_item.dart               # NovaDrawerItem, NovaDrawerSectionData, Badge
+      drawer_theme.dart              # NovaDrawerTheme
+      drawer_config.dart             # NovaDrawerConfig, enums, sub-configs
+      header_config.dart             # NovaHeaderConfig, NovaHeaderUserProfile, NovaHeaderAction
+      surface_config.dart            # NovaDrawerSurfaceConfig, NovaDrawerSurface widget
       content_config.dart            # Content models (stats, shortcuts, etc.)
     controllers/
-      drawer_controller.dart         # AdvancedDrawerController
+      drawer_controller.dart         # NovaDrawerController
     headers/
       nova_drawer_header.dart        # Main header router widget
       header_utils.dart              # Shared header utilities
@@ -577,20 +600,20 @@ lib/
     builders/
       drawer_builders.dart           # Slot-based builder callbacks
     widgets/
-      advanced_app_drawer.dart       # Main drawer widget
-      drawer_header.dart             # Legacy header widget
+      advanced_app_drawer.dart       # Main drawer widget (NovaAppDrawer)
+      drawer_header.dart             # Legacy header widget (NovaDrawerHeaderWidget)
       drawer_item_widget.dart        # Individual item widget
       drawer_section.dart            # Collapsible section widget
-      nested_menu_item.dart          # Nested expandable items
-      mini_drawer.dart               # Mini/collapsed drawer
-      drawer_scaffold.dart           # Responsive scaffold
-      drawer_search_bar.dart         # Search bar with animated focus
-      drawer_stats_card.dart         # User stats card
-      drawer_shortcuts_grid.dart     # Shortcuts grid
-      drawer_recent_items.dart       # Recent items list
-      drawer_filter_chips.dart       # Filter chips row
-      drawer_app_status.dart         # App status footer
-      drawer_workspace_switcher.dart # Workspace/account switcher
+      nested_menu_item.dart          # Nested expandable items (NovaNestedMenuItem)
+      mini_drawer.dart               # Mini/collapsed drawer (NovaMiniDrawer)
+      drawer_scaffold.dart           # Responsive scaffold (NovaDrawerScaffold)
+      drawer_search_bar.dart         # Search bar powered by search_plus (NovaDrawerSearchBar)
+      drawer_stats_card.dart         # User stats card (NovaDrawerStatsCard)
+      drawer_shortcuts_grid.dart     # Shortcuts grid (NovaDrawerShortcutsGrid)
+      drawer_recent_items.dart       # Recent items list (NovaDrawerRecentItems)
+      drawer_filter_chips.dart       # Filter chips row (NovaDrawerFilterChipsWidget)
+      drawer_app_status.dart         # App status footer (NovaDrawerAppStatusWidget)
+      drawer_workspace_switcher.dart # Workspace/account switcher (NovaDrawerWorkspaceSwitcher)
     animations/
       animation_config.dart          # Animation configuration
       animation_wrapper.dart         # Unified animation wrapper
@@ -604,12 +627,19 @@ lib/
       shimmer_animation.dart         # Shimmer effect
       blur_animation.dart            # Blur transitions
       gradient_animation.dart        # Gradient transitions
+      floating_animation.dart        # Floating overlay
+      floating_bounce_animation.dart # Floating bounce
+      floating_reveal_animation.dart # Floating reveal
+      wave_animation.dart            # Wave distortion
+      parallax_animation.dart        # Parallax depth
+      curtain_animation.dart         # Curtain open/close
     utils/
-      responsive_utils.dart          # Responsive breakpoints
-      accessibility_utils.dart       # Accessibility helpers
+      responsive_utils.dart          # Responsive breakpoints (NovaResponsiveUtils)
+      accessibility_utils.dart       # Accessibility helpers (NovaAccessibilityUtils)
     backgrounds/
-      gradient_background.dart       # Animated gradient
-      particle_background.dart       # Particle effects
+      gradient_background.dart       # Animated gradient (NovaGradientBackground)
+      particle_background.dart       # Particle effects (NovaParticleBackground)
+    deprecated_aliases.dart          # Backward-compatible typedefs for old names
 example/
   lib/
     main.dart                        # Full demo app
@@ -626,7 +656,7 @@ test/
 
 ## 🔧 API Reference
 
-### AdvancedDrawerController
+### NovaDrawerController
 
 | Method | Description |
 |--------|-------------|
@@ -647,25 +677,25 @@ test/
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `variant` | `HeaderVariant` | Header visual style |
-| `profile` | `HeaderUserProfile?` | User profile data |
-| `actions` | `List<HeaderAction>` | Action buttons |
+| `variant` | `NovaHeaderVariant` | Header visual style |
+| `profile` | `NovaHeaderUserProfile?` | User profile data |
+| `actions` | `List<NovaHeaderAction>` | Action buttons |
 | `showCloseButton` | `bool` | Show close button |
 | `showPinButton` | `bool` | Show pin button |
 | `isLoading` | `bool` | Show skeleton |
 | `isCollapsed` | `bool` | Collapsed state |
-| `accounts` | `List<HeaderUserProfile>` | For avatar stack |
+| `accounts` | `List<NovaHeaderUserProfile>` | For avatar stack |
 | `customHeaderBuilder` | `Function?` | Custom header |
 
-### HeaderVariant
+### NovaHeaderVariant
 
 `classic` · `glassmorphism` · `compact` · `hero` · `expanded` · `animatedGradient` · `avatarStack` · `multiAction` · `statusAware` · `collapsible`
 
-### DrawerSurfaceStyle
+### NovaDrawerSurfaceStyle
 
 `plain` · `elevated` · `glassmorphism` · `blurred` · `gradient` · `premiumShadow` · `outlinedMinimal` · `neumorphic` · `imageBacked` · `animatedMeshGradient`
 
-### DrawerItem
+### NovaDrawerItem
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -673,19 +703,85 @@ test/
 | `title` | `String` | Display title |
 | `icon` | `IconData?` | Icon |
 | `selectedIcon` | `IconData?` | Icon when selected |
-| `children` | `List<DrawerItem>` | Nested items |
-| `badge` | `DrawerItemBadge?` | Notification badge |
+| `children` | `List<NovaDrawerItem>` | Nested items |
+| `badge` | `NovaDrawerItemBadge?` | Notification badge |
 | `route` | `String?` | Route path |
 | `subtitle` | `String?` | Subtitle text |
 | `onTap` | `VoidCallback?` | Tap callback |
 
-### DrawerAnimationType
+### NovaDrawerAnimationType
 
-`slide` · `fade` · `scale` · `rotate` · `morph` · `elastic` · `spring` · `shimmer` · `blur` · `gradient`
+`slide` · `fade` · `scale` · `rotate` · `morph` · `elastic` · `spring` · `shimmer` · `blur` · `gradient` · `floating` · `floatingBounce` · `floatingReveal` · `wave` · `parallax` · `curtain`
 
-### DrawerDisplayMode
+### NovaDrawerDisplayMode
 
 `auto` · `overlay` · `push` · `side` · `mini`
+
+---
+
+## 🔄 Migration Guide
+
+All public APIs have been renamed from the old `Drawer*` / `Advanced*` prefix convention to the new unified `Nova*` prefix. The old names are still available as **deprecated typedefs** in `deprecated_aliases.dart` for backward compatibility, but will be removed in a future release.
+
+### Naming changes
+
+| Old Name | New Name |
+|----------|----------|
+| `AdvancedDrawerController` | `NovaDrawerController` |
+| `AdvancedDrawerTheme` | `NovaDrawerTheme` |
+| `AdvancedAppDrawer` | `NovaAppDrawer` |
+| `DrawerScaffoldWidget` | `NovaDrawerScaffold` |
+| `DrawerItem` | `NovaDrawerItem` |
+| `DrawerItemBadge` | `NovaDrawerItemBadge` |
+| `DrawerSectionData` | `NovaDrawerSectionData` |
+| `DrawerConfig` | `NovaDrawerConfig` |
+| `DrawerAnimationType` | `NovaDrawerAnimationType` |
+| `DrawerAnimationConfig` | `NovaDrawerAnimationConfig` |
+| `DrawerDisplayMode` | `NovaDrawerDisplayMode` |
+| `DrawerBreakpoints` | `NovaDrawerBreakpoints` |
+| `DrawerGestureConfig` | `NovaDrawerGestureConfig` |
+| `DrawerAccessibilityConfig` | `NovaDrawerAccessibilityConfig` |
+| `DrawerHeaderWidget` | `NovaDrawerHeaderWidget` |
+| `DrawerSearchBar` | `NovaDrawerSearchBar` |
+| `DrawerStatsCard` | `NovaDrawerStatsCard` |
+| `DrawerStatItem` | `NovaDrawerStatItem` |
+| `DrawerShortcutsGrid` | `NovaDrawerShortcutsGrid` |
+| `DrawerShortcut` | `NovaDrawerShortcut` |
+| `DrawerRecentItems` | `NovaDrawerRecentItems` |
+| `DrawerRecentItem` | `NovaDrawerRecentItem` |
+| `DrawerFilterChips` | `NovaDrawerFilterChipsWidget` |
+| `DrawerFilterChip` | `NovaDrawerFilterChip` |
+| `DrawerAppStatusWidget` | `NovaDrawerAppStatusWidget` |
+| `DrawerAppStatus` | `NovaDrawerAppStatus` |
+| `DrawerWorkspaceSwitcher` | `NovaDrawerWorkspaceSwitcher` |
+| `DrawerWorkspace` | `NovaDrawerWorkspace` |
+| `DrawerSurface` | `NovaDrawerSurface` |
+| `DrawerSurfaceConfig` | `NovaDrawerSurfaceConfig` |
+| `DrawerSurfaceStyle` | `NovaDrawerSurfaceStyle` |
+| `DrawerBuilders` | `NovaDrawerBuilders` |
+| `MiniDrawerWidget` | `NovaMiniDrawer` |
+| `NestedMenuItem` | `NovaNestedMenuItem` |
+| `HeaderVariant` | `NovaHeaderVariant` |
+| `HeaderAction` | `NovaHeaderAction` |
+| `HeaderUserProfile` | `NovaHeaderUserProfile` |
+| `UserStatus` | `NovaUserStatus` |
+| `DrawerGradientBackground` | `NovaGradientBackground` |
+| `DrawerParticleBackground` | `NovaParticleBackground` |
+| `ResponsiveUtils` | `NovaResponsiveUtils` |
+| `AccessibilityUtils` | `NovaAccessibilityUtils` |
+| `DeviceType` | `NovaDeviceType` |
+
+### Using deprecated aliases
+
+If you are migrating from an older version, the old names still work thanks to `deprecated_aliases.dart`. Simply import the package as usual and you will see deprecation warnings guiding you to the new names:
+
+```dart
+// Old code still compiles but shows deprecation warnings
+final controller = AdvancedDrawerController(); // ⚠️ Deprecated — use NovaDrawerController
+
+// Updated code
+final controller = NovaDrawerController();
+```
 
 ---
 

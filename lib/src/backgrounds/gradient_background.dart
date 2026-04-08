@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Gradient background for the AdvancedAppDrawer.
+/// Gradient background for the NovaAppDrawer.
 ///
 /// Provides animated gradient backgrounds for the drawer surface.
 library;
@@ -14,14 +14,14 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// DrawerGradientBackground(
+/// NovaGradientBackground(
 ///   colors: [Colors.blue.shade900, Colors.purple.shade900],
 ///   child: drawerContent,
 /// )
 /// ```
-class DrawerGradientBackground extends StatefulWidget {
-  /// Creates a [DrawerGradientBackground].
-  const DrawerGradientBackground({
+class NovaGradientBackground extends StatefulWidget {
+  /// Creates a [NovaGradientBackground].
+  const NovaGradientBackground({
     super.key,
     required this.child,
     this.colors,
@@ -58,11 +58,11 @@ class DrawerGradientBackground extends StatefulWidget {
   final double opacity;
 
   @override
-  State<DrawerGradientBackground> createState() =>
-      _DrawerGradientBackgroundState();
+  State<NovaGradientBackground> createState() =>
+      _NovaGradientBackgroundState();
 }
 
-class _DrawerGradientBackgroundState extends State<DrawerGradientBackground>
+class _NovaGradientBackgroundState extends State<NovaGradientBackground>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -79,7 +79,7 @@ class _DrawerGradientBackgroundState extends State<DrawerGradientBackground>
   }
 
   @override
-  void didUpdateWidget(DrawerGradientBackground oldWidget) {
+  void didUpdateWidget(NovaGradientBackground oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.animated != oldWidget.animated) {
       if (widget.animated) {

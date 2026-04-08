@@ -10,9 +10,9 @@ import 'header_utils.dart';
 ///
 /// Cover image at top, avatar at cover/content boundary, action bar on top.
 /// Height animates smoothly between expanded and collapsed via [AnimatedContainer].
-class ProfileHeaderClassic extends StatefulWidget {
+class NovaProfileHeaderClassic extends StatefulWidget {
   /// Creates a classic profile header.
-  const ProfileHeaderClassic({super.key, required this.config, this.theme});
+  const NovaProfileHeaderClassic({super.key, required this.config, this.theme});
 
   /// Header configuration.
   final NovaHeaderConfig config;
@@ -21,10 +21,10 @@ class ProfileHeaderClassic extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderClassic> createState() => _ProfileHeaderClassicState();
+  State<NovaProfileHeaderClassic> createState() => _NovaProfileHeaderClassicState();
 }
 
-class _ProfileHeaderClassicState extends State<ProfileHeaderClassic> {
+class _NovaProfileHeaderClassicState extends State<NovaProfileHeaderClassic> {
   static const _animDuration = Duration(milliseconds: 300);
 
   NovaHeaderConfig get _config => widget.config;
@@ -35,7 +35,7 @@ class _ProfileHeaderClassicState extends State<ProfileHeaderClassic> {
 
     // Loading state
     if (_config.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: theme,
         height: _effectiveHeight,
       );
@@ -63,22 +63,22 @@ class _ProfileHeaderClassicState extends State<ProfileHeaderClassic> {
   double get _effectiveHeight {
     if (_config.isCollapsed) {
       return _config.collapsedHeaderHeight ??
-          HeaderWidgetUtils.kDefaultCollapsedHeight;
+          NovaHeaderWidgetUtils.kDefaultCollapsedHeight;
     }
-    return _config.headerHeight ?? HeaderWidgetUtils.kDefaultHeaderHeight;
+    return _config.headerHeight ?? NovaHeaderWidgetUtils.kDefaultHeaderHeight;
   }
 
   Widget _buildCollapsed(ThemeData theme) {
     final profile = _config.profile;
     final radius = _config.collapsedAvatarRadius ??
-        HeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
+        NovaHeaderWidgetUtils.kDefaultCollapsedAvatarRadius;
 
     return Padding(
       padding: _config.padding ??
           const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
-          HeaderWidgetUtils.buildAvatar(
+          NovaHeaderWidgetUtils.buildAvatar(
             profile: profile,
             radius: radius,
             showStatus: _config.showStatusIndicator,
@@ -87,14 +87,14 @@ class _ProfileHeaderClassicState extends State<ProfileHeaderClassic> {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: HeaderWidgetUtils.buildUserName(
+            child: NovaHeaderWidgetUtils.buildUserName(
               name: profile?.name,
               theme: theme,
             ),
           ),
           if (_config.showNotificationBadge &&
               (profile?.notificationCount ?? 0) > 0)
-            HeaderWidgetUtils.buildNotificationBadge(
+            NovaHeaderWidgetUtils.buildNotificationBadge(
               count: profile!.notificationCount,
               theme: theme,
             ),
@@ -106,7 +106,7 @@ class _ProfileHeaderClassicState extends State<ProfileHeaderClassic> {
   Widget _buildExpanded(ThemeData theme) {
     final profile = _config.profile;
     final avatarRadius =
-        _config.avatarRadius ?? HeaderWidgetUtils.kDefaultAvatarRadius;
+        _config.avatarRadius ?? NovaHeaderWidgetUtils.kDefaultAvatarRadius;
     final coverH = _config.coverHeight ?? _effectiveHeight * 0.45;
 
     return Stack(
@@ -128,7 +128,7 @@ class _ProfileHeaderClassicState extends State<ProfileHeaderClassic> {
           top: 0,
           left: 0,
           right: 0,
-          child: HeaderWidgetUtils.buildActionBar(
+          child: NovaHeaderWidgetUtils.buildActionBar(
             context: context,
             config: _config,
             theme: theme,
@@ -150,7 +150,7 @@ class _ProfileHeaderClassicState extends State<ProfileHeaderClassic> {
               children: [
                 GestureDetector(
                   onTap: _config.onProfileTap,
-                  child: HeaderWidgetUtils.buildAvatar(
+                  child: NovaHeaderWidgetUtils.buildAvatar(
                     profile: profile,
                     radius: avatarRadius,
                     showStatus: _config.showStatusIndicator,
@@ -164,11 +164,11 @@ class _ProfileHeaderClassicState extends State<ProfileHeaderClassic> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          HeaderWidgetUtils.buildUserName(
+                          NovaHeaderWidgetUtils.buildUserName(
                             name: profile?.name,
                             theme: theme,
                           ),
-                          HeaderWidgetUtils.buildSubtitle(
+                          NovaHeaderWidgetUtils.buildSubtitle(
                             text: profile?.effectiveSubtitle,
                             theme: theme,
                           ),
@@ -177,7 +177,7 @@ class _ProfileHeaderClassicState extends State<ProfileHeaderClassic> {
                     ),
                     if (_config.showNotificationBadge &&
                         (profile?.notificationCount ?? 0) > 0)
-                      HeaderWidgetUtils.buildNotificationBadge(
+                      NovaHeaderWidgetUtils.buildNotificationBadge(
                         count: profile!.notificationCount,
                         theme: theme,
                       ),

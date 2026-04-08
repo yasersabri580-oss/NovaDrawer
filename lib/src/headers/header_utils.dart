@@ -9,8 +9,8 @@ import '../models/header_config.dart';
 ///
 /// Provides common building blocks: avatar, status indicator, action bar,
 /// notification badge, loading skeleton, and user info text.
-class HeaderWidgetUtils {
-  HeaderWidgetUtils._();
+class NovaHeaderWidgetUtils {
+  NovaHeaderWidgetUtils._();
 
   /// Default expanded header height.
   static const double kDefaultHeaderHeight = 200.0;
@@ -24,25 +24,25 @@ class HeaderWidgetUtils {
   /// Default collapsed avatar radius.
   static const double kDefaultCollapsedAvatarRadius = 20.0;
 
-  /// Returns the color for a [UserStatus].
-  static Color statusColor(UserStatus status) {
+  /// Returns the color for a [NovaUserStatus].
+  static Color statusColor(NovaUserStatus status) {
     switch (status) {
-      case UserStatus.online:
+      case NovaUserStatus.online:
         return const Color(0xFF22C55E);
-      case UserStatus.offline:
+      case NovaUserStatus.offline:
         return const Color(0xFF9CA3AF);
-      case UserStatus.busy:
+      case NovaUserStatus.busy:
         return const Color(0xFFEF4444);
-      case UserStatus.away:
+      case NovaUserStatus.away:
         return const Color(0xFFF59E0B);
-      case UserStatus.unknown:
+      case NovaUserStatus.unknown:
         return const Color(0xFF6B7280);
     }
   }
 
   /// Builds the avatar widget with optional status indicator.
   static Widget buildAvatar({
-    required HeaderUserProfile? profile,
+    required NovaHeaderUserProfile? profile,
     required double radius,
     required bool showStatus,
     required ThemeData theme,
@@ -72,7 +72,7 @@ class HeaderWidgetUtils {
 
     Widget result = avatar;
 
-    if (showStatus && profile != null && profile.status != UserStatus.unknown) {
+    if (showStatus && profile != null && profile.status != NovaUserStatus.unknown) {
       result = Stack(
         clipBehavior: Clip.none,
         children: [
@@ -356,7 +356,7 @@ class _ActionIconButton extends StatelessWidget {
 class _StatusDot extends StatefulWidget {
   const _StatusDot({required this.status, this.size = 12.0});
 
-  final UserStatus status;
+  final NovaUserStatus status;
   final double size;
 
   @override
@@ -378,7 +378,7 @@ class _StatusDotState extends State<_StatusDot>
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
-    if (widget.status == UserStatus.online) {
+    if (widget.status == NovaUserStatus.online) {
       _controller.repeat(reverse: true);
     }
   }
@@ -386,7 +386,7 @@ class _StatusDotState extends State<_StatusDot>
   @override
   void didUpdateWidget(_StatusDot oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.status == UserStatus.online) {
+    if (widget.status == NovaUserStatus.online) {
       if (!_controller.isAnimating) _controller.repeat(reverse: true);
     } else {
       _controller.stop();
@@ -408,7 +408,7 @@ class _StatusDotState extends State<_StatusDot>
         width: widget.size,
         height: widget.size,
         decoration: BoxDecoration(
-          color: HeaderWidgetUtils.statusColor(widget.status),
+          color: NovaHeaderWidgetUtils.statusColor(widget.status),
           shape: BoxShape.circle,
           border: Border.all(
             color: Theme.of(context).colorScheme.surface,

@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Slide animation for the AdvancedAppDrawer.
+/// Slide animation for the NovaAppDrawer.
 ///
 /// Provides a horizontal or vertical slide transition that moves
 /// the drawer in from the edge of the screen.
@@ -16,15 +16,15 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// SlideDrawerAnimation(
+/// NovaSlideDrawerAnimation(
 ///   animation: animationController,
 ///   beginOffset: Offset(-1.0, 0.0),
 ///   child: drawerContent,
 /// )
 /// ```
-class SlideDrawerAnimation extends StatelessWidget {
-  /// Creates a [SlideDrawerAnimation].
-  const SlideDrawerAnimation({
+class NovaSlideDrawerAnimation extends StatelessWidget {
+  /// Creates a [NovaSlideDrawerAnimation].
+  const NovaSlideDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -70,9 +70,9 @@ class SlideDrawerAnimation extends StatelessWidget {
 ///
 /// Each child slides in with a delay based on its [index],
 /// creating a cascading entrance effect.
-class StaggeredSlideAnimation extends StatelessWidget {
-  /// Creates a [StaggeredSlideAnimation].
-  const StaggeredSlideAnimation({
+class NovaStaggeredSlideAnimation extends StatelessWidget {
+  /// Creates a [NovaStaggeredSlideAnimation].
+  const NovaStaggeredSlideAnimation({
     super.key,
     required this.animation,
     required this.child,

@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Animation wrapper for the AdvancedAppDrawer.
+/// Animation wrapper for the NovaAppDrawer.
 ///
 /// Provides a unified interface for applying any of the supported
 /// animation types to drawer content via a single widget.
@@ -21,6 +21,8 @@ import '../animations/spring_animation.dart';
 import '../animations/shimmer_animation.dart';
 import '../animations/blur_animation.dart';
 import '../animations/gradient_animation.dart';
+import '../animations/floating_animation.dart';
+import '../animations/wave_animation.dart';
 
 /// A unified animation wrapper that applies the configured animation
 /// type to its child.
@@ -30,20 +32,20 @@ import '../animations/gradient_animation.dart';
 ///
 /// Example:
 /// ```dart
-/// DrawerAnimationWrapper(
+/// NovaDrawerAnimationWrapper(
 ///   animation: controller,
-///   animationType: DrawerAnimationType.slide,
+///   animationType: NovaDrawerAnimationType.slide,
 ///   child: drawerContent,
 /// )
 /// ```
-class DrawerAnimationWrapper extends StatelessWidget {
-  /// Creates a [DrawerAnimationWrapper].
-  const DrawerAnimationWrapper({
+class NovaDrawerAnimationWrapper extends StatelessWidget {
+  /// Creates a [NovaDrawerAnimationWrapper].
+  const NovaDrawerAnimationWrapper({
     super.key,
     required this.animation,
     required this.animationType,
     required this.child,
-    this.animationConfig = const DrawerAnimationConfig(),
+    this.animationConfig = const NovaDrawerAnimationConfig(),
     this.isRtl = false,
   });
 
@@ -51,13 +53,13 @@ class DrawerAnimationWrapper extends StatelessWidget {
   final Animation<double> animation;
 
   /// Which animation type to apply.
-  final DrawerAnimationType animationType;
+  final NovaDrawerAnimationType animationType;
 
   /// The child widget to animate.
   final Widget child;
 
   /// Animation configuration (timing, curves, etc.).
-  final DrawerAnimationConfig animationConfig;
+  final NovaDrawerAnimationConfig animationConfig;
 
   /// Whether the layout direction is right-to-left.
   final bool isRtl;
@@ -65,23 +67,23 @@ class DrawerAnimationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (animationType) {
-      case DrawerAnimationType.slide:
-        return SlideDrawerAnimation(
+      case NovaDrawerAnimationType.slide:
+        return NovaSlideDrawerAnimation(
           animation: animation,
           beginOffset: Offset(isRtl ? 1.0 : -1.0, 0.0),
           curve: animationConfig.curve,
           child: child,
         );
 
-      case DrawerAnimationType.fade:
-        return FadeDrawerAnimation(
+      case NovaDrawerAnimationType.fade:
+        return NovaFadeDrawerAnimation(
           animation: animation,
           curve: animationConfig.curve,
           child: child,
         );
 
-      case DrawerAnimationType.scale:
-        return ScaleDrawerAnimation(
+      case NovaDrawerAnimationType.scale:
+        return NovaScaleDrawerAnimation(
           animation: animation,
           beginScale: 0.8,
           alignment: isRtl ? Alignment.centerRight : Alignment.centerLeft,
@@ -89,56 +91,93 @@ class DrawerAnimationWrapper extends StatelessWidget {
           child: child,
         );
 
-      case DrawerAnimationType.rotate:
-        return PerspectiveRotateAnimation(
+      case NovaDrawerAnimationType.rotate:
+        return NovaPerspectiveRotateAnimation(
           animation: animation,
           curve: animationConfig.curve,
           fromRight: isRtl,
           child: child,
         );
 
-      case DrawerAnimationType.morph:
-        return MorphDrawerAnimation(
+      case NovaDrawerAnimationType.morph:
+        return NovaMorphDrawerAnimation(
           animation: animation,
           curve: animationConfig.curve,
           child: child,
         );
 
-      case DrawerAnimationType.elastic:
-        return ElasticDrawerAnimation(
+      case NovaDrawerAnimationType.elastic:
+        return NovaElasticDrawerAnimation(
           animation: animation,
           period: animationConfig.elasticPeriod,
           child: child,
         );
 
-      case DrawerAnimationType.spring:
-        return SpringDrawerAnimation(
+      case NovaDrawerAnimationType.spring:
+        return NovaSpringDrawerAnimation(
           animation: animation,
           stiffness: animationConfig.springStiffness,
           damping: animationConfig.springDamping,
           child: child,
         );
 
-      case DrawerAnimationType.shimmer:
-        return ShimmerDrawerAnimation(
+      case NovaDrawerAnimationType.shimmer:
+        return NovaShimmerDrawerAnimation(
           animation: animation,
           baseColor: animationConfig.shimmerBaseColor,
           highlightColor: animationConfig.shimmerHighlightColor,
           child: child,
         );
 
-      case DrawerAnimationType.blur:
-        return BlurDrawerAnimation(
+      case NovaDrawerAnimationType.blur:
+        return NovaBlurDrawerAnimation(
           animation: animation,
           maxSigma: animationConfig.blurSigma,
           curve: animationConfig.curve,
           child: child,
         );
 
-      case DrawerAnimationType.gradient:
-        return GradientDrawerAnimation(
+      case NovaDrawerAnimationType.gradient:
+        return NovaGradientDrawerAnimation(
           animation: animation,
           curve: animationConfig.curve,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.floating:
+        return NovaFloatingDrawerAnimation(
+          animation: animation,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.floatingBounce:
+        return NovaFloatingBounceAnimation(
+          animation: animation,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.floatingReveal:
+        return NovaFloatingRevealAnimation(
+          animation: animation,
+          origin: isRtl ? Alignment.centerRight : Alignment.centerLeft,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.wave:
+        return NovaWaveDrawerAnimation(
+          animation: animation,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.parallax:
+        return NovaParallaxDrawerAnimation(
+          animation: animation,
+          child: child,
+        );
+
+      case NovaDrawerAnimationType.curtain:
+        return NovaCurtainDrawerAnimation(
+          animation: animation,
           child: child,
         );
     }
@@ -149,16 +188,16 @@ class DrawerAnimationWrapper extends StatelessWidget {
 ///
 /// Each item receives a delayed entrance animation, creating a
 /// cascading visual effect.
-class StaggeredItemAnimationWrapper extends StatelessWidget {
-  /// Creates a [StaggeredItemAnimationWrapper].
-  const StaggeredItemAnimationWrapper({
+class NovaStaggeredItemAnimationWrapper extends StatelessWidget {
+  /// Creates a [NovaStaggeredItemAnimationWrapper].
+  const NovaStaggeredItemAnimationWrapper({
     super.key,
     required this.animation,
     required this.animationType,
     required this.child,
     required this.index,
     this.totalItems = 10,
-    this.animationConfig = const DrawerAnimationConfig(),
+    this.animationConfig = const NovaDrawerAnimationConfig(),
     this.isRtl = false,
   });
 
@@ -166,7 +205,7 @@ class StaggeredItemAnimationWrapper extends StatelessWidget {
   final Animation<double> animation;
 
   /// Animation type to apply per item.
-  final DrawerAnimationType animationType;
+  final NovaDrawerAnimationType animationType;
 
   /// The child widget.
   final Widget child;
@@ -178,7 +217,7 @@ class StaggeredItemAnimationWrapper extends StatelessWidget {
   final int totalItems;
 
   /// Animation configuration.
-  final DrawerAnimationConfig animationConfig;
+  final NovaDrawerAnimationConfig animationConfig;
 
   /// Whether layout is right-to-left.
   final bool isRtl;
@@ -188,8 +227,8 @@ class StaggeredItemAnimationWrapper extends StatelessWidget {
     if (!animationConfig.enableStaggeredAnimations) return child;
 
     switch (animationType) {
-      case DrawerAnimationType.slide:
-        return StaggeredSlideAnimation(
+      case NovaDrawerAnimationType.slide:
+        return NovaStaggeredSlideAnimation(
           animation: animation,
           index: index,
           totalItems: totalItems,
@@ -197,16 +236,16 @@ class StaggeredItemAnimationWrapper extends StatelessWidget {
           child: child,
         );
 
-      case DrawerAnimationType.fade:
-        return StaggeredFadeAnimation(
+      case NovaDrawerAnimationType.fade:
+        return NovaStaggeredFadeAnimation(
           animation: animation,
           index: index,
           totalItems: totalItems,
           child: child,
         );
 
-      case DrawerAnimationType.scale:
-        return StaggeredScaleAnimation(
+      case NovaDrawerAnimationType.scale:
+        return NovaStaggeredScaleAnimation(
           animation: animation,
           index: index,
           totalItems: totalItems,
@@ -216,7 +255,7 @@ class StaggeredItemAnimationWrapper extends StatelessWidget {
 
       default:
         // For animation types without stagger variants, fall back to slide
-        return StaggeredSlideAnimation(
+        return NovaStaggeredSlideAnimation(
           animation: animation,
           index: index,
           totalItems: totalItems,

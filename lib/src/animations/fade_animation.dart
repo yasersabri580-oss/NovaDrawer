@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Fade animation for the AdvancedAppDrawer.
+/// Fade animation for the NovaAppDrawer.
 ///
 /// Provides opacity-based transitions for the drawer and its items.
 library;
@@ -12,14 +12,14 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// FadeDrawerAnimation(
+/// NovaFadeDrawerAnimation(
 ///   animation: animationController,
 ///   child: drawerContent,
 /// )
 /// ```
-class FadeDrawerAnimation extends StatelessWidget {
-  /// Creates a [FadeDrawerAnimation].
-  const FadeDrawerAnimation({
+class NovaFadeDrawerAnimation extends StatelessWidget {
+  /// Creates a [NovaFadeDrawerAnimation].
+  const NovaFadeDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -52,9 +52,9 @@ class FadeDrawerAnimation extends StatelessWidget {
 /// A fade animation with staggered timing for list items.
 ///
 /// Items fade in sequentially based on their [index].
-class StaggeredFadeAnimation extends StatelessWidget {
-  /// Creates a [StaggeredFadeAnimation].
-  const StaggeredFadeAnimation({
+class NovaStaggeredFadeAnimation extends StatelessWidget {
+  /// Creates a [NovaStaggeredFadeAnimation].
+  const NovaStaggeredFadeAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -97,9 +97,9 @@ class StaggeredFadeAnimation extends StatelessWidget {
 }
 
 /// A crossfade animation that blends between two child widgets.
-class CrossFadeDrawerAnimation extends StatelessWidget {
-  /// Creates a [CrossFadeDrawerAnimation].
-  const CrossFadeDrawerAnimation({
+class CrossNovaFadeDrawerAnimation extends StatelessWidget {
+  /// Creates a [CrossNovaFadeDrawerAnimation].
+  const CrossNovaFadeDrawerAnimation({
     super.key,
     required this.animation,
     required this.firstChild,

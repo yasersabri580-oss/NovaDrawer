@@ -15,15 +15,15 @@ import '../models/content_config.dart';
 ///
 /// ## Usage:
 /// ```dart
-/// DrawerBuilders(
+/// NovaDrawerBuilders(
 ///   headerBuilder: (context, config) => MyCustomHeader(config: config),
 ///   itemBuilder: (context, item, isSelected) => MyCustomItem(item: item),
 ///   footerBuilder: (context) => MyCustomFooter(),
 /// )
 /// ```
-class DrawerBuilders {
+class NovaDrawerBuilders {
   /// Creates a set of drawer builders.
-  const DrawerBuilders({
+  const NovaDrawerBuilders({
     this.headerBuilder,
     this.itemBuilder,
     this.sectionBuilder,
@@ -49,12 +49,12 @@ class DrawerBuilders {
 
   /// Custom item builder.
   final Widget Function(
-      BuildContext context, DrawerItem item, bool isSelected)?
+      BuildContext context, NovaDrawerItem item, bool isSelected)?
       itemBuilder;
 
   /// Custom section builder.
   final Widget Function(
-      BuildContext context, DrawerSectionData section)?
+      BuildContext context, NovaDrawerSectionData section)?
       sectionBuilder;
 
   /// Custom background builder.
@@ -79,44 +79,44 @@ class DrawerBuilders {
       ValueChanged<String> onChanged)? searchBarBuilder;
 
   /// Custom filter chip builder.
-  final Widget Function(BuildContext context, DrawerFilterChip chip)?
+  final Widget Function(BuildContext context, NovaDrawerFilterChip chip)?
       filterChipBuilder;
 
   /// Custom stats card builder.
-  final Widget Function(BuildContext context, List<DrawerStatItem> stats)?
+  final Widget Function(BuildContext context, List<NovaDrawerStatItem> stats)?
       statsCardBuilder;
 
   /// Custom shortcut grid builder.
   final Widget Function(
-      BuildContext context, List<DrawerShortcut> shortcuts)?
+      BuildContext context, List<NovaDrawerShortcut> shortcuts)?
       shortcutGridBuilder;
 
   /// Custom recent item builder.
   final Widget Function(
-      BuildContext context, DrawerRecentItem item)?
+      BuildContext context, NovaDrawerRecentItem item)?
       recentItemBuilder;
 
   /// Custom workspace switcher builder.
   final Widget Function(
-      BuildContext context, List<DrawerWorkspace> workspaces)?
+      BuildContext context, List<NovaDrawerWorkspace> workspaces)?
       workspaceSwitcherBuilder;
 
   /// Custom app status builder.
-  final Widget Function(BuildContext context, DrawerAppStatus status)?
+  final Widget Function(BuildContext context, NovaDrawerAppStatus status)?
       appStatusBuilder;
 
   /// Custom separator/divider builder.
   final Widget Function(BuildContext context)? separatorBuilder;
 
   /// Custom accessibility label builder for items.
-  final String Function(DrawerItem item, bool isSelected)?
+  final String Function(NovaDrawerItem item, bool isSelected)?
       accessibilityLabelBuilder;
 
   /// Creates a copy with the given fields replaced.
-  DrawerBuilders copyWith({
+  NovaDrawerBuilders copyWith({
     Widget Function(BuildContext, NovaHeaderConfig)? headerBuilder,
-    Widget Function(BuildContext, DrawerItem, bool)? itemBuilder,
-    Widget Function(BuildContext, DrawerSectionData)? sectionBuilder,
+    Widget Function(BuildContext, NovaDrawerItem, bool)? itemBuilder,
+    Widget Function(BuildContext, NovaDrawerSectionData)? sectionBuilder,
     Widget Function(BuildContext, Widget)? backgroundBuilder,
     Widget Function(BuildContext)? footerBuilder,
     Widget Function(BuildContext)? emptyStateBuilder,
@@ -125,17 +125,17 @@ class DrawerBuilders {
     Widget Function(BuildContext, TextEditingController,
             ValueChanged<String>)?
         searchBarBuilder,
-    Widget Function(BuildContext, DrawerFilterChip)? filterChipBuilder,
-    Widget Function(BuildContext, List<DrawerStatItem>)? statsCardBuilder,
-    Widget Function(BuildContext, List<DrawerShortcut>)? shortcutGridBuilder,
-    Widget Function(BuildContext, DrawerRecentItem)? recentItemBuilder,
-    Widget Function(BuildContext, List<DrawerWorkspace>)?
+    Widget Function(BuildContext, NovaDrawerFilterChip)? filterChipBuilder,
+    Widget Function(BuildContext, List<NovaDrawerStatItem>)? statsCardBuilder,
+    Widget Function(BuildContext, List<NovaDrawerShortcut>)? shortcutGridBuilder,
+    Widget Function(BuildContext, NovaDrawerRecentItem)? recentItemBuilder,
+    Widget Function(BuildContext, List<NovaDrawerWorkspace>)?
         workspaceSwitcherBuilder,
-    Widget Function(BuildContext, DrawerAppStatus)? appStatusBuilder,
+    Widget Function(BuildContext, NovaDrawerAppStatus)? appStatusBuilder,
     Widget Function(BuildContext)? separatorBuilder,
-    String Function(DrawerItem, bool)? accessibilityLabelBuilder,
+    String Function(NovaDrawerItem, bool)? accessibilityLabelBuilder,
   }) {
-    return DrawerBuilders(
+    return NovaDrawerBuilders(
       headerBuilder: headerBuilder ?? this.headerBuilder,
       itemBuilder: itemBuilder ?? this.itemBuilder,
       sectionBuilder: sectionBuilder ?? this.sectionBuilder,

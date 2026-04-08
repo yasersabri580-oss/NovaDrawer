@@ -12,41 +12,41 @@ import 'package:flutter/material.dart';
 
 import '../models/content_config.dart';
 
-/// A workspace switcher that shows the active [DrawerWorkspace]
+/// A workspace switcher that shows the active [NovaDrawerWorkspace]
 /// and allows switching between a list of workspaces.
 ///
 /// Example:
 /// ```dart
-/// DrawerWorkspaceSwitcher(
+/// NovaDrawerWorkspaceSwitcher(
 ///   workspaces: [
-///     DrawerWorkspace(id: 'w1', name: 'Personal', isActive: true),
-///     DrawerWorkspace(id: 'w2', name: 'Work', icon: Icons.business),
+///     NovaDrawerWorkspace(id: 'w1', name: 'Personal', isActive: true),
+///     NovaDrawerWorkspace(id: 'w2', name: 'Work', icon: Icons.business),
 ///   ],
 /// )
 /// ```
-class DrawerWorkspaceSwitcher extends StatefulWidget {
-  /// Creates a [DrawerWorkspaceSwitcher].
-  const DrawerWorkspaceSwitcher({
+class NovaDrawerWorkspaceSwitcher extends StatefulWidget {
+  /// Creates a [NovaDrawerWorkspaceSwitcher].
+  const NovaDrawerWorkspaceSwitcher({
     super.key,
     required this.workspaces,
     this.padding = const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
   });
 
   /// Available workspaces.
-  final List<DrawerWorkspace> workspaces;
+  final List<NovaDrawerWorkspace> workspaces;
 
   /// Outer padding around the widget.
   final EdgeInsetsGeometry padding;
 
   @override
-  State<DrawerWorkspaceSwitcher> createState() =>
-      _DrawerWorkspaceSwitcherState();
+  State<NovaDrawerWorkspaceSwitcher> createState() =>
+      _NovaDrawerWorkspaceSwitcherState();
 }
 
-class _DrawerWorkspaceSwitcherState extends State<DrawerWorkspaceSwitcher> {
+class _NovaDrawerWorkspaceSwitcherState extends State<NovaDrawerWorkspaceSwitcher> {
   bool _expanded = false;
 
-  DrawerWorkspace? get _active {
+  NovaDrawerWorkspace? get _active {
     final matches = widget.workspaces.where((w) => w.isActive);
     return matches.isNotEmpty ? matches.first : widget.workspaces.firstOrNull;
   }
@@ -170,7 +170,7 @@ class _DrawerWorkspaceSwitcherState extends State<DrawerWorkspaceSwitcher> {
     );
   }
 
-  Widget _buildAvatar(DrawerWorkspace workspace, ColorScheme colorScheme) {
+  Widget _buildAvatar(NovaDrawerWorkspace workspace, ColorScheme colorScheme) {
     if (workspace.avatarUrl != null) {
       return CircleAvatar(
         radius: 14.0,

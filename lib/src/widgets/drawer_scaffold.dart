@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Drawer scaffold widget for the AdvancedAppDrawer.
+/// Drawer scaffold widget for the NovaAppDrawer.
 ///
 /// A responsive scaffold that automatically manages drawer display
 /// mode based on screen size: overlay on mobile, side/push on
@@ -18,7 +18,7 @@ import '../utils/responsive_utils.dart';
 import 'advanced_app_drawer.dart';
 import 'mini_drawer.dart';
 
-/// A scaffold that integrates the [AdvancedAppDrawer] with responsive
+/// A scaffold that integrates the [NovaAppDrawer] with responsive
 /// layout management.
 ///
 /// Automatically switches between overlay, push, and side display
@@ -27,9 +27,9 @@ import 'mini_drawer.dart';
 ///
 /// Example:
 /// ```dart
-/// DrawerScaffoldWidget(
+/// NovaDrawerScaffold(
 ///   controller: drawerController,
-///   drawer: AdvancedAppDrawer(
+///   drawer: NovaAppDrawer(
 ///     controller: drawerController,
 ///     sections: mySections,
 ///   ),
@@ -37,9 +37,9 @@ import 'mini_drawer.dart';
 ///   appBar: AppBar(title: Text('My App')),
 /// )
 /// ```
-class DrawerScaffoldWidget extends StatefulWidget {
-  /// Creates a [DrawerScaffoldWidget].
-  const DrawerScaffoldWidget({
+class NovaDrawerScaffold extends StatefulWidget {
+  /// Creates a [NovaDrawerScaffold].
+  const NovaDrawerScaffold({
     super.key,
     required this.controller,
     required this.drawer,
@@ -49,7 +49,7 @@ class DrawerScaffoldWidget extends StatefulWidget {
     this.floatingActionButtonLocation,
     this.bottomNavigationBar,
     this.theme,
-    this.config = const DrawerConfig(),
+    this.config = const NovaDrawerConfig(),
     this.miniDrawerHeader,
     this.miniDrawerFooter,
     this.miniDrawerItems,
@@ -60,10 +60,10 @@ class DrawerScaffoldWidget extends StatefulWidget {
   });
 
   /// Controller managing drawer state.
-  final AdvancedDrawerController controller;
+  final NovaDrawerController controller;
 
   /// The full drawer widget.
-  final AdvancedAppDrawer drawer;
+  final NovaAppDrawer drawer;
 
   /// The main page content.
   final Widget body;
@@ -81,10 +81,10 @@ class DrawerScaffoldWidget extends StatefulWidget {
   final Widget? bottomNavigationBar;
 
   /// Theme overrides.
-  final AdvancedDrawerTheme? theme;
+  final NovaDrawerTheme? theme;
 
   /// Configuration.
-  final DrawerConfig config;
+  final NovaDrawerConfig config;
 
   /// Header for the mini drawer.
   final Widget? miniDrawerHeader;
@@ -93,13 +93,13 @@ class DrawerScaffoldWidget extends StatefulWidget {
   final Widget? miniDrawerFooter;
 
   /// Items for the mini drawer (defaults to drawer items).
-  final List<DrawerItem>? miniDrawerItems;
+  final List<NovaDrawerItem>? miniDrawerItems;
 
   /// Sections for the mini drawer.
-  final List<DrawerSectionData>? miniDrawerSections;
+  final List<NovaDrawerSectionData>? miniDrawerSections;
 
   /// Callback when a drawer item is tapped.
-  final void Function(DrawerItem item)? onItemTap;
+  final void Function(NovaDrawerItem item)? onItemTap;
 
   /// Scaffold key for controlling the default scaffold drawer.
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -108,10 +108,10 @@ class DrawerScaffoldWidget extends StatefulWidget {
   final Color? backgroundColor;
 
   @override
-  State<DrawerScaffoldWidget> createState() => _DrawerScaffoldWidgetState();
+  State<NovaDrawerScaffold> createState() => _NovaDrawerScaffoldState();
 }
 
-class _DrawerScaffoldWidgetState extends State<DrawerScaffoldWidget>
+class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
     with SingleTickerProviderStateMixin {
   late AnimationController _drawerAnimationController;
   late Animation<double> _drawerAnimation;
@@ -147,7 +147,7 @@ class _DrawerScaffoldWidgetState extends State<DrawerScaffoldWidget>
   }
 
   @override
-  void didUpdateWidget(DrawerScaffoldWidget oldWidget) {
+  void didUpdateWidget(NovaDrawerScaffold oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       oldWidget.controller.removeListener(_onControllerChanged);
@@ -175,7 +175,7 @@ class _DrawerScaffoldWidgetState extends State<DrawerScaffoldWidget>
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final deviceType = ResponsiveUtils.getDeviceType(
+    final deviceType = NovaResponsiveUtils.getDeviceType(
       screenWidth,
       widget.config.breakpoints,
     );
@@ -185,19 +185,19 @@ class _DrawerScaffoldWidgetState extends State<DrawerScaffoldWidget>
 
     final themeData = Theme.of(context);
     final drawerTheme = widget.theme?.resolve(themeData) ??
-        const AdvancedDrawerTheme().resolve(themeData);
+        const NovaDrawerTheme().resolve(themeData);
     final isRtl = Directionality.of(context) == TextDirection.rtl;
-    final displayMode = ResponsiveUtils.resolveDisplayMode(
+    final displayMode = NovaResponsiveUtils.resolveDisplayMode(
       widget.config.displayMode,
       deviceType,
     );
 
-    return DrawerControllerProvider(
+    return NovaDrawerControllerProvider(
       controller: widget.controller,
-      child: ResponsiveDrawerData(
+      child: NovaResponsiveDrawerData(
         deviceType: deviceType,
-        drawerWidth: ResponsiveUtils.getDrawerWidth(deviceType, drawerTheme),
-        miniDrawerWidth: ResponsiveUtils.getMiniDrawerWidth(drawerTheme),
+        drawerWidth: NovaResponsiveUtils.getDrawerWidth(deviceType, drawerTheme),
+        miniDrawerWidth: NovaResponsiveUtils.getMiniDrawerWidth(drawerTheme),
         isDrawerOpen: widget.controller.isOpen,
         isPinned: widget.controller.isPinned,
         displayMode: widget.config.displayMode,
@@ -212,28 +212,28 @@ class _DrawerScaffoldWidgetState extends State<DrawerScaffoldWidget>
   }
 
   Widget _buildLayout(
-    DeviceType deviceType,
-    DrawerDisplayMode displayMode,
-    AdvancedDrawerTheme drawerTheme,
+    NovaDeviceType deviceType,
+    NovaDrawerDisplayMode displayMode,
+    NovaDrawerTheme drawerTheme,
     bool isRtl,
   ) {
     switch (displayMode) {
-      case DrawerDisplayMode.overlay:
+      case NovaDrawerDisplayMode.overlay:
         return _buildOverlayLayout(drawerTheme, isRtl);
-      case DrawerDisplayMode.push:
+      case NovaDrawerDisplayMode.push:
         return _buildPushLayout(drawerTheme, isRtl);
-      case DrawerDisplayMode.side:
+      case NovaDrawerDisplayMode.side:
         return _buildSideLayout(drawerTheme, isRtl);
-      case DrawerDisplayMode.mini:
+      case NovaDrawerDisplayMode.mini:
         return _buildMiniLayout(drawerTheme, isRtl);
-      case DrawerDisplayMode.auto:
+      case NovaDrawerDisplayMode.auto:
         // This shouldn't happen after resolveDisplayMode
         return _buildOverlayLayout(drawerTheme, isRtl);
     }
   }
 
   /// Overlay mode: drawer slides over content (mobile).
-  Widget _buildOverlayLayout(AdvancedDrawerTheme drawerTheme, bool isRtl) {
+  Widget _buildOverlayLayout(NovaDrawerTheme drawerTheme, bool isRtl) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: widget.appBar,
@@ -251,8 +251,8 @@ class _DrawerScaffoldWidgetState extends State<DrawerScaffoldWidget>
   }
 
   /// Push mode: drawer pushes content aside (tablet).
-  Widget _buildPushLayout(AdvancedDrawerTheme drawerTheme, bool isRtl) {
-    final drawerWidth = ResponsiveUtils.getDrawerWidth(
+  Widget _buildPushLayout(NovaDrawerTheme drawerTheme, bool isRtl) {
+    final drawerWidth = NovaResponsiveUtils.getDrawerWidth(
       widget.controller.deviceType,
       drawerTheme,
     );
@@ -319,12 +319,12 @@ class _DrawerScaffoldWidgetState extends State<DrawerScaffoldWidget>
   }
 
   /// Side mode: drawer sits alongside content (desktop).
-  Widget _buildSideLayout(AdvancedDrawerTheme drawerTheme, bool isRtl) {
-    final drawerWidth = ResponsiveUtils.getDrawerWidth(
+  Widget _buildSideLayout(NovaDrawerTheme drawerTheme, bool isRtl) {
+    final drawerWidth = NovaResponsiveUtils.getDrawerWidth(
       widget.controller.deviceType,
       drawerTheme,
     );
-    final miniWidth = ResponsiveUtils.getMiniDrawerWidth(drawerTheme);
+    final miniWidth = NovaResponsiveUtils.getMiniDrawerWidth(drawerTheme);
     final isOpen = widget.controller.isOpen || widget.controller.isPinned;
     final showMini = !isOpen && widget.config.showMiniOnCollapse;
 
@@ -361,12 +361,12 @@ class _DrawerScaffoldWidgetState extends State<DrawerScaffoldWidget>
   }
 
   /// Mini mode: always shows collapsed drawer.
-  Widget _buildMiniLayout(AdvancedDrawerTheme drawerTheme, bool isRtl) {
-    final drawerWidth = ResponsiveUtils.getDrawerWidth(
+  Widget _buildMiniLayout(NovaDrawerTheme drawerTheme, bool isRtl) {
+    final drawerWidth = NovaResponsiveUtils.getDrawerWidth(
       widget.controller.deviceType,
       drawerTheme,
     );
-    final miniWidth = ResponsiveUtils.getMiniDrawerWidth(drawerTheme);
+    final miniWidth = NovaResponsiveUtils.getMiniDrawerWidth(drawerTheme);
     final isExpanded = widget.controller.isOpen;
 
     return Scaffold(
@@ -392,10 +392,10 @@ class _DrawerScaffoldWidgetState extends State<DrawerScaffoldWidget>
     );
   }
 
-  Widget _buildMiniDrawer(AdvancedDrawerTheme drawerTheme) {
-    return DrawerControllerProvider(
+  Widget _buildMiniDrawer(NovaDrawerTheme drawerTheme) {
+    return NovaDrawerControllerProvider(
       controller: widget.controller,
-      child: MiniDrawerWidget(
+      child: NovaMiniDrawer(
         items: widget.miniDrawerItems ?? widget.drawer.items,
         sections: widget.miniDrawerSections ?? widget.drawer.sections,
         header: widget.miniDrawerHeader,

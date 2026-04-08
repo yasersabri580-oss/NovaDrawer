@@ -14,18 +14,18 @@ import 'header_utils.dart';
 /// Tapping the stack triggers [NovaHeaderConfig.onSwitchAccount].
 ///
 /// ```dart
-/// ProfileHeaderAvatarStack(
+/// NovaProfileHeaderAvatarStack(
 ///   config: NovaHeaderConfig(
-///     variant: HeaderVariant.avatarStack,
+///     variant: NovaHeaderVariant.avatarStack,
 ///     profile: primaryProfile,
 ///     accounts: [account1, account2, account3],
 ///     onSwitchAccount: () => switchAccount(),
 ///   ),
 /// )
 /// ```
-class ProfileHeaderAvatarStack extends StatefulWidget {
+class NovaProfileHeaderAvatarStack extends StatefulWidget {
   /// Creates an avatar-stack profile header.
-  const ProfileHeaderAvatarStack({
+  const NovaProfileHeaderAvatarStack({
     super.key,
     required this.config,
     this.theme,
@@ -38,11 +38,11 @@ class ProfileHeaderAvatarStack extends StatefulWidget {
   final ThemeData? theme;
 
   @override
-  State<ProfileHeaderAvatarStack> createState() =>
-      _ProfileHeaderAvatarStackState();
+  State<NovaProfileHeaderAvatarStack> createState() =>
+      _NovaProfileHeaderAvatarStackState();
 }
 
-class _ProfileHeaderAvatarStackState extends State<ProfileHeaderAvatarStack>
+class _NovaProfileHeaderAvatarStackState extends State<NovaProfileHeaderAvatarStack>
     with SingleTickerProviderStateMixin {
   static const _kMaxVisible = 3;
   static const _kSmallRadius = 16.0;
@@ -73,10 +73,10 @@ class _ProfileHeaderAvatarStackState extends State<ProfileHeaderAvatarStack>
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme ?? Theme.of(context);
-    final height = _c.headerHeight ?? HeaderWidgetUtils.kDefaultHeaderHeight;
+    final height = _c.headerHeight ?? NovaHeaderWidgetUtils.kDefaultHeaderHeight;
 
     if (_c.isLoading) {
-      return HeaderWidgetUtils.buildLoadingSkeleton(
+      return NovaHeaderWidgetUtils.buildLoadingSkeleton(
         theme: theme,
         height: height,
       );
@@ -97,20 +97,20 @@ class _ProfileHeaderAvatarStackState extends State<ProfileHeaderAvatarStack>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Primary avatar
-            HeaderWidgetUtils.buildAvatar(
+            NovaHeaderWidgetUtils.buildAvatar(
               profile: _c.profile,
               radius:
-                  _c.avatarRadius ?? HeaderWidgetUtils.kDefaultAvatarRadius,
+                  _c.avatarRadius ?? NovaHeaderWidgetUtils.kDefaultAvatarRadius,
               showStatus: _c.showStatusIndicator,
               theme: theme,
               onTap: _c.onProfileTap,
             ),
             const SizedBox(height: 8),
-            HeaderWidgetUtils.buildUserName(
+            NovaHeaderWidgetUtils.buildUserName(
               name: _c.profile?.name,
               theme: theme,
             ),
-            HeaderWidgetUtils.buildSubtitle(
+            NovaHeaderWidgetUtils.buildSubtitle(
               text: _c.profile?.effectiveSubtitle,
               theme: theme,
             ),
@@ -121,7 +121,7 @@ class _ProfileHeaderAvatarStackState extends State<ProfileHeaderAvatarStack>
             if (_c.showNotificationBadge &&
                 (_c.profile?.notificationCount ?? 0) > 0) ...[
               const SizedBox(height: 6),
-              HeaderWidgetUtils.buildNotificationBadge(
+              NovaHeaderWidgetUtils.buildNotificationBadge(
                 count: _c.profile!.notificationCount,
                 theme: theme,
               ),
@@ -179,7 +179,7 @@ class _ProfileHeaderAvatarStackState extends State<ProfileHeaderAvatarStack>
     );
   }
 
-  Widget _buildSmallAvatar(HeaderUserProfile acct, ThemeData theme) {
+  Widget _buildSmallAvatar(NovaHeaderUserProfile acct, ThemeData theme) {
     return CircleAvatar(
       radius: _kSmallRadius,
       backgroundColor: theme.colorScheme.surfaceContainerHighest,

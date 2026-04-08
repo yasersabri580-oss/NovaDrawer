@@ -11,13 +11,13 @@ import 'package:flutter/material.dart';
 
 import '../models/content_config.dart';
 
-/// A list of [DrawerRecentItem] entries with a "Recent" header.
+/// A list of [NovaDrawerRecentItem] entries with a "Recent" header.
 ///
 /// Example:
 /// ```dart
-/// DrawerRecentItems(
+/// NovaDrawerRecentItems(
 ///   items: [
-///     DrawerRecentItem(
+///     NovaDrawerRecentItem(
 ///       id: '1',
 ///       title: 'Design System',
 ///       subtitle: 'Updated colors',
@@ -27,9 +27,9 @@ import '../models/content_config.dart';
 ///   ],
 /// )
 /// ```
-class DrawerRecentItems extends StatelessWidget {
-  /// Creates a [DrawerRecentItems] widget.
-  const DrawerRecentItems({
+class NovaDrawerRecentItems extends StatelessWidget {
+  /// Creates a [NovaDrawerRecentItems] widget.
+  const NovaDrawerRecentItems({
     super.key,
     required this.items,
     this.headerText = 'Recent',
@@ -37,7 +37,7 @@ class DrawerRecentItems extends StatelessWidget {
   });
 
   /// The recent items to display.
-  final List<DrawerRecentItem> items;
+  final List<NovaDrawerRecentItem> items;
 
   /// Header text displayed above the list.
   final String headerText;
@@ -70,7 +70,7 @@ class DrawerRecentItems extends StatelessWidget {
     );
   }
 
-  Widget _buildItem(BuildContext context, DrawerRecentItem item) {
+  Widget _buildItem(BuildContext context, NovaDrawerRecentItem item) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 

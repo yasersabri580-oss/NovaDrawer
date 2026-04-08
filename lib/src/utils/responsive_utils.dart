@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Responsive layout utilities for the AdvancedAppDrawer.
+/// Responsive layout utilities for the NovaAppDrawer.
 ///
 /// Provides helper methods and classes for determining device type,
 /// calculating drawer dimensions, and adapting layouts across
@@ -14,7 +14,7 @@ import '../models/drawer_config.dart';
 import '../models/drawer_theme.dart';
 
 /// Enumeration of device form factor categories.
-enum DeviceType {
+enum NovaDeviceType {
   /// Phone-sized device (< mobile breakpoint).
   mobile,
 
@@ -29,80 +29,80 @@ enum DeviceType {
 ///
 /// Determines the current device type and provides appropriate
 /// dimensions and layout parameters for the drawer.
-class ResponsiveUtils {
+class NovaResponsiveUtils {
   /// Private constructor – all members are static.
-  const ResponsiveUtils._();
+  const NovaResponsiveUtils._();
 
-  /// Determines the [DeviceType] based on the given screen [width]
+  /// Determines the [NovaDeviceType] based on the given screen [width]
   /// and [breakpoints].
-  static DeviceType getDeviceType(
+  static NovaDeviceType getDeviceType(
     double width, [
-    DrawerBreakpoints breakpoints = const DrawerBreakpoints(),
+    NovaDrawerBreakpoints breakpoints = const NovaDrawerBreakpoints(),
   ]) {
-    if (width < breakpoints.mobile) return DeviceType.mobile;
-    if (width < breakpoints.tablet) return DeviceType.tablet;
-    return DeviceType.desktop;
+    if (width < breakpoints.mobile) return NovaDeviceType.mobile;
+    if (width < breakpoints.tablet) return NovaDeviceType.tablet;
+    return NovaDeviceType.desktop;
   }
 
   /// Returns the appropriate drawer width for the given [deviceType]
   /// and [theme].
   static double getDrawerWidth(
-    DeviceType deviceType,
-    AdvancedDrawerTheme theme,
+    NovaDeviceType deviceType,
+    NovaDrawerTheme theme,
   ) {
     switch (deviceType) {
-      case DeviceType.mobile:
+      case NovaDeviceType.mobile:
         return theme.expandedDrawerWidth ??
-            AdvancedDrawerTheme.defaultExpandedDrawerWidth;
-      case DeviceType.tablet:
+            NovaDrawerTheme.defaultExpandedDrawerWidth;
+      case NovaDeviceType.tablet:
         return theme.tabletDrawerWidth ??
-            AdvancedDrawerTheme.defaultTabletDrawerWidth;
-      case DeviceType.desktop:
+            NovaDrawerTheme.defaultTabletDrawerWidth;
+      case NovaDeviceType.desktop:
         return theme.desktopDrawerWidth ??
-            AdvancedDrawerTheme.defaultDesktopDrawerWidth;
+            NovaDrawerTheme.defaultDesktopDrawerWidth;
     }
   }
 
   /// Returns the mini drawer width from the [theme].
-  static double getMiniDrawerWidth(AdvancedDrawerTheme theme) {
-    return theme.miniDrawerWidth ?? AdvancedDrawerTheme.defaultMiniDrawerWidth;
+  static double getMiniDrawerWidth(NovaDrawerTheme theme) {
+    return theme.miniDrawerWidth ?? NovaDrawerTheme.defaultMiniDrawerWidth;
   }
 
   /// Determines whether the drawer should be shown as an overlay
   /// for the given [deviceType] and [displayMode].
   static bool shouldShowOverlay(
-    DeviceType deviceType,
-    DrawerDisplayMode displayMode,
+    NovaDeviceType deviceType,
+    NovaDrawerDisplayMode displayMode,
   ) {
-    if (displayMode == DrawerDisplayMode.overlay) return true;
-    if (displayMode == DrawerDisplayMode.side) return false;
-    if (displayMode == DrawerDisplayMode.auto) {
-      return deviceType == DeviceType.mobile;
+    if (displayMode == NovaDrawerDisplayMode.overlay) return true;
+    if (displayMode == NovaDrawerDisplayMode.side) return false;
+    if (displayMode == NovaDrawerDisplayMode.auto) {
+      return deviceType == NovaDeviceType.mobile;
     }
-    return deviceType == DeviceType.mobile;
+    return deviceType == NovaDeviceType.mobile;
   }
 
   /// Determines whether the drawer can be pinned for the given
   /// [deviceType].
-  static bool canPin(DeviceType deviceType) {
-    return deviceType != DeviceType.mobile;
+  static bool canPin(NovaDeviceType deviceType) {
+    return deviceType != NovaDeviceType.mobile;
   }
 
-  /// Determines the effective [DrawerDisplayMode] based on the
+  /// Determines the effective [NovaDrawerDisplayMode] based on the
   /// configured mode and current [deviceType].
-  static DrawerDisplayMode resolveDisplayMode(
-    DrawerDisplayMode configuredMode,
-    DeviceType deviceType,
+  static NovaDrawerDisplayMode resolveDisplayMode(
+    NovaDrawerDisplayMode configuredMode,
+    NovaDeviceType deviceType,
   ) {
-    if (configuredMode != DrawerDisplayMode.auto) return configuredMode;
+    if (configuredMode != NovaDrawerDisplayMode.auto) return configuredMode;
 
     switch (deviceType) {
-      case DeviceType.mobile:
-        return DrawerDisplayMode.overlay;
-      case DeviceType.tablet:
-        return DrawerDisplayMode.push;
-      case DeviceType.desktop:
-        return DrawerDisplayMode.side;
+      case NovaDeviceType.mobile:
+        return NovaDrawerDisplayMode.overlay;
+      case NovaDeviceType.tablet:
+        return NovaDrawerDisplayMode.push;
+      case NovaDeviceType.desktop:
+        return NovaDrawerDisplayMode.side;
     }
   }
 
@@ -126,9 +126,9 @@ class ResponsiveUtils {
 ///
 /// Wrap your drawer subtree with this to make device type and
 /// drawer dimensions accessible anywhere below.
-class ResponsiveDrawerData extends InheritedWidget {
-  /// Creates a [ResponsiveDrawerData].
-  const ResponsiveDrawerData({
+class NovaResponsiveDrawerData extends InheritedWidget {
+  /// Creates a [NovaResponsiveDrawerData].
+  const NovaResponsiveDrawerData({
     super.key,
     required super.child,
     required this.deviceType,
@@ -140,7 +140,7 @@ class ResponsiveDrawerData extends InheritedWidget {
   });
 
   /// The current device form factor.
-  final DeviceType deviceType;
+  final NovaDeviceType deviceType;
 
   /// The current drawer width.
   final double drawerWidth;
@@ -155,15 +155,15 @@ class ResponsiveDrawerData extends InheritedWidget {
   final bool isPinned;
 
   /// The resolved display mode.
-  final DrawerDisplayMode displayMode;
+  final NovaDrawerDisplayMode displayMode;
 
-  /// Retrieves the nearest [ResponsiveDrawerData] from the widget tree.
-  static ResponsiveDrawerData? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<ResponsiveDrawerData>();
+  /// Retrieves the nearest [NovaResponsiveDrawerData] from the widget tree.
+  static NovaResponsiveDrawerData? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<NovaResponsiveDrawerData>();
   }
 
   @override
-  bool updateShouldNotify(ResponsiveDrawerData oldWidget) {
+  bool updateShouldNotify(NovaResponsiveDrawerData oldWidget) {
     return deviceType != oldWidget.deviceType ||
         drawerWidth != oldWidget.drawerWidth ||
         miniDrawerWidth != oldWidget.miniDrawerWidth ||

@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Scale animation for the AdvancedAppDrawer.
+/// Scale animation for the NovaAppDrawer.
 ///
 /// Provides scaling transitions that grow or shrink the drawer
 /// and individual items with configurable origins and curves.
@@ -16,16 +16,16 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// ScaleDrawerAnimation(
+/// NovaScaleDrawerAnimation(
 ///   animation: animationController,
 ///   child: drawerContent,
 ///   beginScale: 0.8,
 ///   alignment: Alignment.centerLeft,
 /// )
 /// ```
-class ScaleDrawerAnimation extends StatelessWidget {
-  /// Creates a [ScaleDrawerAnimation].
-  const ScaleDrawerAnimation({
+class NovaScaleDrawerAnimation extends StatelessWidget {
+  /// Creates a [NovaScaleDrawerAnimation].
+  const NovaScaleDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -89,9 +89,9 @@ class ScaleDrawerAnimation extends StatelessWidget {
 }
 
 /// Scale animation with staggered timing for list items.
-class StaggeredScaleAnimation extends StatelessWidget {
-  /// Creates a [StaggeredScaleAnimation].
-  const StaggeredScaleAnimation({
+class NovaStaggeredScaleAnimation extends StatelessWidget {
+  /// Creates a [NovaStaggeredScaleAnimation].
+  const NovaStaggeredScaleAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -151,9 +151,9 @@ class StaggeredScaleAnimation extends StatelessWidget {
 }
 
 /// A bounce-scale animation that overshoots before settling.
-class BounceScaleAnimation extends StatelessWidget {
-  /// Creates a [BounceScaleAnimation].
-  const BounceScaleAnimation({
+class NovaBounceScaleAnimation extends StatelessWidget {
+  /// Creates a [NovaBounceScaleAnimation].
+  const NovaBounceScaleAnimation({
     super.key,
     required this.animation,
     required this.child,

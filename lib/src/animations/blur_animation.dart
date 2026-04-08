@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Blur transition animation for the AdvancedAppDrawer.
+/// Blur transition animation for the NovaAppDrawer.
 ///
 /// Provides a Gaussian blur transition effect that blurs or
 /// unblurs the drawer content during open/close.
@@ -18,21 +18,21 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// BlurDrawerAnimation(
+/// NovaBlurDrawerAnimation(
 ///   animation: controller,
 ///   child: drawerContent,
 ///   maxSigma: 15.0,
 /// )
 /// ```
-class BlurDrawerAnimation extends StatelessWidget {
-  /// Creates a [BlurDrawerAnimation].
-  const BlurDrawerAnimation({
+class NovaBlurDrawerAnimation extends StatelessWidget {
+  /// Creates a [NovaBlurDrawerAnimation].
+  const NovaBlurDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
     this.maxSigma = 10.0,
     this.curve = Curves.easeInOut,
-    this.blurDirection = BlurDirection.blurToSharp,
+    this.blurDirection = NovaBlurDirection.blurToSharp,
     this.includeFade = true,
   });
 
@@ -49,7 +49,7 @@ class BlurDrawerAnimation extends StatelessWidget {
   final Curve curve;
 
   /// Direction of the blur transition.
-  final BlurDirection blurDirection;
+  final NovaBlurDirection blurDirection;
 
   /// Whether to include a fade effect.
   final bool includeFade;
@@ -65,7 +65,7 @@ class BlurDrawerAnimation extends StatelessWidget {
       animation: curvedAnimation,
       builder: (context, child) {
         final t = curvedAnimation.value;
-        final sigma = blurDirection == BlurDirection.blurToSharp
+        final sigma = blurDirection == NovaBlurDirection.blurToSharp
             ? maxSigma * (1.0 - t)
             : maxSigma * t;
 
@@ -92,7 +92,7 @@ class BlurDrawerAnimation extends StatelessWidget {
 }
 
 /// Direction of the blur transition.
-enum BlurDirection {
+enum NovaBlurDirection {
   /// Starts blurry and becomes sharp.
   blurToSharp,
 
@@ -104,9 +104,9 @@ enum BlurDirection {
 ///
 /// Creates a translucent, blurred overlay that gives a modern
 /// glass-morphism appearance.
-class FrostedGlassEffect extends StatelessWidget {
-  /// Creates a [FrostedGlassEffect].
-  const FrostedGlassEffect({
+class NovaFrostedGlassEffect extends StatelessWidget {
+  /// Creates a [NovaFrostedGlassEffect].
+  const NovaFrostedGlassEffect({
     super.key,
     required this.child,
     this.sigma = 10.0,
@@ -144,9 +144,9 @@ class FrostedGlassEffect extends StatelessWidget {
 }
 
 /// An animated frosted glass that transitions blur intensity.
-class AnimatedFrostedGlass extends StatelessWidget {
-  /// Creates an [AnimatedFrostedGlass].
-  const AnimatedFrostedGlass({
+class NovaAnimatedFrostedGlass extends StatelessWidget {
+  /// Creates an [NovaAnimatedFrostedGlass].
+  const NovaAnimatedFrostedGlass({
     super.key,
     required this.animation,
     required this.child,

@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Rotate animation for the AdvancedAppDrawer.
+/// Rotate animation for the NovaAppDrawer.
 ///
 /// Provides rotation transitions for the drawer and items,
 /// with configurable angles and origin points.
@@ -18,15 +18,15 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// RotateDrawerAnimation(
+/// NovaRotateDrawerAnimation(
 ///   animation: controller,
 ///   child: drawerContent,
 ///   beginAngle: -math.pi / 4,
 /// )
 /// ```
-class RotateDrawerAnimation extends StatelessWidget {
-  /// Creates a [RotateDrawerAnimation].
-  const RotateDrawerAnimation({
+class NovaRotateDrawerAnimation extends StatelessWidget {
+  /// Creates a [NovaRotateDrawerAnimation].
+  const NovaRotateDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -112,9 +112,9 @@ class RotateDrawerAnimation extends StatelessWidget {
 ///
 /// Creates a "door opening" effect by rotating the drawer around
 /// a vertical axis with perspective projection.
-class PerspectiveRotateAnimation extends StatelessWidget {
-  /// Creates a [PerspectiveRotateAnimation].
-  const PerspectiveRotateAnimation({
+class NovaPerspectiveRotateAnimation extends StatelessWidget {
+  /// Creates a [NovaPerspectiveRotateAnimation].
+  const NovaPerspectiveRotateAnimation({
     super.key,
     required this.animation,
     required this.child,

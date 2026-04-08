@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Main AdvancedAppDrawer widget.
+/// Main NovaAppDrawer widget.
 ///
 /// The primary widget that assembles the full drawer experience,
 /// including header, sections, items, animations, and responsive
@@ -23,36 +23,36 @@ import 'drawer_section.dart';
 import 'drawer_item_widget.dart';
 import 'nested_menu_item.dart';
 
-/// The main AdvancedAppDrawer widget.
+/// The main NovaAppDrawer widget.
 ///
 /// Provides a complete, fully-featured navigation drawer with
 /// responsive layout, animations, theming, accessibility, and
 /// support for nested/dynamic items.
 ///
-/// Use [AdvancedAppDrawer] as a direct child inside a [Scaffold.drawer]
-/// or within a [DrawerScaffoldWidget] for automatic responsive behavior.
+/// Use [NovaAppDrawer] as a direct child inside a [Scaffold.drawer]
+/// or within a [NovaDrawerScaffold] for automatic responsive behavior.
 ///
 /// Example:
 /// ```dart
-/// AdvancedAppDrawer(
+/// NovaAppDrawer(
 ///   controller: drawerController,
 ///   sections: [
-///     DrawerSectionData(
+///     NovaDrawerSectionData(
 ///       id: 'main',
 ///       title: 'Menu',
 ///       items: [
-///         DrawerItem(id: 'home', title: 'Home', icon: Icons.home),
-///         DrawerItem(id: 'profile', title: 'Profile', icon: Icons.person),
+///         NovaDrawerItem(id: 'home', title: 'Home', icon: Icons.home),
+///         NovaDrawerItem(id: 'profile', title: 'Profile', icon: Icons.person),
 ///       ],
 ///     ),
 ///   ],
-///   header: DrawerHeaderWidget(title: 'My App'),
+///   header: NovaDrawerHeaderWidget(title: 'My App'),
 ///   onItemTap: (item) => print('Tapped: ${item.title}'),
 /// )
 /// ```
-class AdvancedAppDrawer extends StatefulWidget {
-  /// Creates an [AdvancedAppDrawer].
-  const AdvancedAppDrawer({
+class NovaAppDrawer extends StatefulWidget {
+  /// Creates an [NovaAppDrawer].
+  const NovaAppDrawer({
     super.key,
     required this.controller,
     this.sections = const [],
@@ -61,7 +61,7 @@ class AdvancedAppDrawer extends StatefulWidget {
     this.footer,
     this.onItemTap,
     this.theme,
-    this.config = const DrawerConfig(),
+    this.config = const NovaDrawerConfig(),
     this.width,
     this.backgroundWidget,
     this.enableGradientBackground = false,
@@ -72,13 +72,13 @@ class AdvancedAppDrawer extends StatefulWidget {
   });
 
   /// Controller managing drawer state.
-  final AdvancedDrawerController controller;
+  final NovaDrawerController controller;
 
   /// Sections grouping related items.
-  final List<DrawerSectionData> sections;
+  final List<NovaDrawerSectionData> sections;
 
   /// Flat list of items (used when sections are empty).
-  final List<DrawerItem> items;
+  final List<NovaDrawerItem> items;
 
   /// Header widget at the top of the drawer.
   final Widget? header;
@@ -87,13 +87,13 @@ class AdvancedAppDrawer extends StatefulWidget {
   final Widget? footer;
 
   /// Callback when any item is tapped.
-  final void Function(DrawerItem item)? onItemTap;
+  final void Function(NovaDrawerItem item)? onItemTap;
 
   /// Theme customization.
-  final AdvancedDrawerTheme? theme;
+  final NovaDrawerTheme? theme;
 
   /// Behavior configuration.
-  final DrawerConfig config;
+  final NovaDrawerConfig config;
 
   /// Override width (otherwise derived from responsive config).
   final double? width;
@@ -117,10 +117,10 @@ class AdvancedAppDrawer extends StatefulWidget {
   final int particleCount;
 
   @override
-  State<AdvancedAppDrawer> createState() => _AdvancedAppDrawerState();
+  State<NovaAppDrawer> createState() => _NovaAppDrawerState();
 }
 
-class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
+class _NovaAppDrawerState extends State<NovaAppDrawer>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   final ScrollController _scrollController = ScrollController();
@@ -157,15 +157,15 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final drawerTheme = widget.theme?.resolve(themeData) ??
-        const AdvancedDrawerTheme().resolve(themeData);
+        const NovaDrawerTheme().resolve(themeData);
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     final effectiveWidth = widget.width ??
-        ResponsiveUtils.getDrawerWidth(
+        NovaResponsiveUtils.getDrawerWidth(
           widget.controller.deviceType,
           drawerTheme,
         );
 
-    return DrawerControllerProvider(
+    return NovaDrawerControllerProvider(
       controller: widget.controller,
       child: Semantics(
         label: widget.config.accessibilityConfig.drawerLabel,
@@ -184,7 +184,7 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
     );
   }
 
-  BoxDecoration _buildDecoration(AdvancedDrawerTheme drawerTheme) {
+  BoxDecoration _buildDecoration(NovaDrawerTheme drawerTheme) {
     return BoxDecoration(
       color: drawerTheme.gradient == null
           ? drawerTheme.backgroundColor
@@ -196,7 +196,7 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
     );
   }
 
-  Widget _buildContent(AdvancedDrawerTheme drawerTheme, bool isRtl) {
+  Widget _buildContent(NovaDrawerTheme drawerTheme, bool isRtl) {
     Widget content = Column(
       children: [
         // Header
@@ -236,14 +236,14 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
     }
 
     if (widget.enableGradientBackground) {
-      content = DrawerGradientBackground(
+      content = NovaGradientBackground(
         colors: widget.gradientColors,
         child: content,
       );
     }
 
     if (widget.enableParticleBackground) {
-      content = DrawerParticleBackground(
+      content = NovaParticleBackground(
         color: widget.particleColor,
         particleCount: widget.particleCount,
         child: content,
@@ -252,7 +252,7 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
 
     // Apply entrance animation
     if (widget.config.animationConfig.enableItemAnimations) {
-      content = DrawerAnimationWrapper(
+      content = NovaDrawerAnimationWrapper(
         animation: _animationController,
         animationType: widget.config.animationType,
         animationConfig: widget.config.animationConfig,
@@ -264,7 +264,7 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
     return ClipRect(child: content);
   }
 
-  Widget _buildScrollableContent(AdvancedDrawerTheme drawerTheme) {
+  Widget _buildScrollableContent(NovaDrawerTheme drawerTheme) {
     final controller = widget.controller;
 
     return Scrollbar(
@@ -277,7 +277,7 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
           // Sections
           if (widget.sections.isNotEmpty)
             for (final section in widget.sections)
-              DrawerSectionWidget(
+              NovaDrawerSectionWidget(
                 section: section,
                 onItemTap: widget.onItemTap,
                 theme: widget.theme,
@@ -294,16 +294,16 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
   }
 
   Widget _buildFlatItem(
-    DrawerItem item,
-    AdvancedDrawerTheme drawerTheme,
-    AdvancedDrawerController controller,
+    NovaDrawerItem item,
+    NovaDrawerTheme drawerTheme,
+    NovaDrawerController controller,
   ) {
     if (item.customWidget != null) return item.customWidget!;
 
     final isSelected = controller.isSelected(item.id);
 
     if (item.hasChildren) {
-      return NestedMenuItem(
+      return NovaNestedMenuItem(
         item: item,
         isSelected: isSelected,
         onItemTap: widget.onItemTap,
@@ -314,7 +314,7 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: DrawerItemWidget(
+      child: NovaDrawerItemWidget(
         item: item,
         isSelected: isSelected,
         onTap: () {
@@ -322,7 +322,7 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
           widget.onItemTap?.call(item);
           item.onTap?.call();
           if (widget.config.closeOnItemTap &&
-              controller.deviceType == DeviceType.mobile) {
+              controller.deviceType == NovaDeviceType.mobile) {
             controller.close();
           }
         },
@@ -332,9 +332,9 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
     );
   }
 
-  Widget _buildLoadingState(AdvancedDrawerTheme drawerTheme) {
+  Widget _buildLoadingState(NovaDrawerTheme drawerTheme) {
     return Expanded(
-      child: ContinuousShimmer(
+      child: NovaContinuousShimmer(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -372,7 +372,7 @@ class _AdvancedAppDrawerState extends State<AdvancedAppDrawer>
     );
   }
 
-  Widget _buildErrorState(AdvancedDrawerTheme drawerTheme) {
+  Widget _buildErrorState(NovaDrawerTheme drawerTheme) {
     return Expanded(
       child: Center(
         child: Padding(

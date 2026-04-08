@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Theme configuration for the AdvancedAppDrawer.
+/// Theme configuration for the NovaAppDrawer.
 ///
 /// Provides comprehensive styling options including colors, text styles,
 /// shadows, borders, and animation properties for all drawer components.
@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// AdvancedDrawerTheme(
+/// NovaDrawerTheme(
 ///   backgroundColor: Colors.white,
 ///   selectedItemColor: Colors.blue,
 ///   itemTextStyle: TextStyle(fontSize: 14),
@@ -24,9 +24,9 @@ import 'package:flutter/material.dart';
 ///   borderRadius: BorderRadius.circular(16),
 /// )
 /// ```
-class AdvancedDrawerTheme {
-  /// Creates an [AdvancedDrawerTheme].
-  const AdvancedDrawerTheme({
+class NovaDrawerTheme {
+  /// Creates an [NovaDrawerTheme].
+  const NovaDrawerTheme({
     this.backgroundColor,
     this.surfaceColor,
     this.selectedItemColor,
@@ -169,10 +169,10 @@ class AdvancedDrawerTheme {
   // ── Component Themes ────────────────────────────────────────────────
 
   /// Theme configuration for item badges.
-  final DrawerBadgeTheme? badgeTheme;
+  final NovaDrawerBadgeTheme? badgeTheme;
 
   /// Theme for the drawer scrollbar.
-  final DrawerScrollbarTheme? scrollbarTheme;
+  final NovaDrawerScrollbarTheme? scrollbarTheme;
 
   // ── Decoration ──────────────────────────────────────────────────────
 
@@ -219,9 +219,9 @@ class AdvancedDrawerTheme {
 
   /// Resolves this theme against the given [ThemeData], filling in
   /// any null properties with sensible defaults.
-  AdvancedDrawerTheme resolve(ThemeData theme) {
+  NovaDrawerTheme resolve(ThemeData theme) {
     final colorScheme = theme.colorScheme;
-    return AdvancedDrawerTheme(
+    return NovaDrawerTheme(
       backgroundColor: backgroundColor ?? colorScheme.surface,
       surfaceColor: surfaceColor ?? colorScheme.surfaceContainerHighest,
       selectedItemColor: selectedItemColor ?? colorScheme.primary,
@@ -278,8 +278,8 @@ class AdvancedDrawerTheme {
       tabletDrawerWidth: tabletDrawerWidth ?? defaultTabletDrawerWidth,
       desktopDrawerWidth: desktopDrawerWidth ?? defaultDesktopDrawerWidth,
       headerHeight: headerHeight ?? defaultHeaderHeight,
-      badgeTheme: badgeTheme ?? const DrawerBadgeTheme(),
-      scrollbarTheme: scrollbarTheme ?? const DrawerScrollbarTheme(),
+      badgeTheme: badgeTheme ?? const NovaDrawerBadgeTheme(),
+      scrollbarTheme: scrollbarTheme ?? const NovaDrawerScrollbarTheme(),
       border: border,
       gradient: gradient,
       backgroundImage: backgroundImage,
@@ -289,7 +289,7 @@ class AdvancedDrawerTheme {
   }
 
   /// Creates a copy of this theme with the given fields replaced.
-  AdvancedDrawerTheme copyWith({
+  NovaDrawerTheme copyWith({
     Color? backgroundColor,
     Color? surfaceColor,
     Color? selectedItemColor,
@@ -321,15 +321,15 @@ class AdvancedDrawerTheme {
     double? tabletDrawerWidth,
     double? desktopDrawerWidth,
     double? headerHeight,
-    DrawerBadgeTheme? badgeTheme,
-    DrawerScrollbarTheme? scrollbarTheme,
+    NovaDrawerBadgeTheme? badgeTheme,
+    NovaDrawerScrollbarTheme? scrollbarTheme,
     BoxBorder? border,
     Gradient? gradient,
     DecorationImage? backgroundImage,
     double? backgroundBlur,
     ShapeBorder? drawerShape,
   }) {
-    return AdvancedDrawerTheme(
+    return NovaDrawerTheme(
       backgroundColor: backgroundColor ?? this.backgroundColor,
       surfaceColor: surfaceColor ?? this.surfaceColor,
       selectedItemColor: selectedItemColor ?? this.selectedItemColor,
@@ -375,8 +375,8 @@ class AdvancedDrawerTheme {
   }
 
   /// Creates a dark theme variant.
-  factory AdvancedDrawerTheme.dark() {
-    return const AdvancedDrawerTheme(
+  factory NovaDrawerTheme.dark() {
+    return const NovaDrawerTheme(
       backgroundColor: Color(0xFF1E1E2E),
       surfaceColor: Color(0xFF2A2A3E),
       selectedItemColor: Color(0xFF89B4FA),
@@ -392,8 +392,8 @@ class AdvancedDrawerTheme {
   }
 
   /// Creates a light theme variant.
-  factory AdvancedDrawerTheme.light() {
-    return const AdvancedDrawerTheme(
+  factory NovaDrawerTheme.light() {
+    return const NovaDrawerTheme(
       backgroundColor: Color(0xFFFFFFFF),
       surfaceColor: Color(0xFFF5F5F5),
       selectedItemColor: Color(0xFF1976D2),
@@ -410,9 +410,9 @@ class AdvancedDrawerTheme {
 }
 
 /// Theme configuration for drawer item badges.
-class DrawerBadgeTheme {
-  /// Creates a [DrawerBadgeTheme].
-  const DrawerBadgeTheme({
+class NovaDrawerBadgeTheme {
+  /// Creates a [NovaDrawerBadgeTheme].
+  const NovaDrawerBadgeTheme({
     this.backgroundColor,
     this.textColor,
     this.textStyle,
@@ -441,9 +441,9 @@ class DrawerBadgeTheme {
 }
 
 /// Theme configuration for the drawer scrollbar.
-class DrawerScrollbarTheme {
-  /// Creates a [DrawerScrollbarTheme].
-  const DrawerScrollbarTheme({
+class NovaDrawerScrollbarTheme {
+  /// Creates a [NovaDrawerScrollbarTheme].
+  const NovaDrawerScrollbarTheme({
     this.thumbColor,
     this.trackColor,
     this.thickness,

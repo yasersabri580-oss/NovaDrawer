@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Gradient transition animation for the AdvancedAppDrawer.
+/// Gradient transition animation for the NovaAppDrawer.
 ///
 /// Provides smooth color gradient transitions for the drawer
 /// background during open/close or state changes.
@@ -16,16 +16,16 @@ import 'package:flutter/material.dart';
 ///
 /// Example:
 /// ```dart
-/// GradientDrawerAnimation(
+/// NovaGradientDrawerAnimation(
 ///   animation: controller,
 ///   child: drawerContent,
 ///   beginGradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
 ///   endGradient: LinearGradient(colors: [Colors.teal, Colors.green]),
 /// )
 /// ```
-class GradientDrawerAnimation extends StatelessWidget {
-  /// Creates a [GradientDrawerAnimation].
-  const GradientDrawerAnimation({
+class NovaGradientDrawerAnimation extends StatelessWidget {
+  /// Creates a [NovaGradientDrawerAnimation].
+  const NovaGradientDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -109,9 +109,9 @@ class GradientDrawerAnimation extends StatelessWidget {
 }
 
 /// An animated gradient background that continuously cycles through colors.
-class AnimatedGradientBackground extends StatefulWidget {
-  /// Creates an [AnimatedGradientBackground].
-  const AnimatedGradientBackground({
+class NovaAnimatedGradientBackground extends StatefulWidget {
+  /// Creates an [NovaAnimatedGradientBackground].
+  const NovaAnimatedGradientBackground({
     super.key,
     required this.child,
     this.colors,
@@ -140,11 +140,11 @@ class AnimatedGradientBackground extends StatefulWidget {
   final bool enabled;
 
   @override
-  State<AnimatedGradientBackground> createState() =>
-      _AnimatedGradientBackgroundState();
+  State<NovaAnimatedGradientBackground> createState() =>
+      _NovaAnimatedGradientBackgroundState();
 }
 
-class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
+class _NovaAnimatedGradientBackgroundState extends State<NovaAnimatedGradientBackground>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -161,7 +161,7 @@ class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
   }
 
   @override
-  void didUpdateWidget(AnimatedGradientBackground oldWidget) {
+  void didUpdateWidget(NovaAnimatedGradientBackground oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.enabled != oldWidget.enabled) {
       if (widget.enabled) {
@@ -225,9 +225,9 @@ class _AnimatedGradientBackgroundState extends State<AnimatedGradientBackground>
 }
 
 /// A pulsing gradient effect for attention-drawing highlights.
-class PulsingGradient extends StatefulWidget {
-  /// Creates a [PulsingGradient].
-  const PulsingGradient({
+class NovaPulsingGradient extends StatefulWidget {
+  /// Creates a [NovaPulsingGradient].
+  const NovaPulsingGradient({
     super.key,
     required this.child,
     this.color,
@@ -256,10 +256,10 @@ class PulsingGradient extends StatefulWidget {
   final bool enabled;
 
   @override
-  State<PulsingGradient> createState() => _PulsingGradientState();
+  State<NovaPulsingGradient> createState() => _NovaPulsingGradientState();
 }
 
-class _PulsingGradientState extends State<PulsingGradient>
+class _NovaPulsingGradientState extends State<NovaPulsingGradient>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
@@ -276,7 +276,7 @@ class _PulsingGradientState extends State<PulsingGradient>
   }
 
   @override
-  void didUpdateWidget(PulsingGradient oldWidget) {
+  void didUpdateWidget(NovaPulsingGradient oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.enabled != oldWidget.enabled) {
       if (widget.enabled) {

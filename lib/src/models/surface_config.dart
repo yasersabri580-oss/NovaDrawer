@@ -6,7 +6,7 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 
 /// Enum representing the visual surface style of the drawer.
-enum DrawerSurfaceStyle {
+enum NovaDrawerSurfaceStyle {
   /// Plain flat surface with background color only.
   plain,
 
@@ -41,10 +41,10 @@ enum DrawerSurfaceStyle {
 /// Configuration for the drawer surface appearance.
 ///
 /// Controls the visual style of the drawer panel itself.
-class DrawerSurfaceConfig {
+class NovaDrawerSurfaceConfig {
   /// Creates a surface configuration.
-  const DrawerSurfaceConfig({
-    this.style = DrawerSurfaceStyle.plain,
+  const NovaDrawerSurfaceConfig({
+    this.style = NovaDrawerSurfaceStyle.plain,
     this.backgroundColor,
     this.gradientColors,
     this.gradientBegin,
@@ -62,7 +62,7 @@ class DrawerSurfaceConfig {
   });
 
   /// The surface style to use.
-  final DrawerSurfaceStyle style;
+  final NovaDrawerSurfaceStyle style;
 
   /// Background color for the surface.
   final Color? backgroundColor;
@@ -108,8 +108,8 @@ class DrawerSurfaceConfig {
       customSurfaceBuilder;
 
   /// Creates a copy with the given fields replaced.
-  DrawerSurfaceConfig copyWith({
-    DrawerSurfaceStyle? style,
+  NovaDrawerSurfaceConfig copyWith({
+    NovaDrawerSurfaceStyle? style,
     Color? backgroundColor,
     List<Color>? gradientColors,
     AlignmentGeometry? gradientBegin,
@@ -125,7 +125,7 @@ class DrawerSurfaceConfig {
     List<Color>? meshColors,
     Widget Function(BuildContext, Widget)? customSurfaceBuilder,
   }) {
-    return DrawerSurfaceConfig(
+    return NovaDrawerSurfaceConfig(
       style: style ?? this.style,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       gradientColors: gradientColors ?? this.gradientColors,
@@ -145,20 +145,20 @@ class DrawerSurfaceConfig {
   }
 }
 
-/// Widget that renders the drawer surface based on [DrawerSurfaceConfig].
-class DrawerSurface extends StatelessWidget {
+/// Widget that renders the drawer surface based on [NovaDrawerSurfaceConfig].
+class NovaDrawerSurface extends StatelessWidget {
   /// Creates a drawer surface.
-  const DrawerSurface({
+  const NovaDrawerSurface({
     super.key,
     required this.child,
-    this.config = const DrawerSurfaceConfig(),
+    this.config = const NovaDrawerSurfaceConfig(),
   });
 
   /// The content to display inside the surface.
   final Widget child;
 
   /// The surface configuration.
-  final DrawerSurfaceConfig config;
+  final NovaDrawerSurfaceConfig config;
 
   @override
   Widget build(BuildContext context) {
@@ -167,25 +167,25 @@ class DrawerSurface extends StatelessWidget {
     }
 
     switch (config.style) {
-      case DrawerSurfaceStyle.plain:
+      case NovaDrawerSurfaceStyle.plain:
         return _buildPlain();
-      case DrawerSurfaceStyle.elevated:
+      case NovaDrawerSurfaceStyle.elevated:
         return _buildElevated();
-      case DrawerSurfaceStyle.glassmorphism:
+      case NovaDrawerSurfaceStyle.glassmorphism:
         return _buildGlassmorphism();
-      case DrawerSurfaceStyle.blurred:
+      case NovaDrawerSurfaceStyle.blurred:
         return _buildBlurred();
-      case DrawerSurfaceStyle.gradient:
+      case NovaDrawerSurfaceStyle.gradient:
         return _buildGradient();
-      case DrawerSurfaceStyle.premiumShadow:
+      case NovaDrawerSurfaceStyle.premiumShadow:
         return _buildPremiumShadow();
-      case DrawerSurfaceStyle.outlinedMinimal:
+      case NovaDrawerSurfaceStyle.outlinedMinimal:
         return _buildOutlinedMinimal();
-      case DrawerSurfaceStyle.neumorphic:
+      case NovaDrawerSurfaceStyle.neumorphic:
         return _buildNeumorphic();
-      case DrawerSurfaceStyle.imageBacked:
+      case NovaDrawerSurfaceStyle.imageBacked:
         return _buildImageBacked();
-      case DrawerSurfaceStyle.animatedMeshGradient:
+      case NovaDrawerSurfaceStyle.animatedMeshGradient:
         return _buildAnimatedMeshGradient();
     }
   }

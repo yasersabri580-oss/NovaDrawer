@@ -1,7 +1,7 @@
-// Copyright (c) 2024 AdvancedAppDrawer Contributors
+// Copyright (c) 2024 NovaAppDrawer Contributors
 // Licensed under the MIT License.
 
-/// Spring animation for the AdvancedAppDrawer.
+/// Spring animation for the NovaAppDrawer.
 ///
 /// Uses spring physics simulation for natural, physics-based
 /// motion when opening/closing the drawer.
@@ -19,16 +19,16 @@ import 'package:flutter/physics.dart';
 ///
 /// Example:
 /// ```dart
-/// SpringDrawerAnimation(
+/// NovaSpringDrawerAnimation(
 ///   animation: controller,
 ///   child: drawerContent,
 ///   stiffness: 300,
 ///   damping: 15,
 /// )
 /// ```
-class SpringDrawerAnimation extends StatelessWidget {
-  /// Creates a [SpringDrawerAnimation].
-  const SpringDrawerAnimation({
+class NovaSpringDrawerAnimation extends StatelessWidget {
+  /// Creates a [NovaSpringDrawerAnimation].
+  const NovaSpringDrawerAnimation({
     super.key,
     required this.animation,
     required this.child,
@@ -125,9 +125,9 @@ class _SpringCurve extends Curve {
 }
 
 /// A spring animation applied to scale transformations.
-class SpringScaleAnimation extends StatelessWidget {
-  /// Creates a [SpringScaleAnimation].
-  const SpringScaleAnimation({
+class NovaSpringScaleAnimation extends StatelessWidget {
+  /// Creates a [NovaSpringScaleAnimation].
+  const NovaSpringScaleAnimation({
     super.key,
     required this.animation,
     required this.child,

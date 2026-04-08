@@ -1,9 +1,10 @@
 name: nova_drawer
 description: >
-  AdvancedAppDrawer – A modern, fully dynamic, and highly responsive
+  NovaDrawer – A modern, fully dynamic, and highly responsive
   app drawer component for Flutter supporting mobile, tablet, and desktop
-  with 10+ animation types, nested menus, RTL, theming, accessibility,
-  mini-drawer mode, gesture controls, and background effects.
+  with 16+ animation types (including floating, wave, parallax, and curtain),
+  nested menus, RTL, theming, accessibility, mini-drawer mode, gesture controls,
+  search_plus-powered search, and background effects.
 version: 1.0.0
 homepage: https://github.com/yasersabri580-oss/NovaDrawer
 
@@ -14,6 +15,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  search_plus: ^3.1.2
 
 dev_dependencies:
   flutter_test:
