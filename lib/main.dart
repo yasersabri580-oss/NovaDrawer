@@ -19,7 +19,7 @@
 /// - Gesture controls
 /// - Background effects
 /// - Slot-based builder APIs for deep customization
-library nova_drawer;
+library;
 
 // ── Models ──────────────────────────────────────────────────────────────
 export 'src/models/drawer_item.dart';
@@ -40,7 +40,7 @@ export 'src/widgets/drawer_section.dart';
 export 'src/widgets/nested_menu_item.dart';
 export 'src/widgets/mini_drawer.dart';
 export 'src/widgets/drawer_scaffold.dart';
-export 'src/widgets/drawer_search_bar.dart';
+
 export 'src/widgets/drawer_stats_card.dart';
 export 'src/widgets/drawer_shortcuts_grid.dart';
 export 'src/widgets/drawer_recent_items.dart';

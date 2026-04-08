@@ -47,6 +47,7 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 | `animatedMeshGradient` | Animated shifting gradient |
 
 ### 📦 Content Widgets
+
 <<<<<<< HEAD
 
 - **DrawerSearchBar** — Animated focus state, clear button
@@ -60,7 +61,7 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 ### 🎬 Animations (10+ types)
 
 =======
-- **NovaDrawerSearchBar** — Powered by `search_plus`, with animated focus state, clear button
+
 - **NovaDrawerStatsCard** — Row of stat items with dividers
 - **NovaDrawerShortcutsGrid** — Tappable shortcut grid with badges
 - **NovaDrawerRecentItems** — Recent items list with timestamps
@@ -69,7 +70,7 @@ Each header supports: avatar, cover image, user name, role, email, status indica
 - **NovaDrawerWorkspaceSwitcher** — Expandable workspace/account switcher
 
 ### 🎬 Animations (16+ types)
->>>>>>> 185de8de1cdee738b7ee508fa861e1b3f6e7b769
+
 | Animation | Description |
 |-----------|-------------|
 | `slide` | Slides in from the edge |
@@ -125,6 +126,7 @@ dependencies:
 ```
 
 Then run:
+
 ```bash
 flutter pub get
 ```
@@ -585,7 +587,7 @@ lib/
     controllers/
       drawer_controller.dart         # NovaDrawerController
     headers/
-      nova_drawer_header.dart        # Main header router widget
+      nova_drawer_header.dart        # Main header router widgets
       header_utils.dart              # Shared header utilities
       profile_header_classic.dart    # Classic variant
       profile_header_glassmorphism.dart # Glassmorphism variant

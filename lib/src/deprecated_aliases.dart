@@ -8,7 +8,6 @@
 /// major version. Migrate to the new names as soon as possible.
 library;
 
-import 'package:flutter/material.dart';
 
 // Re-export all new names so the typedefs can resolve.
 import 'models/drawer_item.dart';

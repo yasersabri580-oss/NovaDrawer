@@ -1287,23 +1287,7 @@ void main() {
   // ═══════════════════════════════════════════════════════════════════════
 
   group('Content Widgets', () {
-    testWidgets('NovaDrawerSearchBar renders with hint', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: NovaDrawerSearchBar<String>.simple(
-              items: const ['Home', 'Settings', 'Profile'],
-              searchableFields: (item) => [item],
-              toResult: (item) =>
-                  SearchResult(id: item, title: item, data: item),
-              hintText: 'Find items',
-              onChanged: (_) {},
-            ),
-          ),
-        ),
-      );
-      expect(find.byType(NovaDrawerSearchBar<String>), findsOneWidget);
-    });
+  
 
     testWidgets('NovaDrawerStatsCard renders stats', (tester) async {
       await tester.pumpWidget(

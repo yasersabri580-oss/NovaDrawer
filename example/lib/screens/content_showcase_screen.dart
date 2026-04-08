@@ -9,7 +9,6 @@ class ContentShowcaseScreen extends StatefulWidget {
 }
 
 class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
-  String _searchQuery = '';
   final Set<String> _selectedFilters = {'all'};
 
   // --- Sample data ---
@@ -20,21 +19,9 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
       value: '42',
       icon: Icons.folder_outlined,
     ),
-    NovaDrawerStatItem(
-      label: 'Tasks',
-      value: '128',
-      icon: Icons.task_alt,
-    ),
-    NovaDrawerStatItem(
-      label: 'Stars',
-      value: '1.2K',
-      icon: Icons.star_outline,
-    ),
-    NovaDrawerStatItem(
-      label: 'Team',
-      value: '8',
-      icon: Icons.group_outlined,
-    ),
+    NovaDrawerStatItem(label: 'Tasks', value: '128', icon: Icons.task_alt),
+    NovaDrawerStatItem(label: 'Stars', value: '1.2K', icon: Icons.star_outline),
+    NovaDrawerStatItem(label: 'Team', value: '8', icon: Icons.group_outlined),
   ];
 
   static const _shortcuts = [
@@ -108,16 +95,8 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
       icon: Icons.person,
       isActive: true,
     ),
-    NovaDrawerWorkspace(
-      id: 'team',
-      name: 'Team Nova',
-      icon: Icons.groups,
-    ),
-    NovaDrawerWorkspace(
-      id: 'org',
-      name: 'Acme Corp',
-      icon: Icons.business,
-    ),
+    NovaDrawerWorkspace(id: 'team', name: 'Team Nova', icon: Icons.groups),
+    NovaDrawerWorkspace(id: 'org', name: 'Acme Corp', icon: Icons.business),
   ];
 
   static const _appStatus = NovaDrawerAppStatus(
@@ -156,10 +135,7 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(title, style: Theme.of(context).textTheme.titleMedium),
         ),
-        Card(
-          clipBehavior: Clip.antiAlias,
-          child: child,
-        ),
+        Card(clipBehavior: Clip.antiAlias, child: child),
         const SizedBox(height: 20),
       ],
     );
@@ -168,28 +144,37 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
   // --- Widgets ---
 
   Widget _buildSearchBar() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        NovaDrawerSearchBar<String>.simple(
-          items: const ['Home', 'Settings', 'Profile', 'Dashboard', 'Analytics'],
-          searchableFields: (item) => [item],
-          toResult: (item) => SearchResult(id: item, title: item, data: item),
-          hintText: 'Search items…',
-          onChanged: (v) => setState(() => _searchQuery = v),
-        ),
-        if (_searchQuery.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-            child: Text(
-              'Query: "$_searchQuery"',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
-      ],
+    return SearchableListView<String>(
+      items: const ['Home', 'Settings', 'Profile', 'Dashboard', 'Analytics'],
+      searchableFields: (item) => [item],
+      toResult: (item) => SearchResult(id: item, title: item, data: item),
+      hintText: 'Search items…',
+
+      // Shows the full list when no query is entered (like a normal drawer menu)
+      idleBuilder: (context) => ListView(
+        children: const [
+          'Home',
+          'Settings',
+          'Profile',
+          'Dashboard',
+          'Analytics',
+        ].map((item) => ListTile(title: Text(item))).toList(),
+      ),
+
+      // Handle taps – close drawer, navigate, etc.
+      onItemTap: (result) {
+        Navigator.of(context).pop(); // close drawer if inside a drawer
+        // Add your navigation logic here
+        debugPrint('Selected: ${result.title}');
+      },
+
+      // Optional: customize appearance
+      layout: SearchResultsLayout.list,
+      density: SearchResultDensity.comfortable,
+      showClearButton: true,
+      debounceDuration: const Duration(milliseconds: 300),
     );
   }
-
 
   Widget _buildStatsCard() {
     return const NovaDrawerStatsCard(items: _stats);
@@ -217,21 +202,23 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
 
     return NovaDrawerFilterChipsWidget(
       chips: chipDefs
-          .map((c) => NovaDrawerFilterChip(
-                id: c.$1,
-                label: c.$2,
-                icon: c.$3,
-                isSelected: _selectedFilters.contains(c.$1),
-                onSelected: (selected) {
-                  setState(() {
-                    if (selected) {
-                      _selectedFilters.add(c.$1);
-                    } else {
-                      _selectedFilters.remove(c.$1);
-                    }
-                  });
-                },
-              ))
+          .map(
+            (c) => NovaDrawerFilterChip(
+              id: c.$1,
+              label: c.$2,
+              icon: c.$3,
+              isSelected: _selectedFilters.contains(c.$1),
+              onSelected: (selected) {
+                setState(() {
+                  if (selected) {
+                    _selectedFilters.add(c.$1);
+                  } else {
+                    _selectedFilters.remove(c.$1);
+                  }
+                });
+              },
+            ),
+          )
           .toList(),
     );
   }
