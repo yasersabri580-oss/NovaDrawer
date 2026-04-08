@@ -11,6 +11,7 @@ library;
 import 'dart:math' show pi, sin, sqrt, max;
 
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' show Vector3;
 
 /// A widget that applies a floating animation to its child.
 ///
@@ -70,8 +71,8 @@ class NovaFloatingDrawerAnimation extends StatelessWidget {
 
         return Transform(
           transform: Matrix4.identity()
-            ..translate(0.0, translateY)
-            ..scale(scale),
+            ..translateByVector3(Vector3(0.0, translateY, 0.0))
+            ..scaleByDouble(scale),
           alignment: Alignment.center,
           child: DecoratedBox(
             decoration: BoxDecoration(
@@ -160,8 +161,8 @@ class NovaFloatingBounceAnimation extends StatelessWidget {
 
         return Transform(
           transform: Matrix4.identity()
-            ..translate(0.0, translateY)
-            ..scale(scale),
+            ..translateByVector3(Vector3(0.0, translateY, 0.0))
+            ..scaleByDouble(scale),
           alignment: Alignment.center,
           child: DecoratedBox(
             decoration: BoxDecoration(
