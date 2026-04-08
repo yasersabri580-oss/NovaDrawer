@@ -40,7 +40,7 @@ class NovaAccessibilityUtils {
       button: !item.hasChildren,
       enabled: item.isEnabled,
       selected: isSelected,
-      value: stateDescription,
+      attributedValue: AttributedString(stateDescription),
       sortKey: indexInList != null ? OrdinalSortKey(indexInList.toDouble()) : null,
       child: child,
     );
@@ -78,7 +78,12 @@ class NovaAccessibilityUtils {
 
   /// Announces a message to screen readers.
   static void announce(BuildContext context, String message) {
-    SemanticsService.announce(message, Directionality.of(context));
+    final view = View.of(context);
+    SemanticsService.sendAnnouncement(
+      view,
+      message,
+      Directionality.of(context),
+    );
   }
 
   /// Creates an [ExcludeSemantics] wrapper to hide decorative elements.

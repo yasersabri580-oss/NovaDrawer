@@ -144,35 +144,38 @@ class _ContentShowcaseScreenState extends State<ContentShowcaseScreen> {
   // --- Widgets ---
 
   Widget _buildSearchBar() {
-    return SearchableListView<String>(
-      items: const ['Home', 'Settings', 'Profile', 'Dashboard', 'Analytics'],
-      searchableFields: (item) => [item],
-      toResult: (item) => SearchResult(id: item, title: item, data: item),
-      hintText: 'Search items…',
+    return SizedBox(
+      height: 350,
+      child: SearchableListView<String>(
+        items: const ['Home', 'Settings', 'Profile', 'Dashboard', 'Analytics'],
+        searchableFields: (item) => [item],
+        toResult: (item) => SearchResult(id: item, title: item, data: item),
+        hintText: 'Search items…',
 
-      // Shows the full list when no query is entered (like a normal drawer menu)
-      idleBuilder: (context) => ListView(
-        children: const [
-          'Home',
-          'Settings',
-          'Profile',
-          'Dashboard',
-          'Analytics',
-        ].map((item) => ListTile(title: Text(item))).toList(),
+        // Shows the full list when no query is entered (like a normal drawer menu)
+        idleBuilder: (context) => ListView(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: const [
+            'Home',
+            'Settings',
+            'Profile',
+            'Dashboard',
+            'Analytics',
+          ].map((item) => ListTile(title: Text(item))).toList(),
+        ),
+
+        // Handle taps – close drawer, navigate, etc.
+        onItemTap: (result) {
+          debugPrint('Selected: ${result.title}');
+        },
+
+        // Optional: customize appearance
+        layout: SearchResultsLayout.list,
+        density: SearchResultDensity.comfortable,
+        showClearButton: true,
+        debounceDuration: const Duration(milliseconds: 300),
       ),
-
-      // Handle taps – close drawer, navigate, etc.
-      onItemTap: (result) {
-        Navigator.of(context).pop(); // close drawer if inside a drawer
-        // Add your navigation logic here
-        debugPrint('Selected: ${result.title}');
-      },
-
-      // Optional: customize appearance
-      layout: SearchResultsLayout.list,
-      density: SearchResultDensity.comfortable,
-      showClearButton: true,
-      debounceDuration: const Duration(milliseconds: 300),
     );
   }
 
