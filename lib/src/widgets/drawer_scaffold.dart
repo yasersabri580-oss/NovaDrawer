@@ -461,7 +461,9 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
         onItemTap: widget.onItemTap,
         onExpandRequest: () => widget.controller.open(),
         theme: widget.theme,
-        config: widget.config,
+        // Use the drawer's config so that settings like enableHoverExpand
+        // and hoverExpandDelay configured on the NovaAppDrawer are honoured.
+        config: widget.drawer.config,
       ),
     );
   }
