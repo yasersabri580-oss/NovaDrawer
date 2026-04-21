@@ -52,7 +52,7 @@ Think of it as a drop-in replacement for Flutter's built-in `Drawer` that automa
 
 ```yaml
 dependencies:
-  nova_drawer: ^1.0.4
+  nova_drawer: ^1.0.7
 ```
 
 ```dart
@@ -97,6 +97,8 @@ import 'package:nova_drawer/nova_drawer.dart';
   - [NovaDrawerTheme](#novadrawertheme)
   - [NovaDrawerAnimationConfig](#novadraweranimationconfig)
   - [NovaHeaderConfig](#novaheaderconfig)
+- [Config Priority: NovaDrawerScaffold vs NovaAppDrawer](#config-priority-novadrawerscaffold-vs-novaappdrawer)
+- [Particles](#particles)
 - [Animations](#animations)
 - [Migration Guide](#migration-guide)
 
@@ -133,7 +135,8 @@ Think of `NovaDrawerScaffold` as a smarter `Scaffold`. Drop it in place of `Scaf
 | `appBar` | `PreferredSizeWidget?` | Standard app bar wired into the scaffold. |
 | `miniDrawerItems` / `miniDrawerSections` | `List?` | Items shown in mini mode; defaults to the full drawer's items. |
 | `miniDrawerHeader` / `miniDrawerFooter` | `Widget?` | Optional header/footer for the mini drawer. |
-| `onItemTap` | `void Function(NovaDrawerItem)?` | Central tap handler wired to both full and mini drawer. |
+| `onItemTap` | `void Function(NovaDrawerItem)?` | Central tap handler wired to both full and mini drawer. Falls back to `NovaAppDrawer.onItemTap` if not set. |
+| `onMiniDrawerExpandRequest` | `VoidCallback?` | Called when the mini drawer's expand button is tapped or hover-expand fires. Overrides the default `controller.open()`. |
 
 ### Display modes (set via `NovaDrawerConfig.displayMode`)
 
@@ -868,12 +871,44 @@ Think of `NovaMiniDrawer` as the "icon rail" state of the drawer. When `displayM
 | `header` | `Widget?` | Optional widget at the top (e.g., app logo). Centered in a 64px area. |
 | `footer` | `Widget?` | Optional widget at the bottom. |
 | `onItemTap` | `void Function(NovaDrawerItem)?` | Called when an icon is tapped. |
-| `onExpandRequest` | `VoidCallback?` | Called when the hamburger toggle is tapped. |
+| `onExpandRequest` | `VoidCallback?` | Called when the hamburger toggle is tapped or hover-expand fires. |
+| `config` | `NovaDrawerConfig?` | Controls `enableHoverExpand` and `hoverExpandDelay` for this rail. |
 | `width` | `double?` | Override width (default: 72 from theme). |
 
 ### Hover expansion (desktop)
 
-When `NovaDrawerConfig.enableHoverExpand: true`, hovering over the mini drawer for `hoverExpandDelay` milliseconds triggers `onExpandRequest`, expanding the full drawer.
+When `NovaDrawerConfig.enableHoverExpand: true` is set on the **drawer's** config
+(i.e., `NovaAppDrawer.config`), hovering over the mini drawer for
+`hoverExpandDelay` milliseconds triggers `onExpandRequest`.
+
+When using `NovaDrawerScaffold`, you can customise the expand behaviour via
+`onMiniDrawerExpandRequest`. If not provided, the default is `controller.open()`.
+
+```dart
+// Enable hover expand:
+NovaAppDrawer(
+  config: const NovaDrawerConfig(
+    enableHoverExpand: true,
+    hoverExpandDelay: Duration(milliseconds: 400),
+  ),
+  ...
+)
+
+// Custom expand behaviour on the scaffold:
+NovaDrawerScaffold(
+  onMiniDrawerExpandRequest: () {
+    // Do something custom, then expand:
+    controller.open();
+  },
+  ...
+)
+```
+
+> **Config priority note:** `enableHoverExpand` and `hoverExpandDelay` must be
+> set on `NovaAppDrawer.config` (not `NovaDrawerScaffold.config`) because the
+> scaffold passes the drawer's config to the mini drawer. See the
+> [Config Priority](#config-priority-novadrawerscaffold-vs-novaappdrawer) section
+> for a full explanation.
 
 ### Example (direct use)
 
@@ -1575,6 +1610,94 @@ NovaDrawerAnimationConfig(
 ### NovaHeaderConfig
 
 The **data + behavior config for any drawer header variant**. Described in detail in the [NovaDrawerHeader](#novadrawerheader-variant-system) section above.
+
+---
+
+## Config Priority: NovaDrawerScaffold vs NovaAppDrawer
+
+Both `NovaDrawerScaffold` and `NovaAppDrawer` accept a `NovaDrawerConfig`. This is
+intentional — they have overlapping but distinct responsibilities, and the same
+config object can be shared between them.
+
+### What each config controls
+
+| Config setting | Effective in | Reason |
+|---|---|---|
+| `displayMode` | `NovaDrawerScaffold` | The scaffold decides *how* the drawer is displayed (overlay / push / side / mini). |
+| `breakpoints` | `NovaDrawerScaffold` | The scaffold resolves which device type the screen width maps to. |
+| `animationConfig` (scaffold-level) | `NovaDrawerScaffold` | Controls the drawer slide-in/slide-out animation managed by the scaffold. |
+| `gestureConfig` | `NovaDrawerScaffold` | The scaffold handles swipe gestures on the body. |
+| `showMiniOnCollapse` | `NovaDrawerScaffold` | The scaffold decides whether to show `NovaMiniDrawer` when collapsed. |
+| `isPinnedByDefault` | `NovaDrawerScaffold` | The scaffold initialises the pinned state on startup. |
+| `closeOnOutsideTap` | `NovaDrawerScaffold` | The scaffold handles the overlay scrim tap. |
+| `animationType` / `animationConfig` (item-level) | `NovaAppDrawer` | The drawer animates its own content items on mount. |
+| `accessibilityConfig` | `NovaAppDrawer` | The drawer applies semantic labels to its content. |
+| `closeOnItemTap` | `NovaAppDrawer` / `NovaDrawerSectionWidget` | The drawer/section decides whether to close on mobile after tap. |
+| **`enableHoverExpand`** | **`NovaAppDrawer`** | The scaffold passes `drawer.config` to `NovaMiniDrawer`. Set this on the drawer. |
+| **`hoverExpandDelay`** | **`NovaAppDrawer`** | Same as above. |
+
+### Which has priority?
+
+There is no conflict resolution — both configs are used simultaneously for the
+parts they own. When in doubt, set the option on both.
+
+**Key rule:** Settings that affect the **mini drawer's** behaviour must be on
+`NovaAppDrawer.config`, because the scaffold hands that config directly to
+`NovaMiniDrawer`. Settings that affect the **scaffold layout** must be on
+`NovaDrawerScaffold.config`.
+
+### Simplest pattern (share one config object)
+
+```dart
+const myConfig = NovaDrawerConfig(
+  displayMode: NovaDrawerDisplayMode.auto,
+  showMiniOnCollapse: true,
+  enableHoverExpand: true,
+  hoverExpandDelay: Duration(milliseconds: 400),
+  closeOnItemTap: true,
+);
+
+NovaDrawerScaffold(
+  config: myConfig,
+  drawer: NovaAppDrawer(
+    config: myConfig, // same object – both get all settings
+    ...
+  ),
+  ...
+)
+```
+
+---
+
+## Particles
+
+`NovaParticleBackground` renders floating animated circles over the drawer's
+background layer. Each particle is a small filled circle that:
+
+- **Drifts** slowly across the panel using sinusoidal motion
+- **Pulses** in opacity for a breathing effect
+- **Randomises** size, speed, starting position, and phase per particle
+
+Enable it on `NovaAppDrawer`:
+
+```dart
+NovaAppDrawer(
+  enableParticleBackground: true,
+  particleCount: 25,        // number of particles (default: 20)
+  particleColor: Colors.white.withOpacity(0.15),
+  ...
+)
+```
+
+Particles are rendered on a `CustomPaint` layer above the drawer content
+background but below the navigation items, so they never block taps.
+
+**When to use:** Apps where you want the drawer to feel "alive" — creative tools,
+entertainment apps, onboarding flows. Pair with `enableGradientBackground: true`
+for best results.
+
+**Avoid when:** You target users with motion-sensitivity preferences, or the
+app's design is strictly minimal/flat.
 
 ---
 
