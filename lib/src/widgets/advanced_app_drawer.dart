@@ -9,6 +9,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../models/drawer_item.dart';
 import '../models/drawer_theme.dart';
@@ -134,13 +135,19 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
       reverseDuration: widget.config.animationConfig.effectiveReverseDuration,
     );
 
-    // Initialize sections in controller
-    if (widget.sections.isNotEmpty) {
-      widget.controller.setSections(widget.sections);
-    }
-    if (widget.items.isNotEmpty) {
-      widget.controller.setItems(widget.items);
-    }
+    // Defer controller state updates to post-frame to avoid calling
+    // notifyListeners() while the widget tree is still being built, which
+    // would cause a "setState() called during build" error via the
+    // NovaDrawerControllerProvider InheritedNotifier.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      if (widget.sections.isNotEmpty) {
+        widget.controller.setSections(widget.sections);
+      }
+      if (widget.items.isNotEmpty) {
+        widget.controller.setItems(widget.items);
+      }
+    });
 
     // Start the entrance animation
     _animationController.forward();
