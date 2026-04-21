@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../controllers/drawer_controller.dart';
 import '../models/header_config.dart';
 
 /// Shared utility widgets and helpers used across all header variants.
@@ -105,27 +106,11 @@ class NovaHeaderWidgetUtils {
     final List<Widget> trailing = [];
 
     if (config.showCloseButton) {
-      leading.add(
-        _ActionIconButton(
-          icon: Icons.close,
-          tooltip: 'Close drawer',
-          color: color,
-          onTap: () {
-            // Will be handled by parent via controller
-          },
-        ),
-      );
+      leading.add(_HeaderCloseButton(color: color));
     }
 
     if (config.showPinButton) {
-      trailing.add(
-        _ActionIconButton(
-          icon: Icons.push_pin_outlined,
-          tooltip: 'Pin drawer',
-          color: color,
-          onTap: () {},
-        ),
-      );
+      trailing.add(_HeaderPinButton(color: color));
     }
 
     for (final action in config.actions) {
@@ -288,6 +273,68 @@ class NovaHeaderWidgetUtils {
       return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
     }
     return parts.first[0].toUpperCase();
+  }
+}
+
+// ── Header Close Button ──────────────────────────────────────────────────────
+
+/// Close button for the header action bar.
+///
+/// Reads the [NovaDrawerControllerProvider] from context and calls
+/// [NovaDrawerController.close] when tapped.
+class _HeaderCloseButton extends StatelessWidget {
+  const _HeaderCloseButton({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    // Use getInheritedWidgetOfExactType (no dependency) because the close
+    // button appearance never changes — only its onTap callback needs the
+    // controller reference, which is looked up at tap time.
+    final provider = context
+        .getInheritedWidgetOfExactType<NovaDrawerControllerProvider>();
+    final controller = provider?.notifier;
+
+    return _ActionIconButton(
+      icon: Icons.close,
+      tooltip: 'Close drawer',
+      color: color,
+      onTap: () {
+        if (controller != null) {
+          controller.close();
+        } else {
+          Navigator.of(context).maybePop();
+        }
+      },
+    );
+  }
+}
+
+// ── Header Pin Button ────────────────────────────────────────────────────────
+
+/// Pin/unpin button for the header action bar.
+///
+/// Reads the [NovaDrawerControllerProvider] from context so it rebuilds
+/// automatically when the pin state changes.
+class _HeaderPinButton extends StatelessWidget {
+  const _HeaderPinButton({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = context
+        .dependOnInheritedWidgetOfExactType<NovaDrawerControllerProvider>();
+    final controller = provider?.notifier;
+    final isPinned = controller?.isPinned ?? false;
+
+    return _ActionIconButton(
+      icon: isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+      tooltip: isPinned ? 'Unpin drawer' : 'Pin drawer',
+      color: color,
+      onTap: controller != null ? () => controller.togglePin() : null,
+    );
   }
 }
 

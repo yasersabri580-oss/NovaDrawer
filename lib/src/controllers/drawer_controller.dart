@@ -174,6 +174,9 @@ class NovaDrawerController extends ChangeNotifier {
   // ── Mini Mode ──────────────────────────────────────────────────────
 
   /// Switches to mini (collapsed icon-only) mode.
+  ///
+  /// Sets [isMini] to `true` and [isOpen] to `false`.
+  /// Use [fromMini] or [expand] to return to full mode.
   void toMini() {
     if (!_isMini) {
       _isMini = true;
@@ -183,6 +186,8 @@ class NovaDrawerController extends ChangeNotifier {
   }
 
   /// Switches from mini to expanded mode.
+  ///
+  /// Sets [isMini] to `false` and [isOpen] to `true`.
   void fromMini() {
     if (_isMini) {
       _isMini = false;
@@ -199,6 +204,22 @@ class NovaDrawerController extends ChangeNotifier {
       toMini();
     }
   }
+
+  /// Expands the drawer to full width.
+  ///
+  /// Alias for [open] / [fromMini]: always opens the drawer regardless
+  /// of whether it was in mini mode or simply closed.
+  void expand() {
+    final needsNotify = _isMini || !_isOpen;
+    _isMini = false;
+    _isOpen = true;
+    if (needsNotify) notifyListeners();
+  }
+
+  /// Collapses the drawer to mini (icon-only) mode.
+  ///
+  /// Alias for [toMini].
+  void mini() => toMini();
 
   // ── Item Selection ─────────────────────────────────────────────────
 

@@ -205,6 +205,11 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
     } else {
       _drawerAnimationController.reverse();
     }
+
+    // Rebuild so that side/mini layouts pick up the new controller state
+    // (e.g. isOpen, isPinned, isMini) since they read controller fields
+    // directly inside build() rather than through AnimatedBuilder.
+    setState(() {});
   }
 
   @override
