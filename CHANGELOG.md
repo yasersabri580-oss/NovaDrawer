@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.6
+
+- Fixed onClose not working in drawer
+
 ## 1.0.5
 
 - Fixed "setState() or markNeedsBuild() called during build" crash that occurred
