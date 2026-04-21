@@ -56,6 +56,7 @@ class NovaDrawerScaffold extends StatefulWidget {
     this.miniDrawerItems,
     this.miniDrawerSections,
     this.onItemTap,
+    this.onMiniDrawerExpandRequest,
     this.scaffoldKey,
     this.backgroundColor,
   });
@@ -101,6 +102,24 @@ class NovaDrawerScaffold extends StatefulWidget {
 
   /// Callback when a drawer item is tapped.
   final void Function(NovaDrawerItem item)? onItemTap;
+
+  /// Optional callback invoked when the mini drawer requests expansion
+  /// (hamburger button tap or hover-expand trigger).
+  ///
+  /// When provided, this replaces the default behaviour of calling
+  /// `controller.open()`. Use this to implement custom expand logic, such
+  /// as showing a modal sheet instead of expanding the drawer, or running
+  /// additional side-effects before expanding.
+  ///
+  /// Example:
+  /// ```dart
+  /// onMiniDrawerExpandRequest: () {
+  ///   // Custom analytics event before expanding
+  ///   analytics.track('mini_drawer_expanded');
+  ///   controller.open();
+  /// },
+  /// ```
+  final VoidCallback? onMiniDrawerExpandRequest;
 
   /// Scaffold key for controlling the default scaffold drawer.
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -463,8 +482,13 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
         sections: widget.miniDrawerSections ?? widget.drawer.sections,
         header: widget.miniDrawerHeader,
         footer: widget.miniDrawerFooter,
-        onItemTap: widget.onItemTap,
-        onExpandRequest: () => widget.controller.open(),
+        // Fall back to the drawer's onItemTap so that a callback set on
+        // NovaAppDrawer still fires when the mini drawer is shown.
+        onItemTap: widget.onItemTap ?? widget.drawer.onItemTap,
+        // Allow the caller to override the default expand behaviour; if not
+        // provided, fall back to opening the full drawer.
+        onExpandRequest:
+            widget.onMiniDrawerExpandRequest ?? () => widget.controller.open(),
         theme: widget.theme,
         // Use the drawer's config so that settings like enableHoverExpand
         // and hoverExpandDelay configured on the NovaAppDrawer are honoured.

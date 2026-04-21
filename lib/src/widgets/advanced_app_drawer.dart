@@ -135,6 +135,12 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
       reverseDuration: widget.config.animationConfig.effectiveReverseDuration,
     );
 
+    // Listen to controller changes so that selection and other state changes
+    // cause this widget to rebuild. This is necessary for flat items rendered
+    // directly in _buildFlatItem, which do not go through a widget that
+    // depends on NovaDrawerControllerProvider.of(context).
+    widget.controller.addListener(_onControllerChanged);
+
     // Defer controller state updates to post-frame to avoid calling
     // notifyListeners() while the widget tree is still being built, which
     // would cause a "setState() called during build" error via the
@@ -154,10 +160,24 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
   }
 
   @override
+  void didUpdateWidget(NovaAppDrawer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.controller != oldWidget.controller) {
+      oldWidget.controller.removeListener(_onControllerChanged);
+      widget.controller.addListener(_onControllerChanged);
+    }
+  }
+
+  @override
   void dispose() {
+    widget.controller.removeListener(_onControllerChanged);
     _animationController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (mounted) setState(() {});
   }
 
   @override
