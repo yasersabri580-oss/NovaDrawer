@@ -618,6 +618,51 @@ void main() {
   // WIDGET TESTS
   // ═══════════════════════════════════════════════════════════════════════
 
+  group('NovaDrawerScaffold', () {
+    testWidgets('controller opens and closes overlay drawer',
+        (WidgetTester tester) async {
+      final controller = NovaDrawerController();
+      final scaffoldKey = GlobalKey<ScaffoldState>();
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: NovaDrawerScaffold(
+            scaffoldKey: scaffoldKey,
+            controller: controller,
+            config: const NovaDrawerConfig(
+              displayMode: NovaDrawerDisplayMode.overlay,
+            ),
+            drawer: NovaAppDrawer(
+              controller: controller,
+              sections: const [
+                NovaDrawerSectionData(
+                  id: 'main',
+                  items: [
+                    NovaDrawerItem(id: 'home', title: 'Home'),
+                  ],
+                ),
+              ],
+            ),
+            appBar: AppBar(title: const Text('Test')),
+            body: const SizedBox.shrink(),
+          ),
+        ),
+      );
+
+      expect(scaffoldKey.currentState?.isDrawerOpen, isFalse);
+
+      controller.open();
+      await tester.pumpAndSettle();
+      expect(scaffoldKey.currentState?.isDrawerOpen, isTrue);
+
+      controller.close();
+      await tester.pumpAndSettle();
+      expect(scaffoldKey.currentState?.isDrawerOpen, isFalse);
+
+      controller.dispose();
+    });
+  });
+
   group('NovaDrawerItemWidget', () {
     testWidgets('renders title and icon', (WidgetTester tester) async {
       final controller = NovaDrawerController();
