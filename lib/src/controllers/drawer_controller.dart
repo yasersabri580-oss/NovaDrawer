@@ -210,10 +210,10 @@ class NovaDrawerController extends ChangeNotifier {
   /// Alias for [open] / [fromMini]: always opens the drawer regardless
   /// of whether it was in mini mode or simply closed.
   void expand() {
-    final changed = _isMini || !_isOpen;
+    final needsNotify = _isMini || !_isOpen;
     _isMini = false;
     _isOpen = true;
-    if (changed) notifyListeners();
+    if (needsNotify) notifyListeners();
   }
 
   /// Collapses the drawer to mini (icon-only) mode.

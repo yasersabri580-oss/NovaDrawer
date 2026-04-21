@@ -289,8 +289,11 @@ class _HeaderCloseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Use getInheritedWidgetOfExactType (no dependency) because the close
+    // button appearance never changes — only its onTap callback needs the
+    // controller reference, which is looked up at tap time.
     final provider = context
-        .dependOnInheritedWidgetOfExactType<NovaDrawerControllerProvider>();
+        .getInheritedWidgetOfExactType<NovaDrawerControllerProvider>();
     final controller = provider?.notifier;
 
     return _ActionIconButton(
