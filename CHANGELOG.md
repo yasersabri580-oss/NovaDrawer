@@ -1,5 +1,5 @@
 # Changelog
 
-## 1.0.1
+## 1.0.2
 
-- Fix some bugs
+- Novadrawer controller now opens that drawer on overlymode
