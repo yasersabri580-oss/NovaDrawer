@@ -269,6 +269,8 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
   Widget _buildOverlayLayout(NovaDrawerTheme drawerTheme, bool isRtl) {
     return Scaffold(
       key: _scaffoldKey,
+      onDrawerChanged: _handleScaffoldDrawerChanged,
+      onEndDrawerChanged: _handleScaffoldDrawerChanged,
       appBar: widget.appBar,
       body: _buildGestureDetector(
         child: widget.body,
@@ -281,6 +283,19 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
       bottomNavigationBar: widget.bottomNavigationBar,
       backgroundColor: widget.backgroundColor,
     );
+  }
+
+  void _handleScaffoldDrawerChanged(bool isOpened) {
+    if (isOpened) {
+      if (!widget.controller.isOpen) {
+        widget.controller.open();
+      }
+      return;
+    }
+
+    if (widget.controller.isOpen) {
+      widget.controller.close();
+    }
   }
 
   /// Push mode: drawer pushes content aside (tablet).
