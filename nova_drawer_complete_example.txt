@@ -1,0 +1,687 @@
+================================================================================
+  NovaDrawer – Complete Usage Example
+  All features, options, and controller APIs in one place
+================================================================================
+
+PUBSPEC DEPENDENCY
+──────────────────
+dependencies:
+  nova_drawer: ^<latest>        # adjust to the version in your pubspec.yaml
+
+Then run:  flutter pub get
+
+
+IMPORT
+──────
+import 'package:nova_drawer/main.dart';
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 1. CONTROLLER  (NovaDrawerController)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Create a controller and keep it alive (e.g. in a StatefulWidget or provider).
+
+  final _controller = NovaDrawerController(
+    initialSelectedItemId: 'home',   // optional – which item is active at start
+    initiallyOpen: false,            // start closed
+    initiallyPinned: false,          // start unpinned (desktop persistent mode)
+    initiallyMini: false,            // start in full mode (not icon-only)
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();           // always dispose the controller
+    super.dispose();
+  }
+
+── Open / Close ────────────────────────────────────────────────────────────────
+  _controller.open();               // open the drawer
+  _controller.close();              // close the drawer (no-op if pinned)
+  _controller.toggle();             // toggle open/closed
+
+── Expand / Mini (Icon-only mode) ──────────────────────────────────────────────
+  // Switch the drawer between full-width and icon-only (mini) mode.
+  // Works for side / mini display modes (tablet & desktop).
+
+  _controller.expand();             // always expand to full width
+  _controller.mini();               // collapse to icon-only strip
+  _controller.toMini();             // same as mini()
+  _controller.fromMini();           // same as expand()
+  _controller.toggleMini();         // toggle between full and mini
+
+── Pin / Unpin (persistent desktop sidebar) ────────────────────────────────────
+  _controller.pin();                // pin the drawer open permanently
+  _controller.unpin();              // let the drawer close again
+  _controller.togglePin();          // toggle pinned state
+
+── Item selection ───────────────────────────────────────────────────────────────
+  _controller.selectItem('settings');     // select item by ID
+  _controller.clearSelection();           // clear active selection
+  _controller.selectByRoute('/settings'); // select by route path
+
+── Section / nested item expansion ─────────────────────────────────────────────
+  _controller.expandSection('main');      // expand a section
+  _controller.collapseSection('main');    // collapse a section
+  _controller.toggleSection('main');
+
+  _controller.expandItem('reports');      // expand a nested item's children
+  _controller.collapseItem('reports');
+  _controller.toggleItem('reports');
+
+── Enable / disable / hide items ───────────────────────────────────────────────
+  _controller.disableItem('admin');       // grey out, non-interactive
+  _controller.enableItem('admin');
+  _controller.hideItem('debug');          // remove from list entirely
+  _controller.showItem('debug');
+
+── Read state ───────────────────────────────────────────────────────────────────
+  bool open     = _controller.isOpen;
+  bool mini     = _controller.isMini;
+  bool pinned   = _controller.isPinned;
+  bool animating= _controller.isAnimating;
+  String? id    = _controller.selectedItemId;
+  NovaDeviceType dt = _controller.deviceType; // mobile / tablet / desktop
+
+── Dynamic data loading ─────────────────────────────────────────────────────────
+  await _controller.loadItems(() async {
+    // fetch from API, return List<NovaDrawerItem>
+    return await MyApi.fetchNavItems();
+  });
+
+  await _controller.loadSections(() async {
+    return await MyApi.fetchSections();
+  });
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 2. ITEMS  (NovaDrawerItem)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Items can be flat, nested (children), and support badges, custom widgets, etc.
+
+  final items = [
+    NovaDrawerItem(
+      id: 'home',
+      title: 'Home',
+      icon: Icons.home,
+      route: '/home',
+      badge: 3,                     // notification badge count
+      badgeColor: Colors.red,
+      onTap: () => Navigator.pushNamed(context, '/home'),
+    ),
+
+    // Nested item with children
+    NovaDrawerItem(
+      id: 'reports',
+      title: 'Reports',
+      icon: Icons.bar_chart,
+      children: [
+        NovaDrawerItem(
+          id: 'sales',
+          title: 'Sales',
+          icon: Icons.trending_up,
+          route: '/reports/sales',
+        ),
+        NovaDrawerItem(
+          id: 'inventory',
+          title: 'Inventory',
+          icon: Icons.inventory,
+          route: '/reports/inventory',
+        ),
+      ],
+    ),
+
+    // Item with tooltip and trailing widget
+    NovaDrawerItem(
+      id: 'settings',
+      title: 'Settings',
+      icon: Icons.settings,
+      route: '/settings',
+      tooltip: 'App settings',
+      trailing: Icon(Icons.chevron_right, size: 16),
+    ),
+
+    // Divider item
+    NovaDrawerItem.divider(id: 'div1'),
+
+    // Custom widget item (full control)
+    NovaDrawerItem(
+      id: 'custom',
+      title: 'Custom',
+      icon: Icons.widgets,
+      customWidget: MyCustomTile(),
+    ),
+  ];
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 3. SECTIONS  (NovaDrawerSectionData)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Group items into collapsible sections.
+
+  final sections = [
+    NovaDrawerSectionData(
+      id: 'main',
+      title: 'Main Menu',
+      initiallyExpanded: true,
+      items: [
+        NovaDrawerItem(id: 'home',    title: 'Home',    icon: Icons.home),
+        NovaDrawerItem(id: 'profile', title: 'Profile', icon: Icons.person),
+      ],
+    ),
+    NovaDrawerSectionData(
+      id: 'admin',
+      title: 'Administration',
+      initiallyExpanded: false,
+      items: [
+        NovaDrawerItem(id: 'users',  title: 'Users',  icon: Icons.group),
+        NovaDrawerItem(id: 'roles',  title: 'Roles',  icon: Icons.security),
+      ],
+    ),
+  ];
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 4. HEADER  (NovaDrawerHeader / NovaHeaderConfig)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Use the pluggable header system with 10 built-in variants.
+
+── Variants ──────────────────────────────────────────────────────────────────
+  NovaHeaderVariant.classic          // avatar + cover + name + subtitle
+  NovaHeaderVariant.compact          // single-row minimal layout
+  NovaHeaderVariant.hero             // large cover photo, magazine-style
+  NovaHeaderVariant.expanded         // detailed layout with extra info
+  NovaHeaderVariant.glassmorphism    // frosted-glass blur effect
+  NovaHeaderVariant.animatedGradient // cycling gradient background
+  NovaHeaderVariant.avatarStack      // multiple account avatars
+  NovaHeaderVariant.multiAction      // prominent action buttons
+  NovaHeaderVariant.statusAware      // user-status focused, breathing dot
+  NovaHeaderVariant.collapsible      // header that expands / collapses
+
+── Profile data ──────────────────────────────────────────────────────────────
+  const profile = NovaHeaderUserProfile(
+    name: 'Jane Doe',
+    email: 'jane@example.com',
+    role: 'Administrator',
+    subtitle: 'Premium member',
+    phone: '+1 555-0100',
+    avatarUrl: 'https://example.com/avatar.jpg',
+    // avatarWidget: MyCustomAvatar(),   // custom widget instead of URL
+    coverUrl: 'https://example.com/cover.jpg',
+    status: NovaUserStatus.online,      // online / offline / busy / away / unknown
+    notificationCount: 5,
+  );
+
+── Complete NovaHeaderConfig ─────────────────────────────────────────────────
+  const headerConfig = NovaHeaderConfig(
+    variant: NovaHeaderVariant.collapsible,
+    profile: profile,
+
+    // Buttons
+    showCloseButton: true,            // × button that closes the drawer
+    showPinButton: true,              // pin/unpin persistent sidebar button
+    showEditProfileButton: false,
+    showStatusIndicator: true,        // colored dot for online/offline/busy
+    showNotificationBadge: true,
+
+    // Collapse / expand behaviour (works for all variants that support it)
+    enableCollapseExpand: true,       // show the ▾ toggle button
+    isCollapsed: false,               // initial state – expanded
+
+    // Sizes
+    headerHeight: 220.0,             // expanded height
+    collapsedHeaderHeight: 72.0,     // collapsed height
+    avatarRadius: 36.0,
+    collapsedAvatarRadius: 20.0,
+    coverHeight: 90.0,
+
+    // Callbacks
+    onProfileTap: () => print('profile tapped'),
+    onEditProfile: () => print('edit profile'),
+    onSwitchAccount: () => print('switch account'),
+
+    // Extra header action buttons (appear in top-right)
+    actions: [
+      NovaHeaderAction(
+        id: 'search',
+        icon: Icons.search,
+        label: 'Search',
+        tooltip: 'Search',
+        onTap: () => print('search tapped'),
+        badge: 0,
+      ),
+      NovaHeaderAction(
+        id: 'logout',
+        icon: Icons.logout,
+        label: 'Logout',
+        isDestructive: true,         // shown in red
+        onTap: () => print('logout'),
+      ),
+    ],
+
+    // Layout extras
+    backgroundWidget: Image.network('...', fit: BoxFit.cover),
+    bottomWidget: Chip(label: Text('Beta tester')),
+    gradientColors: [Colors.blue, Colors.purple],
+
+    // Multi-account
+    accounts: [
+      NovaHeaderUserProfile(name: 'Work Account', email: 'work@example.com'),
+    ],
+  );
+
+── Build the header widget ───────────────────────────────────────────────────
+  final header = NovaDrawerHeader(config: headerConfig);
+
+  // Or use the simple header widget (no profile system):
+  final simpleHeader = NovaDrawerHeaderWidget(
+    title: 'My App',
+    subtitle: 'v2.0',
+    avatar: CircleAvatar(child: Icon(Icons.apps)),
+    showCloseButton: true,
+    showPinButton: true,
+  );
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 5. CONFIG  (NovaDrawerConfig)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  const config = NovaDrawerConfig(
+    // Display mode
+    displayMode: NovaDrawerDisplayMode.auto,
+    // auto    → overlay on mobile, push on tablet, side on desktop (default)
+    // overlay → always slides over content (traditional mobile drawer)
+    // push    → content slides to make room for the drawer
+    // side    → drawer sits permanently alongside content
+    // mini    → always shows icon-only strip; click to expand
+
+    // Animation
+    animationType: NovaDrawerAnimationType.slide,
+    // Other types: fade, scale, rotate, morph, elastic, spring, shimmer,
+    //              blur, gradient, floating, floatingBounce, floatingReveal,
+    //              wave, parallax, curtain
+
+    // Responsive breakpoints (in logical pixels)
+    breakpoints: NovaDrawerBreakpoints(
+      mobile: 600,    // < 600  → mobile
+      tablet: 1024,   // 600–1024 → tablet
+                      // > 1024  → desktop
+    ),
+
+    // Pinning
+    isPinnable: true,
+    isPinnedByDefault: false,       // pin by default on desktop
+
+    // Mini strip
+    showMiniOnCollapse: true,       // show icon strip instead of hiding drawer
+
+    // Gestures
+    gestureConfig: NovaDrawerGestureConfig(
+      enableSwipeToOpen: true,      // swipe from edge to open
+      enableSwipeToClose: true,
+      swipeSensitivity: 0.5,        // 0.0–1.0
+      swipeEdgeWidth: 20.0,
+      enableDragHandle: true,
+    ),
+
+    // Overlay scrim
+    showOverlay: true,
+    overlayOpacity: 0.5,            // 0.0–1.0
+
+    // Behaviour
+    closeOnItemTap: true,           // close after item tap on mobile
+    closeOnOutsideTap: true,        // tap outside to close
+    enableHoverExpand: true,        // hover over mini strip to expand (desktop)
+    hoverExpandDelay: Duration(milliseconds: 400),
+
+    // Accessibility
+    accessibilityConfig: NovaDrawerAccessibilityConfig(
+      enableSemantics: true,
+      drawerLabel: 'Navigation drawer',
+      closeButtonLabel: 'Close navigation drawer',
+    ),
+  );
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 6. THEME  (NovaDrawerTheme)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  const theme = NovaDrawerTheme(
+    backgroundColor: Color(0xFF1A1A2E),
+    headerBackgroundColor: Color(0xFF16213E),
+    selectedItemColor: Colors.blue,
+    unselectedItemColor: Colors.white70,
+    selectedItemBackgroundColor: Color(0x2200BFFF),
+    itemTextStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+    subtitleTextStyle: TextStyle(fontSize: 12, color: Colors.white54),
+    headerTitleStyle: TextStyle(fontSize: 16, color: Colors.white,
+                                fontWeight: FontWeight.bold),
+    headerSubtitleStyle: TextStyle(fontSize: 12, color: Colors.white60),
+    dividerColor: Color(0xFF2A2A4A),
+    iconSize: 22.0,
+    itemHeight: 48.0,
+    borderRadius: BorderRadius.horizontal(right: Radius.circular(16)),
+    elevation: 8.0,
+    shadowColor: Colors.black54,
+    // Width overrides
+    expandedDrawerWidth: 280.0,
+    tabletDrawerWidth: 240.0,
+    desktopDrawerWidth: 260.0,
+    miniDrawerWidth: 72.0,
+    // Content padding
+    contentPadding: EdgeInsets.symmetric(vertical: 8),
+  );
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 7. PUTTING IT ALL TOGETHER  (NovaDrawerScaffold + NovaAppDrawer)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+import 'package:flutter/material.dart';
+import 'package:nova_drawer/main.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'NovaDrawer Demo',
+      theme: ThemeData(colorSchemeSeed: Colors.blue),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // ── 1. Controller ──────────────────────────────────────────────────────────
+  final _controller = NovaDrawerController(
+    initialSelectedItemId: 'home',
+  );
+
+  // ── 2. Items ───────────────────────────────────────────────────────────────
+  final _sections = [
+    NovaDrawerSectionData(
+      id: 'main',
+      title: 'MAIN',
+      items: [
+        NovaDrawerItem(id: 'home',    title: 'Home',    icon: Icons.home,        route: '/'),
+        NovaDrawerItem(id: 'profile', title: 'Profile', icon: Icons.person,      route: '/profile'),
+        NovaDrawerItem(id: 'inbox',   title: 'Inbox',   icon: Icons.inbox,       route: '/inbox', badge: 4),
+      ],
+    ),
+    NovaDrawerSectionData(
+      id: 'tools',
+      title: 'TOOLS',
+      initiallyExpanded: false,
+      items: [
+        NovaDrawerItem(
+          id: 'reports',
+          title: 'Reports',
+          icon: Icons.bar_chart,
+          children: [
+            NovaDrawerItem(id: 'sales',     title: 'Sales',     icon: Icons.trending_up),
+            NovaDrawerItem(id: 'inventory', title: 'Inventory', icon: Icons.inventory),
+          ],
+        ),
+        NovaDrawerItem(id: 'settings', title: 'Settings', icon: Icons.settings, route: '/settings'),
+      ],
+    ),
+  ];
+
+  // ── 3. Header ──────────────────────────────────────────────────────────────
+  static const _profile = NovaHeaderUserProfile(
+    name: 'Jane Doe',
+    email: 'jane@example.com',
+    role: 'Administrator',
+    status: NovaUserStatus.online,
+    notificationCount: 3,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // ── 4. Drawer ─────────────────────────────────────────────────────────────
+    final drawer = NovaAppDrawer(
+      controller: _controller,
+      sections: _sections,
+      config: const NovaDrawerConfig(
+        displayMode: NovaDrawerDisplayMode.auto,
+        animationType: NovaDrawerAnimationType.slide,
+        showMiniOnCollapse: true,
+        enableHoverExpand: true,
+        closeOnItemTap: true,
+      ),
+      theme: const NovaDrawerTheme(
+        selectedItemColor: Colors.blue,
+      ),
+      header: const NovaDrawerHeader(
+        config: NovaHeaderConfig(
+          variant: NovaHeaderVariant.collapsible,
+          profile: _profile,
+          enableCollapseExpand: true,   // show ▾ toggle button in the header
+          showCloseButton: true,        // × button – closes the drawer
+          showPinButton: true,          // pin button – persists sidebar on desktop
+          showStatusIndicator: true,
+          showNotificationBadge: true,
+          actions: [
+            NovaHeaderAction(
+              id: 'search',
+              icon: Icons.search,
+              tooltip: 'Search',
+              onTap: null,              // replace with your callback
+            ),
+          ],
+        ),
+      ),
+      footer: ListTile(
+        leading: const Icon(Icons.logout),
+        title: const Text('Sign out'),
+        onTap: () => debugPrint('sign out'),
+      ),
+      onItemTap: (item) {
+        debugPrint('Tapped: ${item.id}');
+        if (item.route != null) {
+          // Navigator.pushNamed(context, item.route!);
+        }
+      },
+    );
+
+    // ── 5. Scaffold ───────────────────────────────────────────────────────────
+    return NovaDrawerScaffold(
+      controller: _controller,
+      drawer: drawer,
+      appBar: AppBar(
+        title: const Text('NovaDrawer Demo'),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: _controller.toggle,          // open / close
+        ),
+        actions: [
+          // Toggle mini / full programmatically
+          IconButton(
+            icon: const Icon(Icons.view_sidebar),
+            tooltip: 'Toggle mini mode',
+            onPressed: _controller.toggleMini,    // expand() or mini()
+          ),
+          // Pin / unpin
+          IconButton(
+            icon: const Icon(Icons.push_pin_outlined),
+            tooltip: 'Toggle pin',
+            onPressed: _controller.togglePin,
+          ),
+        ],
+      ),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return ListenableBuilder(
+      listenable: _controller,
+      builder: (context, _) {
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Selected: ${_controller.selectedItemId ?? 'none'}'),
+              const SizedBox(height: 12),
+              Text('Open: ${_controller.isOpen}   '
+                   'Mini: ${_controller.isMini}   '
+                   'Pinned: ${_controller.isPinned}'),
+              const SizedBox(height: 24),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ElevatedButton(
+                    onPressed: _controller.open,
+                    child: const Text('Open'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _controller.close,
+                    child: const Text('Close'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _controller.expand,
+                    child: const Text('Expand (full)'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _controller.mini,
+                    child: const Text('Mini (icon-only)'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _controller.toggleMini,
+                    child: const Text('Toggle Mini'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _controller.togglePin,
+                    child: const Text('Toggle Pin'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _controller.selectItem('settings'),
+                    child: const Text('Select Settings'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _controller.disableItem('profile'),
+                    child: const Text('Disable Profile'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => _controller.enableItem('profile'),
+                    child: const Text('Enable Profile'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 8. BACKGROUND EFFECTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  NovaAppDrawer(
+    // ...
+    enableGradientBackground: true,
+    gradientColors: [Colors.indigo.shade900, Colors.purple.shade900],
+
+    // OR particle effect
+    enableParticleBackground: true,
+    particleColor: Colors.white24,
+    particleCount: 30,
+
+    // OR fully custom widget behind the content
+    backgroundWidget: Image.asset('assets/bg.png', fit: BoxFit.cover),
+  )
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 9. MINI DRAWER CUSTOMISATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The mini drawer is shown automatically when the full drawer is closed on
+tablet/desktop (showMiniOnCollapse: true). Customise it via the scaffold:
+
+  NovaDrawerScaffold(
+    controller: _controller,
+    drawer: drawer,
+    // Override items / sections shown in mini mode
+    miniDrawerItems: _flatMiniItems,     // defaults to drawer.items
+    miniDrawerSections: _miniSections,   // defaults to drawer.sections
+    miniDrawerHeader: Icon(Icons.apps, size: 28),
+    miniDrawerFooter: Icon(Icons.logout, size: 28),
+    onItemTap: (item) => debugPrint('mini tap: ${item.id}'),
+    // ...
+  )
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 10. ALL ANIMATION TYPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  NovaDrawerAnimationType.slide           // smooth slide from the side
+  NovaDrawerAnimationType.fade            // opacity fade in/out
+  NovaDrawerAnimationType.scale           // scale from corner
+  NovaDrawerAnimationType.rotate          // rotation
+  NovaDrawerAnimationType.morph           // shape morphing
+  NovaDrawerAnimationType.elastic         // elastic overshoot
+  NovaDrawerAnimationType.spring          // spring physics
+  NovaDrawerAnimationType.shimmer         // shimmer whilst loading
+  NovaDrawerAnimationType.blur            // blur transition
+  NovaDrawerAnimationType.gradient        // gradient colour sweep
+  NovaDrawerAnimationType.floating        // elevated floating panel
+  NovaDrawerAnimationType.floatingBounce  // floating with bounce
+  NovaDrawerAnimationType.floatingReveal  // circular reveal
+  NovaDrawerAnimationType.wave            // wave boundary reveal
+  NovaDrawerAnimationType.parallax        // parallax multi-layer depth
+  NovaDrawerAnimationType.curtain         // curtain split reveal
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 11. BUGS FIXED IN THIS RELEASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Close button (showCloseButton: true) now actually closes the drawer.
+   Previously the onTap was wired to an empty lambda.
+
+2. Pin button (showPinButton: true) now correctly shows the filled/outlined
+   pin icon based on the current pin state, and toggles the pin on tap.
+   Previously it was always outlined and the tap was a no-op.
+
+3. Expand / collapse on desktop (side / mini display modes) now updates
+   immediately without needing a window resize.
+   Root cause: NovaDrawerScaffold._onControllerChanged did not call
+   setState() for non-overlay modes, so AnimatedContainer never received
+   updated width values until the next unrelated rebuild.
+
+4. New convenience methods on NovaDrawerController:
+     expand()  – always opens to full width (works even from mini mode)
+     mini()    – collapses to icon-only strip (alias for toMini())
+   These complement the existing open/close/toggle/toMini/fromMini/toggleMini.
+
+
+================================================================================
