@@ -9,6 +9,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../models/drawer_item.dart';
 import '../models/drawer_theme.dart';
@@ -116,6 +117,7 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
   late AnimationController _drawerAnimationController;
   late Animation<double> _drawerAnimation;
   late GlobalKey<ScaffoldState> _scaffoldKey;
+  NovaDeviceType? _lastDeviceType;
 
   @override
   void initState() {
@@ -213,8 +215,16 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
       widget.config.breakpoints,
     );
 
-    // Update controller with current device type
-    widget.controller.updateDeviceType(deviceType);
+    // Update controller with current device type after the build phase to
+    // avoid calling notifyListeners() while the widget tree is being built.
+    if (_lastDeviceType != deviceType) {
+      _lastDeviceType = deviceType;
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          widget.controller.updateDeviceType(deviceType);
+        }
+      });
+    }
 
     final themeData = Theme.of(context);
     final drawerTheme = widget.theme?.resolve(themeData) ??
