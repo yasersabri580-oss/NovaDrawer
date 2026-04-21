@@ -165,6 +165,39 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
   void _onControllerChanged() {
     if (!mounted) return;
 
+    final mediaQuery = MediaQuery.maybeOf(context);
+    if (mediaQuery != null) {
+      final deviceType = NovaResponsiveUtils.getDeviceType(
+        mediaQuery.size.width,
+        widget.config.breakpoints,
+      );
+      final displayMode = NovaResponsiveUtils.resolveDisplayMode(
+        widget.config.displayMode,
+        deviceType,
+      );
+
+      if (displayMode == NovaDrawerDisplayMode.overlay) {
+        final scaffoldState = _scaffoldKey.currentState;
+        if (scaffoldState == null) return;
+
+        final isRtl = Directionality.of(context) == TextDirection.rtl;
+        final isDrawerActuallyOpen = isRtl
+            ? scaffoldState.isEndDrawerOpen
+            : scaffoldState.isDrawerOpen;
+
+        if (widget.controller.isOpen && !isDrawerActuallyOpen) {
+          if (isRtl) {
+            scaffoldState.openEndDrawer();
+          } else {
+            scaffoldState.openDrawer();
+          }
+        } else if (!widget.controller.isOpen && isDrawerActuallyOpen) {
+          Navigator.of(context).maybePop();
+        }
+        return;
+      }
+    }
+
     if (widget.controller.isOpen) {
       _drawerAnimationController.forward();
     } else {
