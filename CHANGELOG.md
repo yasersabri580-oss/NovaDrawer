@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.4
+## 1.0.5
 
 - Fixed "setState() or markNeedsBuild() called during build" crash that occurred
   when opening the drawer on mobile. The device-type update now runs in a
