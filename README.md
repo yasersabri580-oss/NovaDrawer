@@ -17,9 +17,10 @@
 
 ## 📋 Table of Contents
 
+- [Prerequisites](#-prerequisites)
 - [Features](#-features)
 - [Installation](#-installation)
-- [Quick Start](#-quick-start)
+- [Zero to Hero: Your First Drawer](#-zero-to-hero-your-first-drawer)
 - [Complete Example](#-complete-example)
 - [Header System](#-header-system)
 - [Surface Styles](#-surface-styles)
@@ -38,6 +39,23 @@
 - [Package Structure](#-package-structure)
 - [API Reference](#-api-reference)
 - [Migration Guide](#-migration-guide)
+- [FAQ & Troubleshooting](#-faq--troubleshooting)
+- [Contributing](#-contributing)
+- [What's Next](#-whats-next)
+
+---
+
+## 🛠️ Prerequisites
+
+Before you start, make sure you have the following installed and configured:
+
+| Requirement | Minimum version | How to check |
+|-------------|-----------------|--------------|
+| Flutter SDK | **≥ 3.22.0** | `flutter --version` |
+| Dart SDK | **≥ 3.10.0** | `dart --version` |
+| A Flutter project | any | `flutter create my_app` |
+
+NovaDrawer works on all Flutter platforms — **Android, iOS, Web, macOS, Windows, and Linux** — with no additional platform-specific setup.
 
 ---
 
@@ -139,7 +157,22 @@ All animations are smooth and performant. Developers can customize **duration, c
 
 ## 📦 Installation
 
-Add to your `pubspec.yaml`:
+### Option A — pub.dev (recommended)
+
+Add `nova_drawer` to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  nova_drawer: ^1.0.4
+```
+
+Then run:
+
+```bash
+flutter pub get
+```
+
+### Option B — GitHub (latest unreleased)
 
 ```yaml
 dependencies:
@@ -156,78 +189,136 @@ flutter pub get
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Zero to Hero: Your First Drawer
 
-The fastest way to add a drawer to your app:
+Follow these five steps to go from a blank Flutter project to a fully working animated drawer — it takes less than five minutes.
 
-### 1. Import the package
+### Step 1 — Import the package
 
 ```dart
-// The barrel export lives at lib/main.dart
-import 'package:nova_drawer/main.dart';
+import 'package:nova_drawer/nova_drawer.dart';
 ```
 
-### 2. Create a controller
+> All classes, enums, and helpers are exported from this single file. You never need to import sub-paths.
+
+---
+
+### Step 2 — Create a controller
+
+`NovaDrawerController` manages every aspect of the drawer state (open/close, selected item, pin, mini-mode, …).  
+Create it once — usually as a `StatefulWidget` field — and remember to `dispose()` it.
 
 ```dart
-final _controller = NovaDrawerController(
-  initialSelectedItemId: 'home',
-);
+class _HomeScreenState extends State<HomeScreen> {
+  final _controller = NovaDrawerController(
+    initialSelectedItemId: 'home', // which item is highlighted on first render
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 ```
 
-### 3. Build the scaffold
+---
+
+### Step 3 — Define your menu items
+
+Items live inside **sections**. A section is just a titled group. You can have as many sections as you need.
 
 ```dart
-NovaDrawerScaffold(
-  controller: _controller,
-  appBar: AppBar(
-    title: const Text('My App'),
-    leading: IconButton(
-      icon: const Icon(Icons.menu),
-      onPressed: _controller.toggle,
-    ),
-  ),
-  drawer: NovaAppDrawer(
-    controller: _controller,
-    sections: [
-      NovaDrawerSectionData(
-        id: 'main',
-        title: 'Navigation',
-        items: [
-          NovaDrawerItem(
-            id: 'home',
-            title: 'Home',
-            icon: Icons.home_outlined,
-            selectedIcon: Icons.home,
-            route: '/home',
-          ),
-          NovaDrawerItem(
-            id: 'profile',
-            title: 'Profile',
-            icon: Icons.person_outline,
-            selectedIcon: Icons.person,
-            badge: NovaDrawerItemBadge(count: 2),
-          ),
-        ],
+final _sections = [
+  NovaDrawerSectionData(
+    id: 'main',
+    title: 'Main',
+    items: [
+      NovaDrawerItem(
+        id: 'home',
+        title: 'Home',
+        icon: Icons.home_outlined,
+        selectedIcon: Icons.home,
+        route: '/home',
+      ),
+      NovaDrawerItem(
+        id: 'settings',
+        title: 'Settings',
+        icon: Icons.settings_outlined,
+        selectedIcon: Icons.settings,
+        route: '/settings',
       ),
     ],
-    header: NovaDrawerHeader(
-      config: NovaHeaderConfig(
-        variant: NovaHeaderVariant.classic,
-        profile: NovaHeaderUserProfile(
-          name: 'Jane Developer',
-          email: 'jane@example.com',
-          status: NovaUserStatus.online,
-        ),
+  ),
+];
+```
+
+> **Tip:** Give every item a unique `id`. The controller uses it to track selection, enable/disable, show/hide, and deep-link via `selectByRoute()`.
+
+---
+
+### Step 4 — Build the scaffold
+
+`NovaDrawerScaffold` is a drop-in replacement for Flutter's `Scaffold`. It handles responsive layout automatically.
+
+```dart
+@override
+Widget build(BuildContext context) {
+  return NovaDrawerScaffold(
+    controller: _controller,
+    appBar: AppBar(
+      title: const Text('My App'),
+      leading: IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: _controller.toggle, // hamburger button
       ),
     ),
-    onItemTap: (item) {
-      Navigator.pushNamed(context, item.route ?? '/');
-    },
-  ),
-  body: const Center(child: Text('Hello, NovaDrawer!')),
-)
+    drawer: NovaAppDrawer(
+      controller: _controller,
+      sections: _sections,
+      header: NovaDrawerHeader(
+        config: NovaHeaderConfig(
+          profile: const NovaHeaderUserProfile(
+            name: 'Jane Developer',
+            email: 'jane@example.com',
+            status: NovaUserStatus.online,
+          ),
+        ),
+      ),
+      onItemTap: (item) {
+        _controller.selectItem(item.id);
+        // Navigate or update UI here
+      },
+    ),
+    body: const Center(child: Text('Hello, NovaDrawer! 🎉')),
+  );
+}
 ```
+
+---
+
+### Step 5 — Run the app
+
+```bash
+flutter run
+```
+
+Swipe from the **left edge** on mobile, or click the hamburger icon to open the drawer. That's it — you have a responsive, animated drawer!
+
+---
+
+### What you get out of the box
+
+| Feature | Default behaviour |
+|---------|------------------|
+| Mobile | Overlay drawer that slides over content |
+| Tablet | Drawer that pushes content to the side |
+| Desktop | Persistent side-by-side drawer |
+| Animation | `slide` (smooth and performant) |
+| Gesture | Swipe from left edge to open, swipe drawer to close |
+| Header | Classic profile header |
+| Accessibility | Semantic labels and focus traversal enabled |
+
+Every one of these defaults is overridable — keep reading for the full options.
 
 ---
 
@@ -237,7 +328,7 @@ The following is a full, self-contained Flutter app that showcases the most impo
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:nova_drawer/main.dart'; // barrel export at lib/main.dart
+import 'package:nova_drawer/nova_drawer.dart';
 
 void main() => runApp(const MyApp());
 
@@ -445,7 +536,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             // Stats bar
             NovaDrawerStatsCard(
-              stats: const [
+              items: const [
                 NovaDrawerStatItem(label: 'Projects', value: '12'),
                 NovaDrawerStatItem(label: 'Tasks', value: '48'),
                 NovaDrawerStatItem(label: 'Done', value: '89%'),
@@ -717,7 +808,7 @@ NovaDrawerConfig(animationType: NovaDrawerAnimationType.parallax)
 
 ```dart
 NovaDrawerStatsCard(
-  stats: const [
+  items: const [
     NovaDrawerStatItem(label: 'Projects', value: '12', icon: Icons.folder),
     NovaDrawerStatItem(label: 'Tasks',    value: '48', icon: Icons.task_alt),
     NovaDrawerStatItem(label: 'Messages', value: '7',  icon: Icons.chat_bubble),
@@ -1238,7 +1329,7 @@ NovaDrawerItem(
 
 ```
 lib/
-  main.dart                     # Barrel export (library nova_drawer)
+  nova_drawer.dart              # Barrel export (library nova_drawer)
   src/
     models/
       drawer_item.dart          # NovaDrawerItem · NovaDrawerSectionData · NovaDrawerItemBadge
@@ -1467,6 +1558,131 @@ final c = AdvancedDrawerController();
 // ✅ Correct
 final c = NovaDrawerController();
 ```
+
+---
+
+## ❓ FAQ & Troubleshooting
+
+### "No NovaDrawerControllerProvider found in context"
+
+You called `NovaDrawerControllerProvider.of(context)` in a widget that is **above** the provider in the widget tree. Wrap the subtree that needs the controller:
+
+```dart
+NovaDrawerControllerProvider(
+  controller: _controller,
+  child: MySubTree(),
+)
+```
+
+---
+
+### The drawer opens but never closes on desktop
+
+On desktop the drawer is **pinned** by default when the screen is wide enough. Call `controller.unpin()` or set `isPinnedByDefault: false` in the controller constructor.
+
+---
+
+### Items appear duplicated
+
+Make sure every `NovaDrawerItem` has a **unique `id`**. The controller uses IDs to track state; duplicates cause unexpected behaviour.
+
+---
+
+### The import `package:nova_drawer/main.dart` is not found
+
+The barrel export is at `lib/nova_drawer.dart`. Use:
+
+```dart
+import 'package:nova_drawer/nova_drawer.dart';
+```
+
+---
+
+### Animations feel janky on older Android devices
+
+Try a simpler animation type such as `slide` or `fade`, and lower the duration:
+
+```dart
+NovaDrawerConfig(
+  animationType: NovaDrawerAnimationType.slide,
+  animationConfig: NovaDrawerAnimationConfig(
+    duration: Duration(milliseconds: 250),
+  ),
+)
+```
+
+---
+
+### `setState() or markNeedsBuild() called during build` crash when opening drawer
+
+This is fixed in v1.0.4. Update your dependency to `^1.0.4`.
+
+---
+
+### The header avatar image does not load
+
+`avatarUrl` is loaded via Flutter's `Image.network`. Make sure:
+
+1. The device has internet access.
+2. The URL is publicly reachable.
+3. Add `INTERNET` permission for Android if needed.
+
+Alternatively pass a custom `avatarWidget`:
+
+```dart
+NovaHeaderUserProfile(
+  name: 'Jane',
+  avatarWidget: const CircleAvatar(child: Icon(Icons.person)),
+)
+```
+
+---
+
+### How do I open the drawer programmatically (e.g., from a button in the body)?
+
+```dart
+// Anywhere you have a reference to the controller:
+_controller.open();
+
+// Or via context if you used NovaDrawerControllerProvider:
+NovaDrawerControllerProvider.read(context).open();
+```
+
+---
+
+### Does NovaDrawer support go_router / auto_route?
+
+Yes. Use `selectByRoute(path)` to sync selection with the router, or call `controller.selectItem(id)` from your route observer. NovaDrawer does not depend on any navigation library.
+
+---
+
+## 🤝 Contributing
+
+Contributions are very welcome! Here is how to get started:
+
+1. **Fork** the repository on GitHub.
+2. Create a branch: `git checkout -b feature/my-feature`.
+3. Make your changes and add tests where applicable.
+4. Run the tests: `flutter test`.
+5. Open a **Pull Request** against `main` and describe what you changed and why.
+
+Please keep PRs focused — one feature or bug-fix per PR makes review much faster.
+
+For significant changes (new API, breaking change, new animation type), open an issue first to discuss the approach.
+
+---
+
+## 🔭 What's Next
+
+After you master the basics, explore these topics in order:
+
+1. **Change the header variant** → [`Header System`](#-header-system)
+2. **Apply a surface style** (glassmorphism, neumorphic, gradient) → [`Surface Styles`](#-surface-styles)
+3. **Pick an animation** that fits your app's personality → [`Animations`](#-animations)
+4. **Add content widgets** (stats, shortcuts, workspace switcher) → [`Content Widgets`](#-content-widgets)
+5. **Slot-based builders** for pixel-perfect custom items → [`Slot-Based Builder APIs`](#-slot-based-builder-apis)
+6. **Load menu items from an API** → [`Dynamic Data Loading`](#-dynamic-data-loading)
+7. **Check accessibility** labels and screen-reader support → [`Accessibility`](#-accessibility)
 
 ---
 
