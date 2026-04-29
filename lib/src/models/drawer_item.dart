@@ -228,6 +228,56 @@ class NovaDrawerItem {
   int get hashCode => id.hashCode;
 }
 
+// ---------------------------------------------------------------------------
+// Mixed-entry support
+// ---------------------------------------------------------------------------
+
+/// A single entry in a drawer's ordered list of content.
+///
+/// Use [NovaDrawerEntry] with [NovaAppDrawer.entries] when you need to
+/// freely interleave standalone items and grouped sections:
+///
+/// ```dart
+/// NovaAppDrawer(
+///   controller: controller,
+///   entries: [
+///     NovaDrawerItemEntry(NovaDrawerItem(id: 'home', title: 'Home', icon: Icons.home)),
+///     NovaDrawerItemEntry(NovaDrawerItem(id: 'profile', title: 'Profile', icon: Icons.person)),
+///     NovaDrawerSectionEntry(NovaDrawerSectionData(
+///       id: 'tools',
+///       title: 'Tools',
+///       items: [
+///         NovaDrawerItem(id: 'search', title: 'Search', icon: Icons.search),
+///         NovaDrawerItem(id: 'settings', title: 'Settings', icon: Icons.settings),
+///         NovaDrawerItem(id: 'help', title: 'Help', icon: Icons.help),
+///       ],
+///     )),
+///     NovaDrawerItemEntry(NovaDrawerItem(id: 'logout', title: 'Logout', icon: Icons.logout)),
+///   ],
+/// )
+/// ```
+sealed class NovaDrawerEntry {
+  const NovaDrawerEntry();
+}
+
+/// A [NovaDrawerEntry] that wraps a single [NovaDrawerItem].
+final class NovaDrawerItemEntry extends NovaDrawerEntry {
+  /// Creates a [NovaDrawerItemEntry].
+  const NovaDrawerItemEntry(this.item);
+
+  /// The item to render.
+  final NovaDrawerItem item;
+}
+
+/// A [NovaDrawerEntry] that wraps a [NovaDrawerSectionData].
+final class NovaDrawerSectionEntry extends NovaDrawerEntry {
+  /// Creates a [NovaDrawerSectionEntry].
+  const NovaDrawerSectionEntry(this.section);
+
+  /// The section to render.
+  final NovaDrawerSectionData section;
+}
+
 /// Represents a group of related drawer items.
 ///
 /// Sections provide visual separation and optional headers/footers
