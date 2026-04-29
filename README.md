@@ -463,7 +463,7 @@ Large flat item lists are hard to scan. Sections add structure and allow users t
 
 ### When to use it
 
-**Use when:** You have logically distinct groups (e.g., "Main", "Admin", "Account"). 
+**Use when:** You have logically distinct groups (e.g., "Main", "Admin", "Account").
 
 **Avoid when:** You only have 3–5 items total — a flat list via `NovaAppDrawer.items` is simpler.
 
