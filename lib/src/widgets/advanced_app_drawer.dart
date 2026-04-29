@@ -18,6 +18,7 @@ import '../controllers/drawer_controller.dart';
 import '../animations/animation_wrapper.dart';
 import '../animations/shimmer_animation.dart';
 import '../utils/responsive_utils.dart';
+import '../utils/navigation_utils.dart';
 import '../backgrounds/gradient_background.dart';
 import '../backgrounds/particle_background.dart';
 import 'drawer_section.dart';
@@ -397,13 +398,7 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
           controller.selectItem(item.id);
           widget.onItemTap?.call(item);
           item.onTap?.call();
-          if (item.route != null) {
-            if (widget.onNavigate != null) {
-              widget.onNavigate!(context, item.route!);
-            } else {
-              Navigator.of(context).pushNamed(item.route!);
-            }
-          }
+          novaNavigateForItem(context, item, widget.onNavigate);
           if (widget.config.closeOnItemTap &&
               controller.deviceType == NovaDeviceType.mobile) {
             controller.close();

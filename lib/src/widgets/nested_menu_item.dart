@@ -13,6 +13,7 @@ import '../models/drawer_item.dart';
 import '../models/drawer_theme.dart';
 import '../models/drawer_config.dart';
 import '../controllers/drawer_controller.dart';
+import '../utils/navigation_utils.dart';
 import '../utils/responsive_utils.dart';
 import 'drawer_item_widget.dart';
 
@@ -177,13 +178,7 @@ class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
           controller.selectItem(selectedItem.id);
           widget.onItemTap?.call(selectedItem);
           selectedItem.onTap?.call();
-          if (selectedItem.route != null) {
-            if (widget.onNavigate != null) {
-              widget.onNavigate!(context, selectedItem.route!);
-            } else {
-              Navigator.of(context).pushNamed(selectedItem.route!);
-            }
-          }
+          novaNavigateForItem(context, selectedItem, widget.onNavigate);
         }
       },
       itemBuilder: (context) => _buildPopupItems(widget.item.children, 0),
@@ -281,13 +276,7 @@ class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
           controller.selectItem(item.id);
           widget.onItemTap?.call(item);
           item.onTap?.call();
-          if (item.route != null) {
-            if (widget.onNavigate != null) {
-              widget.onNavigate!(context, item.route!);
-            } else {
-              Navigator.of(context).pushNamed(item.route!);
-            }
-          }
+          novaNavigateForItem(context, item, widget.onNavigate);
 
           // Close drawer on mobile
           final config = widget.config ?? const NovaDrawerConfig();

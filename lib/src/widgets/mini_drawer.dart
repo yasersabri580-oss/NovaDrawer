@@ -13,6 +13,7 @@ import '../models/drawer_item.dart';
 import '../models/drawer_theme.dart';
 import '../models/drawer_config.dart';
 import '../controllers/drawer_controller.dart';
+import '../utils/navigation_utils.dart';
 import 'drawer_item_widget.dart';
 import 'nested_menu_item.dart';
 
@@ -234,13 +235,7 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
     controller.selectItem(item.id);
     widget.onItemTap?.call(item);
     item.onTap?.call();
-    if (item.route != null) {
-      if (widget.onNavigate != null) {
-        widget.onNavigate!(context, item.route!);
-      } else {
-        Navigator.of(context).pushNamed(item.route!);
-      }
-    }
+    novaNavigateForItem(context, item, widget.onNavigate);
   }
 
   void _onHover(bool isHovered) {
