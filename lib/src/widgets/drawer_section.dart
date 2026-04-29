@@ -42,6 +42,7 @@ class NovaDrawerSectionWidget extends StatefulWidget {
     super.key,
     required this.section,
     this.onItemTap,
+    this.onNavigate,
     this.theme,
     this.config,
     this.isMiniMode = false,
@@ -55,6 +56,9 @@ class NovaDrawerSectionWidget extends StatefulWidget {
 
   /// Callback when any item in the section is tapped.
   final void Function(NovaDrawerItem item)? onItemTap;
+
+  /// Router-agnostic navigation callback. See [NovaAppDrawer.onNavigate].
+  final void Function(BuildContext context, String route)? onNavigate;
 
   /// Theme overrides.
   final NovaDrawerTheme? theme;
@@ -271,6 +275,7 @@ class _NovaDrawerSectionWidgetState extends State<NovaDrawerSectionWidget>
         item: item,
         isSelected: isSelected,
         onItemTap: widget.onItemTap,
+        onNavigate: widget.onNavigate,
         theme: widget.theme,
         config: widget.config,
         isMiniMode: widget.isMiniMode,
@@ -296,6 +301,13 @@ class _NovaDrawerSectionWidgetState extends State<NovaDrawerSectionWidget>
     controller.selectItem(item.id);
     widget.onItemTap?.call(item);
     item.onTap?.call();
+    if (item.route != null) {
+      if (widget.onNavigate != null) {
+        widget.onNavigate!(context, item.route!);
+      } else {
+        Navigator.of(context).pushNamed(item.route!);
+      }
+    }
 
     // Close drawer on mobile if configured
     final config = widget.config ?? const NovaDrawerConfig();

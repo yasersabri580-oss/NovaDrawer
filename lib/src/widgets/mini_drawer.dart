@@ -38,6 +38,7 @@ class NovaMiniDrawer extends StatefulWidget {
     this.header,
     this.footer,
     this.onItemTap,
+    this.onNavigate,
     this.onExpandRequest,
     this.theme,
     this.config,
@@ -59,6 +60,9 @@ class NovaMiniDrawer extends StatefulWidget {
 
   /// Callback when an item is tapped.
   final void Function(NovaDrawerItem item)? onItemTap;
+
+  /// Router-agnostic navigation callback. See [NovaAppDrawer.onNavigate].
+  final void Function(BuildContext context, String route)? onNavigate;
 
   /// Callback when the user requests expansion (e.g., hover).
   final VoidCallback? onExpandRequest;
@@ -203,6 +207,7 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
               item: item,
               isSelected: isSelected,
               onItemTap: widget.onItemTap,
+              onNavigate: widget.onNavigate,
               theme: widget.theme,
               config: widget.config,
               isMiniMode: true,
@@ -229,6 +234,13 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
     controller.selectItem(item.id);
     widget.onItemTap?.call(item);
     item.onTap?.call();
+    if (item.route != null) {
+      if (widget.onNavigate != null) {
+        widget.onNavigate!(context, item.route!);
+      } else {
+        Navigator.of(context).pushNamed(item.route!);
+      }
+    }
   }
 
   void _onHover(bool isHovered) {

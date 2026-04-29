@@ -62,6 +62,7 @@ class NovaAppDrawer extends StatefulWidget {
     this.header,
     this.footer,
     this.onItemTap,
+    this.onNavigate,
     this.theme,
     this.config = const NovaDrawerConfig(),
     this.width,
@@ -105,6 +106,21 @@ class NovaAppDrawer extends StatefulWidget {
 
   /// Callback when any item is tapped.
   final void Function(NovaDrawerItem item)? onItemTap;
+
+  /// Router-agnostic navigation callback invoked when an item with a [NovaDrawerItem.route]
+  /// is tapped.
+  ///
+  /// Use this to support any navigation system (GoRouter, auto_route, Navigator 2.0, etc.).
+  /// When omitted the drawer falls back to [Navigator.pushNamed].
+  ///
+  /// Example with GoRouter:
+  /// ```dart
+  /// NovaAppDrawer(
+  ///   onNavigate: (context, route) => context.go(route),
+  ///   ...
+  /// )
+  /// ```
+  final void Function(BuildContext context, String route)? onNavigate;
 
   /// Theme customization.
   final NovaDrawerTheme? theme;
@@ -328,6 +344,7 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
                 NovaDrawerSectionWidget(
                   section: entry.section,
                   onItemTap: widget.onItemTap,
+                  onNavigate: widget.onNavigate,
                   theme: widget.theme,
                   config: widget.config,
                 )
@@ -337,6 +354,7 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
               NovaDrawerSectionWidget(
                 section: section,
                 onItemTap: widget.onItemTap,
+                onNavigate: widget.onNavigate,
                 theme: widget.theme,
                 config: widget.config,
               )
@@ -364,6 +382,7 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
         item: item,
         isSelected: isSelected,
         onItemTap: widget.onItemTap,
+        onNavigate: widget.onNavigate,
         theme: widget.theme,
         config: widget.config,
       );
@@ -378,6 +397,13 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
           controller.selectItem(item.id);
           widget.onItemTap?.call(item);
           item.onTap?.call();
+          if (item.route != null) {
+            if (widget.onNavigate != null) {
+              widget.onNavigate!(context, item.route!);
+            } else {
+              Navigator.of(context).pushNamed(item.route!);
+            }
+          }
           if (widget.config.closeOnItemTap &&
               controller.deviceType == NovaDeviceType.mobile) {
             controller.close();
