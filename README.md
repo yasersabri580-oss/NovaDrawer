@@ -34,6 +34,7 @@ Think of it as a drop-in replacement for Flutter's built-in `Drawer` that automa
 | Get auto-responsive layout management | `NovaDrawerScaffold` |
 | Control drawer state from code | `NovaDrawerController` |
 | Define menu items | `NovaDrawerItem`, `NovaDrawerSectionData` |
+| Interleave items and sections in any order | `NovaAppDrawer.entries` with `NovaDrawerItemEntry` / `NovaDrawerSectionEntry` |
 | Customize the header | `NovaDrawerHeader` + `NovaHeaderConfig` |
 | Simple custom header without variants | `NovaDrawerHeaderWidget` |
 | Collapse to icons-only on desktop | `NovaMiniDrawer` |
@@ -52,7 +53,7 @@ Think of it as a drop-in replacement for Flutter's built-in `Drawer` that automa
 
 ```yaml
 dependencies:
-  nova_drawer: ^1.0.7
+  nova_drawer: ^1.0.8
 ```
 
 ```dart
@@ -68,6 +69,7 @@ import 'package:nova_drawer/nova_drawer.dart';
 - [NovaDrawerController](#novadrawercontroller)
 - [NovaDrawerItem](#novadraweritem)
 - [NovaDrawerSectionData](#novadrawersectiondata)
+- [NovaDrawerEntry](#novadrawerentry)
 - [NovaDrawerHeaderWidget](#novadrawerheaderwidget)
 - [NovaDrawerHeader (Variant System)](#novadrawerheader-variant-system)
   - [NovaProfileHeaderClassic](#novaprofileheaderclassic)
@@ -213,6 +215,7 @@ Think of `NovaAppDrawer` as the drawer's *view layer*, and `NovaDrawerController
 | Parameter | Type | Purpose |
 |---|---|---|
 | `controller` | `NovaDrawerController` | Required. Connects the drawer to shared open/close/selection state. |
+| `entries` | `List<NovaDrawerEntry>` | Ordered mix of items and sections. When non-empty, takes precedence over `sections` and `items`. Use `NovaDrawerItemEntry` or `NovaDrawerSectionEntry`. |
 | `sections` | `List<NovaDrawerSectionData>` | Grouped navigation structure (preferred when you have section headers). |
 | `items` | `List<NovaDrawerItem>` | Flat list of items (used when no sections are provided). |
 | `header` | `Widget?` | Any widget placed at the top of the drawer — typically a `NovaDrawerHeader`. |
@@ -499,6 +502,67 @@ NovaDrawerSectionData(
     NovaDrawerItem(id: 'users', title: 'Users', icon: Icons.group),
     NovaDrawerItem(id: 'roles', title: 'Roles', icon: Icons.shield_outlined),
     NovaDrawerItem(id: 'audit', title: 'Audit Log', icon: Icons.history),
+  ],
+)
+```
+
+---
+
+## NovaDrawerEntry
+
+### What it actually is
+
+A **sealed base class** with two concrete subtypes that let you express arbitrary ordering of drawer content — interleaving standalone items and full sections in any position.
+
+| Subtype | Wraps | Purpose |
+|---|---|---|
+| `NovaDrawerItemEntry` | `NovaDrawerItem` | Renders a single item directly in the content area. |
+| `NovaDrawerSectionEntry` | `NovaDrawerSectionData` | Renders a full collapsible section group. |
+
+### Problem it solves
+
+Previously `NovaAppDrawer` rendered either a flat `items` list *or* a `sections` list — never both interleaved. With `entries` you can pin items above and below sections, separate admin shortcuts from a navigation group, or place a logout button at the very bottom regardless of section structure.
+
+### When to use it
+
+**Use when:** You need items and sections side-by-side in a specific order (e.g., a top-level "Home" before a collapsible "Tools" group, followed by a "Logout" at the bottom).
+
+**Avoid when:** Your drawer content is uniformly structured as either a flat list or a consistent set of sections — use `items` or `sections` directly for simplicity.
+
+### Mental model
+
+Think of `entries` as a playlist. Each entry is either a standalone track (`NovaDrawerItemEntry`) or an album (`NovaDrawerSectionEntry`). You control the exact order.
+
+### Priority
+
+When `entries` is non-empty it takes full precedence over `sections` and `items`, keeping existing usages backward-compatible.
+
+### Example
+
+```dart
+NovaAppDrawer(
+  controller: controller,
+  entries: [
+    NovaDrawerItemEntry(
+      NovaDrawerItem(id: 'home', title: 'Home', icon: Icons.home),
+    ),
+    NovaDrawerItemEntry(
+      NovaDrawerItem(id: 'profile', title: 'Profile', icon: Icons.person),
+    ),
+    NovaDrawerSectionEntry(
+      NovaDrawerSectionData(
+        id: 'tools',
+        title: 'Tools',
+        items: [
+          NovaDrawerItem(id: 'search',   title: 'Search',   icon: Icons.search),
+          NovaDrawerItem(id: 'settings', title: 'Settings', icon: Icons.settings),
+          NovaDrawerItem(id: 'help',     title: 'Help',     icon: Icons.help_outline),
+        ],
+      ),
+    ),
+    NovaDrawerItemEntry(
+      NovaDrawerItem(id: 'logout', title: 'Logout', icon: Icons.logout),
+    ),
   ],
 )
 ```

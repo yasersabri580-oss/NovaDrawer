@@ -180,7 +180,99 @@ class _DemoHomePageState extends State<DemoHomePage> {
     ),
   ];
 
+  bool _useEntriesApi = false;
+
   // ── Drawer Data ──────────────────────────────────────────────────────
+
+  /// Entries-API layout: standalone items interleaved with a section.
+  List<NovaDrawerEntry> get _entries => [
+    NovaDrawerItemEntry(
+      NovaDrawerItem(
+        id: 'home',
+        title: 'Home',
+        icon: Icons.home_outlined,
+        selectedIcon: Icons.home,
+        route: '/home',
+        badge: const NovaDrawerItemBadge(count: 3),
+      ),
+    ),
+    NovaDrawerItemEntry(
+      NovaDrawerItem(
+        id: 'dashboard',
+        title: 'Dashboard',
+        icon: Icons.dashboard_outlined,
+        selectedIcon: Icons.dashboard,
+        route: '/dashboard',
+      ),
+    ),
+    NovaDrawerSectionEntry(
+      NovaDrawerSectionData(
+        id: 'showcase',
+        title: 'Showcase',
+        icon: Icons.auto_awesome,
+        items: [
+          NovaDrawerItem(
+            id: 'header_showcase',
+            title: 'Header Variants',
+            icon: Icons.account_circle_outlined,
+            selectedIcon: Icons.account_circle,
+            route: '/showcase/headers',
+          ),
+          NovaDrawerItem(
+            id: 'surface_showcase',
+            title: 'Surface Styles',
+            icon: Icons.layers_outlined,
+            selectedIcon: Icons.layers,
+            route: '/showcase/surfaces',
+          ),
+          NovaDrawerItem(
+            id: 'content_showcase',
+            title: 'Content Widgets',
+            icon: Icons.widgets_outlined,
+            selectedIcon: Icons.widgets,
+            route: '/showcase/content',
+          ),
+          NovaDrawerItem(
+            id: 'animation_showcase',
+            title: 'Animations',
+            icon: Icons.animation_outlined,
+            selectedIcon: Icons.animation,
+            route: '/showcase/animations',
+          ),
+        ],
+      ),
+    ),
+    NovaDrawerSectionEntry(
+      NovaDrawerSectionData(
+        id: 'settings_section',
+        title: 'Settings & Tools',
+        items: [
+          NovaDrawerItem(
+            id: 'settings',
+            title: 'Settings',
+            icon: Icons.settings_outlined,
+            selectedIcon: Icons.settings,
+            route: '/settings',
+          ),
+          NovaDrawerItem(
+            id: 'help',
+            title: 'Help & Support',
+            icon: Icons.help_outline,
+            selectedIcon: Icons.help,
+            route: '/help',
+          ),
+        ],
+      ),
+    ),
+    NovaDrawerItemEntry(
+      NovaDrawerItem(
+        id: 'logout',
+        title: 'Logout',
+        icon: Icons.logout,
+        route: '/logout',
+      ),
+    ),
+  ];
 
   List<NovaDrawerSectionData> get _sections => [
     NovaDrawerSectionData(
@@ -424,7 +516,8 @@ class _DemoHomePageState extends State<DemoHomePage> {
     // Build the drawer widget
     final drawer = NovaAppDrawer(
       controller: _drawerController,
-      sections: _sections,
+      sections: _useEntriesApi ? [] : _sections,
+      entries: _useEntriesApi ? _entries : [],
       header: NovaDrawerHeader(config: headerConfig),
       footer: _buildDrawerFooter(),
       onItemTap: (item) {
@@ -542,6 +635,10 @@ class _DemoHomePageState extends State<DemoHomePage> {
 
           // Dynamic loading demo
           _buildDynamicLoadingDemo(),
+          const SizedBox(height: 24),
+
+          // Entries API demo
+          _buildEntriesApiDemo(),
           const SizedBox(height: 24),
 
           // Responsive info card
@@ -741,6 +838,97 @@ class _DemoHomePageState extends State<DemoHomePage> {
     );
   }
 
+  Widget _buildEntriesApiDemo() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.reorder,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Entries API Demo',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'The entries API lets you interleave standalone items and '
+              'grouped sections in any order. Tap the button to switch '
+              'the drawer to an entries-based layout.',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Layout: Home → Profile → [Tools section] → Logout',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                FilledButton.icon(
+                  onPressed: () {
+                    setState(() => _useEntriesApi = !_useEntriesApi);
+                    _drawerController.open();
+                  },
+                  icon: Icon(
+                    _useEntriesApi ? Icons.list : Icons.reorder,
+                    size: 18,
+                  ),
+                  label: Text(
+                    _useEntriesApi
+                        ? 'Switch to Sections layout'
+                        : 'Switch to Entries layout',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.all(12),
+              child: const Text(
+                'NovaAppDrawer(\n'
+                '  controller: controller,\n'
+                '  entries: [\n'
+                '    NovaDrawerItemEntry(NovaDrawerItem(\n'
+                "      id: 'home', title: 'Home', icon: Icons.home)),\n"
+                '    NovaDrawerItemEntry(NovaDrawerItem(\n'
+                "      id: 'profile', title: 'Profile', icon: Icons.person)),\n"
+                '    NovaDrawerSectionEntry(NovaDrawerSectionData(\n'
+                "      id: 'tools', title: 'Tools',\n"
+                '      items: [ /* search, settings, help */ ],\n'
+                '    )),\n'
+                '    NovaDrawerItemEntry(NovaDrawerItem(\n'
+                "      id: 'logout', title: 'Logout', icon: Icons.logout)),\n"
+                '  ],\n'
+                ')',
+                style: TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 11,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildResponsiveInfoCard(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final deviceType = NovaResponsiveUtils.getDeviceType(width);
@@ -800,6 +988,11 @@ class _DemoHomePageState extends State<DemoHomePage> {
 
   Widget _buildFeatureShowcase() {
     final features = [
+      _FeatureItem(
+        Icons.reorder,
+        'Entries API',
+        'Interleave standalone items and sections in any order with NovaDrawerItemEntry / NovaDrawerSectionEntry',
+      ),
       _FeatureItem(
         Icons.account_circle,
         'Header System',
