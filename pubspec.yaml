@@ -3,7 +3,7 @@ description: >
   NovaDrawer – A modern, fully dynamic, and highly responsive
   app drawer component for Flutter supporting mobile, tablet, and desktop
 
-version: 1.0.7
+version: 1.0.8
 homepage: https://github.com/yasersabri580-oss/NovaDrawer
 
 environment:

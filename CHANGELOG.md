@@ -1,5 +1,45 @@
 # Changelog
 
+## 1.0.8
+
+### New Features
+
+- **First-class `entries` API** (`NovaAppDrawer.entries`): A new `entries`
+  parameter lets you freely interleave standalone items and grouped sections
+  in any order, breaking out of the previous constraint of either a flat item
+  list *or* a sections list.
+
+  Two sealed subtypes express each kind of entry:
+
+  - `NovaDrawerItemEntry(NovaDrawerItem)` — a standalone item rendered directly
+    in the drawer content area. Respects `isVisible` and `isItemHidden`.
+  - `NovaDrawerSectionEntry(NovaDrawerSectionData)` — a full collapsible section
+    group that handles its own item filtering as before.
+
+  When `entries` is non-empty it takes priority over `sections` / `items`,
+  keeping the change fully backward-compatible.
+
+  ```dart
+  NovaAppDrawer(
+    controller: controller,
+    entries: [
+      NovaDrawerItemEntry(NovaDrawerItem(id: 'home',    title: 'Home',    icon: Icons.home)),
+      NovaDrawerItemEntry(NovaDrawerItem(id: 'profile', title: 'Profile', icon: Icons.person)),
+      NovaDrawerSectionEntry(NovaDrawerSectionData(
+        id: 'tools', title: 'Tools',
+        items: [
+          NovaDrawerItem(id: 'search',   title: 'Search',   icon: Icons.search),
+          NovaDrawerItem(id: 'settings', title: 'Settings', icon: Icons.settings),
+          NovaDrawerItem(id: 'help',     title: 'Help',     icon: Icons.help_outline),
+        ],
+      )),
+      NovaDrawerItemEntry(NovaDrawerItem(id: 'logout', title: 'Logout', icon: Icons.logout)),
+    ],
+  )
+  ```
+
+---
+
 ## 1.0.7
 
 ### Bug Fixes
