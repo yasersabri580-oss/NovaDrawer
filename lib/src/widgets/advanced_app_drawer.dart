@@ -58,6 +58,7 @@ class NovaAppDrawer extends StatefulWidget {
     required this.controller,
     this.sections = const [],
     this.items = const [],
+    this.entries = const [],
     this.header,
     this.footer,
     this.onItemTap,
@@ -80,6 +81,21 @@ class NovaAppDrawer extends StatefulWidget {
 
   /// Flat list of items (used when sections are empty).
   final List<NovaDrawerItem> items;
+
+  /// Ordered mix of items and sections.
+  ///
+  /// When non-empty, [entries] takes precedence over [sections] and [items],
+  /// allowing you to interleave standalone [NovaDrawerItem]s and
+  /// [NovaDrawerSectionData] groups in any order:
+  ///
+  /// ```dart
+  /// entries: [
+  ///   NovaDrawerItemEntry(NovaDrawerItem(id: 'home', title: 'Home', icon: Icons.home)),
+  ///   NovaDrawerSectionEntry(NovaDrawerSectionData(id: 'tools', title: 'Tools', items: [...])),
+  ///   NovaDrawerItemEntry(NovaDrawerItem(id: 'logout', title: 'Logout', icon: Icons.logout)),
+  /// ],
+  /// ```
+  final List<NovaDrawerEntry> entries;
 
   /// Header widget at the top of the drawer.
   final Widget? header;
@@ -301,8 +317,22 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
         controller: _scrollController,
         padding: drawerTheme.contentPadding,
         children: [
+          // Mixed entries (items and sections interleaved)
+          if (widget.entries.isNotEmpty)
+            for (final entry in widget.entries)
+              if (entry is NovaDrawerItemEntry &&
+                  entry.item.isVisible &&
+                  !controller.isItemHidden(entry.item.id))
+                _buildFlatItem(entry.item, drawerTheme, controller)
+              else if (entry is NovaDrawerSectionEntry)
+                NovaDrawerSectionWidget(
+                  section: entry.section,
+                  onItemTap: widget.onItemTap,
+                  theme: widget.theme,
+                  config: widget.config,
+                )
           // Sections
-          if (widget.sections.isNotEmpty)
+          else if (widget.sections.isNotEmpty)
             for (final section in widget.sections)
               NovaDrawerSectionWidget(
                 section: section,
