@@ -1,5 +1,55 @@
 # Changelog
 
+## 1.0.9
+
+### New Features
+
+- **Router-agnostic navigation via `onNavigate`** (`NovaAppDrawer.onNavigate`):
+  A new optional `void Function(BuildContext context, String route)` callback
+  lets you plug in **any** navigation system — GoRouter, auto_route, Navigator
+  2.0, or your own custom router — without having to bridge through `onItemTap`.
+
+  When `onNavigate` is provided and an item's `route` field is non-null, the
+  drawer calls `onNavigate(context, route)` on tap instead of the default
+  `Navigator.pushNamed` fallback, making GoRouter usage trivial:
+
+  ```dart
+  NovaAppDrawer(
+    onNavigate: (context, route) => context.go(route), // GoRouter
+    items: [
+      NovaDrawerItem(id: 'units', title: 'Units', icon: Icons.straighten_outlined,
+                     route: '/settings/units'),
+      NovaDrawerItem(id: 'currencies', title: 'Currencies', icon: Icons.currency_exchange,
+                     route: '/settings/currencies'),
+    ],
+    ...
+  )
+  ```
+
+  **Backward-compatible**: if `onNavigate` is not set, the drawer falls back to
+  `Navigator.of(context).pushNamed(route)` exactly as before.
+
+  The callback is automatically threaded through all internal widgets:
+  `NovaDrawerSectionWidget`, `NovaNestedMenuItem` (full-drawer and mini popup
+  mode), and `NovaMiniDrawer`.
+
+- **`onTap` per item**: Each `NovaDrawerItem` already exposes an
+  `onTap: VoidCallback?` field that is fired on every tap regardless of
+  whether a `route` is set, giving you a per-item side-effect hook (analytics,
+  state updates, etc.) alongside the router-level navigation.
+
+  ```dart
+  NovaDrawerItem(
+    id: 'units',
+    title: 'Units',
+    icon: Icons.straighten_outlined,
+    route: '/settings/units',
+    onTap: () => analytics.log('units_tapped'), // fires in addition to navigation
+  )
+  ```
+
+---
+
 ## 1.0.8
 
 ### New Features

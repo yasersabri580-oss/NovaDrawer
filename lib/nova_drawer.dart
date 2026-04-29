@@ -84,6 +84,7 @@ export 'src/animations/wave_animation.dart';
 // ── Utilities ───────────────────────────────────────────────────────────
 export 'src/utils/responsive_utils.dart';
 export 'src/utils/accessibility_utils.dart';
+export 'src/utils/navigation_utils.dart';
 
 // ── Backgrounds ─────────────────────────────────────────────────────────
 export 'src/backgrounds/gradient_background.dart';

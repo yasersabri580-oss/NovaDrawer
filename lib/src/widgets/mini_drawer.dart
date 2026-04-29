@@ -13,6 +13,7 @@ import '../models/drawer_item.dart';
 import '../models/drawer_theme.dart';
 import '../models/drawer_config.dart';
 import '../controllers/drawer_controller.dart';
+import '../utils/navigation_utils.dart';
 import 'drawer_item_widget.dart';
 import 'nested_menu_item.dart';
 
@@ -38,6 +39,7 @@ class NovaMiniDrawer extends StatefulWidget {
     this.header,
     this.footer,
     this.onItemTap,
+    this.onNavigate,
     this.onExpandRequest,
     this.theme,
     this.config,
@@ -59,6 +61,9 @@ class NovaMiniDrawer extends StatefulWidget {
 
   /// Callback when an item is tapped.
   final void Function(NovaDrawerItem item)? onItemTap;
+
+  /// Router-agnostic navigation callback. See [NovaAppDrawer.onNavigate].
+  final void Function(BuildContext context, String route)? onNavigate;
 
   /// Callback when the user requests expansion (e.g., hover).
   final VoidCallback? onExpandRequest;
@@ -203,6 +208,7 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
               item: item,
               isSelected: isSelected,
               onItemTap: widget.onItemTap,
+              onNavigate: widget.onNavigate,
               theme: widget.theme,
               config: widget.config,
               isMiniMode: true,
@@ -229,6 +235,7 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
     controller.selectItem(item.id);
     widget.onItemTap?.call(item);
     item.onTap?.call();
+    novaNavigateForItem(context, item, widget.onNavigate);
   }
 
   void _onHover(bool isHovered) {

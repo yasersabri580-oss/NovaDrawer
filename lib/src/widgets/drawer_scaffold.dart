@@ -485,6 +485,7 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
         // Fall back to the drawer's onItemTap so that a callback set on
         // NovaAppDrawer still fires when the mini drawer is shown.
         onItemTap: widget.onItemTap ?? widget.drawer.onItemTap,
+        onNavigate: widget.drawer.onNavigate,
         // Allow the caller to override the default expand behaviour; if not
         // provided, fall back to opening the full drawer.
         onExpandRequest:

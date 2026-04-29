@@ -13,6 +13,7 @@ import '../models/drawer_item.dart';
 import '../models/drawer_theme.dart';
 import '../models/drawer_config.dart';
 import '../controllers/drawer_controller.dart';
+import '../utils/navigation_utils.dart';
 import '../utils/responsive_utils.dart';
 import 'drawer_item_widget.dart';
 
@@ -43,6 +44,7 @@ class NovaNestedMenuItem extends StatefulWidget {
     this.isSelected = false,
     this.depth = 0,
     this.onItemTap,
+    this.onNavigate,
     this.theme,
     this.config,
     this.isMiniMode = false,
@@ -59,6 +61,9 @@ class NovaNestedMenuItem extends StatefulWidget {
 
   /// Callback when a child item is tapped.
   final void Function(NovaDrawerItem item)? onItemTap;
+
+  /// Router-agnostic navigation callback. See [NovaAppDrawer.onNavigate].
+  final void Function(BuildContext context, String route)? onNavigate;
 
   /// Theme overrides.
   final NovaDrawerTheme? theme;
@@ -173,6 +178,7 @@ class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
           controller.selectItem(selectedItem.id);
           widget.onItemTap?.call(selectedItem);
           selectedItem.onTap?.call();
+          novaNavigateForItem(context, selectedItem, widget.onNavigate);
         }
       },
       itemBuilder: (context) => _buildPopupItems(widget.item.children, 0),
@@ -254,6 +260,7 @@ class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
         isSelected: isSelected,
         depth: depth,
         onItemTap: widget.onItemTap,
+        onNavigate: widget.onNavigate,
         theme: widget.theme,
         config: widget.config,
       );
@@ -269,6 +276,7 @@ class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
           controller.selectItem(item.id);
           widget.onItemTap?.call(item);
           item.onTap?.call();
+          novaNavigateForItem(context, item, widget.onNavigate);
 
           // Close drawer on mobile
           final config = widget.config ?? const NovaDrawerConfig();
