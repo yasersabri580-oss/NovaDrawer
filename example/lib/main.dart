@@ -869,7 +869,7 @@ class _DemoHomePageState extends State<DemoHomePage> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Layout: Home → Profile → [Tools section] → Logout',
+              'Layout: Home → Dashboard → [Showcase section] → [Settings section] → Logout',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontStyle: FontStyle.italic,
               ),
@@ -906,12 +906,16 @@ class _DemoHomePageState extends State<DemoHomePage> {
                 '  controller: controller,\n'
                 '  entries: [\n'
                 '    NovaDrawerItemEntry(NovaDrawerItem(\n'
-                "      id: 'home', title: 'Home', icon: Icons.home)),\n"
+                "      id: 'home', title: 'Home', icon: Icons.home_outlined)),\n"
                 '    NovaDrawerItemEntry(NovaDrawerItem(\n'
-                "      id: 'profile', title: 'Profile', icon: Icons.person)),\n"
+                "      id: 'dashboard', title: 'Dashboard')),\n"
                 '    NovaDrawerSectionEntry(NovaDrawerSectionData(\n'
-                "      id: 'tools', title: 'Tools',\n"
-                '      items: [ /* search, settings, help */ ],\n'
+                "      id: 'showcase', title: 'Showcase',\n"
+                '      items: [ /* header, surface, content, animation */ ],\n'
+                '    )),\n'
+                '    NovaDrawerSectionEntry(NovaDrawerSectionData(\n'
+                "      id: 'settings_section', title: 'Settings & Tools',\n"
+                '      items: [ /* settings, help */ ],\n'
                 '    )),\n'
                 '    NovaDrawerItemEntry(NovaDrawerItem(\n'
                 "      id: 'logout', title: 'Logout', icon: Icons.logout)),\n"
