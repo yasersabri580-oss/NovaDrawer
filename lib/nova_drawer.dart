@@ -28,6 +28,7 @@ export 'src/models/drawer_config.dart';
 export 'src/models/header_config.dart';
 export 'src/models/surface_config.dart';
 export 'src/models/content_config.dart';
+export 'src/models/body_router_page.dart';
 
 // ── Controllers ─────────────────────────────────────────────────────────
 export 'src/controllers/drawer_controller.dart';
@@ -47,6 +48,7 @@ export 'src/widgets/drawer_recent_items.dart';
 export 'src/widgets/drawer_filter_chips.dart';
 export 'src/widgets/drawer_app_status.dart';
 export 'src/widgets/drawer_workspace_switcher.dart';
+export 'src/widgets/drawer_body_router.dart';
 
 // ── Headers ─────────────────────────────────────────────────────────────
 export 'src/headers/header_utils.dart';
