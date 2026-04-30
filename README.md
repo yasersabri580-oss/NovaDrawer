@@ -32,6 +32,7 @@ Think of it as a drop-in replacement for Flutter's built-in `Drawer` that automa
 |---|---|
 | Drop a drawer into a `Scaffold` | `NovaAppDrawer` |
 | Get auto-responsive layout management | `NovaDrawerScaffold` |
+| Keep the bottom bar / app bar visible while on drawer pages | `NovaDrawerBodyRouter` + `NovaDrawerPage` + `novaDrawerBodyNavigate` |
 | Control drawer state from code | `NovaDrawerController` |
 | Define menu items | `NovaDrawerItem`, `NovaDrawerSectionData` |
 | Interleave items and sections in any order | `NovaAppDrawer.entries` with `NovaDrawerItemEntry` / `NovaDrawerSectionEntry` |
@@ -53,7 +54,7 @@ Think of it as a drop-in replacement for Flutter's built-in `Drawer` that automa
 
 ```yaml
 dependencies:
-  nova_drawer: ^1.0.8
+  nova_drawer: ^1.1.0
 ```
 
 ```dart
@@ -65,6 +66,7 @@ import 'package:nova_drawer/nova_drawer.dart';
 ## Table of Contents
 
 - [NovaDrawerScaffold](#novadrawerscaffold)
+- [NovaDrawerBodyRouter](#novadrawerbodyrouter)
 - [NovaAppDrawer](#novaappdrawer)
 - [NovaDrawerController](#novadrawercontroller)
 - [NovaDrawerItem](#novadraweritem)
@@ -102,6 +104,7 @@ import 'package:nova_drawer/nova_drawer.dart';
 - [Config Priority: NovaDrawerScaffold vs NovaAppDrawer](#config-priority-novadrawerscaffold-vs-novaappdrawer)
 - [Particles](#particles)
 - [Animations](#animations)
+- [Real-World Scenario: ERP Dashboard with Persistent Bottom Navigation](#real-world-scenario-erp-dashboard-with-persistent-bottom-navigation)
 - [Migration Guide](#migration-guide)
 
 ---
@@ -187,6 +190,112 @@ Widget build(BuildContext context) {
 ```
 
 What is happening: The scaffold reads the current screen width, resolves the display mode (overlay / push / side), and wires the controller's `open()` / `close()` calls to the correct mechanism — `Scaffold.openDrawer()` on mobile, or an animated `Row` with `AnimatedContainer` on tablet/desktop.
+
+---
+
+## NovaDrawerBodyRouter
+
+### What it actually is
+
+A **body host widget** that renders drawer navigation targets *inside* the scaffold body using an `IndexedStack` — so the drawer, `AppBar`, and `bottomNavigationBar` remain entirely visible while the content area changes.
+
+### Problem it solves
+
+The default Flutter pattern for drawer navigation — `Navigator.push` or `GoRouter.go` to a new route — replaces the current scaffold with a new one. Any `bottomNavigationBar`, floating action button, or persistent header placed on the outer scaffold disappears the moment the user taps a drawer item.
+
+`NovaDrawerBodyRouter` fixes this by rendering each drawer page *inside* the existing scaffold body. The outer shell — including your `MotionTabBar`, `AppBar`, or any other scaffold-level widget — stays visible throughout.
+
+### When to use it
+
+**Use when:** Your app has persistent scaffold-level UI — a bottom navigation bar, a floating action button, a connectivity strip — that must remain visible while the user browses drawer pages.
+
+**Avoid when:** Drawer pages each need their own `AppBar`, or are fully self-contained screens with native back-button navigation. In those cases, use normal route navigation (`GoRouter.go`, `Navigator.push`).
+
+### Mental model
+
+Think of `NovaDrawerBodyRouter` as the drawer's equivalent of `TabBarView`. Tabs drive what content is shown in `TabBarView`; the drawer selection drives what content is shown here. The outer scaffold never changes — only the content slot does.
+
+```
+NovaDrawerScaffold
+├── appBar                           ← always visible
+├── bottomNavigationBar              ← always visible  (your MotionTabBar)
+└── body: NovaDrawerBodyRouter
+    ├── fallback: IndexedStack(...)   ← shown when no drawer page is active
+    ├── UnitsPage                    ← shown when 'units' is selected
+    ├── CategoriesPage               ← shown when 'categories' is selected
+    └── ...
+```
+
+### Parameters
+
+| Parameter | Type | Purpose |
+|---|---|---|
+| `controller` | `NovaDrawerController` | **Required.** Watches `selectedItemId` to determine which page to show. |
+| `pages` | `List<NovaDrawerPage>` | **Required.** Pages that can be displayed inline. Each page's `id` must match a `NovaDrawerItem.id`. |
+| `fallback` | `Widget?` | Widget shown when no registered page matches the current selection — typically your bottom-nav tab body. Defaults to an invisible `SizedBox` when omitted. |
+
+### NovaDrawerPage model
+
+| Field | Type | Default | Purpose |
+|---|---|---|---|
+| `id` | `String` | – | **Required.** Must match the `NovaDrawerItem.id` of the corresponding drawer item. |
+| `route` | `String?` | `null` | Optional route path. Provide it so `novaDrawerBodyNavigate` can prevent the external router from also navigating for this page. |
+| `builder` | `WidgetBuilder` | – | **Required.** Builds the page widget. Called lazily — pages the user never visits are never constructed. |
+| `keepAlive` | `bool` | `true` | When `true`, the widget subtree stays in the tree while hidden and its state is preserved. When `false`, the subtree is discarded on deactivation and rebuilt fresh on the next visit. |
+
+### novaDrawerBodyNavigate helper
+
+```dart
+void Function(BuildContext, String)? novaDrawerBodyNavigate({
+  required List<NovaDrawerPage> pages,
+  void Function(BuildContext, String)? external,
+})
+```
+
+Pass the returned callback to `NovaAppDrawer.onNavigate`. It intercepts navigation requests for routes registered in `pages` — preventing `NovaDrawerBodyRouter` from showing the page *and* the external router from also pushing a new route at the same time — and forwards all other routes to `external`.
+
+### Example
+
+```dart
+// 1. Declare pages once — use late final so the list is stable across rebuilds.
+late final _pages = [
+  NovaDrawerPage(
+    id: 'settings',
+    route: '/settings',
+    builder: (_) => const SettingsPage(),
+  ),
+  NovaDrawerPage(
+    id: 'profile',
+    route: '/profile',
+    builder: (_) => const ProfilePage(),
+    keepAlive: false, // rebuilt fresh each visit
+  ),
+];
+
+// 2. Wire onNavigate so inline routes are NOT forwarded to the router.
+NovaAppDrawer(
+  onNavigate: novaDrawerBodyNavigate(
+    pages: _pages,
+    external: (ctx, route) => GoRouter.of(ctx).go(route),
+  ),
+  ...
+)
+
+// 3. Use NovaDrawerBodyRouter as the scaffold body.
+body: NovaDrawerBodyRouter(
+  controller: _drawerController,
+  pages: _pages,
+  fallback: myTabContent, // IndexedStack of tab pages
+),
+```
+
+### Key rules
+
+1. `NovaDrawerItem.id` and `NovaDrawerPage.id` **must match exactly** — the controller looks up pages by item ID.
+2. `NovaDrawerItem.route` and `NovaDrawerPage.route` **must match exactly** when you use `novaDrawerBodyNavigate`.
+3. Declare `_pages` as **`late final`**, not inside `build()`. Recreating the list on every rebuild causes `NovaDrawerBodyRouter` to reset all page state.
+4. Call `_drawerController.clearSelection()` in your tab bar's `onTabItemSelected` so the router shows the fallback when the user returns to a tab.
+5. Your persistent bar (`MotionTabBar`, `NavigationBar`, etc.) **must live in `NovaDrawerScaffold.bottomNavigationBar`** — not inside the body. Only the body slot changes; the scaffold shell is fixed.
 
 ---
 
@@ -1787,6 +1896,280 @@ NovaDrawer has 16 animation types for the drawer's open/close transition. Set vi
 | `wave` | Wave-like boundary wipe reveal. |
 | `parallax` | Multi-layer depth effect — content layers move at different speeds. |
 | `curtain` | Split-panel curtain wipe from centre outward. |
+
+---
+
+## Real-World Scenario: ERP Dashboard with Persistent Bottom Navigation
+
+This scenario builds a complete ERP / POS dashboard where:
+
+- A **bottom tab bar** (`MotionTabBar`) is always visible — even while the user navigates to drawer pages.
+- **Drawer pages** (Units, Currencies, Categories, Customers) load inline inside the scaffold body without pushing new routes onto the navigator stack.
+- Tapping a tab while a drawer page is open returns to the tab content automatically.
+
+### Layout structure
+
+```
+NovaDrawerScaffold
+├── drawer: NovaAppDrawer  (sections: Settings, Products, CRM)
+├── appBar: AppBar         (hamburger button + current page title)
+├── bottomNavigationBar: MotionTabBar  (always visible)
+└── body: NovaDrawerBodyRouter
+    ├── fallback → IndexedStack  (5 tab pages: Sales, Finance, …)
+    ├── UnitsPage         ← activated when drawer item 'units' is tapped
+    ├── CurrenciesPage    ← activated when drawer item 'currencies' is tapped
+    ├── CategoriesPage    ← activated when drawer item 'categories' is tapped
+    ├── CustomerTypesPage ← activated when drawer item 'customer_types' is tapped
+    └── CustomersPage     ← activated when drawer item 'customers' is tapped
+```
+
+### What each user interaction produces
+
+| User action | Body area | Bottom tab bar |
+|---|---|---|
+| App launches | Sales tab page | ✅ Visible |
+| Taps a bottom tab | That tab's page | ✅ Visible |
+| Opens drawer → taps **Units** | `UnitsPage` (inline) | ✅ Still visible |
+| Opens drawer → taps **Customers** | `CustomersPage` (inline) | ✅ Still visible |
+| Taps a bottom tab while on a drawer page | Returns to tab content | ✅ Still visible |
+| Taps hamburger (opens/closes drawer) | No change to body | ✅ Still visible |
+
+### Full code
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:nova_drawer/nova_drawer.dart';
+
+// ── Route constants ───────────────────────────────────────────────────────────
+abstract class AppRoutes {
+  static const unitsPage         = '/settings/units';
+  static const currenciesPage    = '/settings/currencies';
+  static const categoriesPage    = '/products/categories';
+  static const customerTypesPage = '/crm/customer-types';
+  static const customersPage     = '/crm/customers';
+}
+
+// ── Main dashboard page ───────────────────────────────────────────────────────
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key});
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  // ── 1. Controller ──────────────────────────────────────────────────────────
+  final _drawerController = NovaDrawerController();
+  int    _tabIndex  = 0;
+  String _pageTitle = 'Dashboard';
+
+  static const _tabLabels = [
+    'Sales', 'Finance', 'Inventory', 'Products', 'Clients',
+  ];
+
+  // ── 2. Inline pages ────────────────────────────────────────────────────────
+  //    • Declare with `late final` — the list must be stable across rebuilds.
+  //    • id must match NovaDrawerItem.id exactly.
+  //    • route must match NovaDrawerItem.route exactly.
+  late final _inlinePages = [
+    NovaDrawerPage(
+      id: 'units',
+      route: AppRoutes.unitsPage,
+      builder: (_) => const UnitsPage(),
+    ),
+    NovaDrawerPage(
+      id: 'currencies',
+      route: AppRoutes.currenciesPage,
+      builder: (_) => const CurrenciesPage(),
+    ),
+    NovaDrawerPage(
+      id: 'categories',
+      route: AppRoutes.categoriesPage,
+      builder: (_) => const CategoriesPage(),
+      keepAlive: false, // always fresh — avoids stale product lists
+    ),
+    NovaDrawerPage(
+      id: 'customer_types',
+      route: AppRoutes.customerTypesPage,
+      builder: (_) => const CustomerTypesPage(),
+    ),
+    NovaDrawerPage(
+      id: 'customers',
+      route: AppRoutes.customersPage,
+      builder: (_) => const CustomersPage(),
+    ),
+  ];
+
+  @override
+  void dispose() {
+    _drawerController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    // ── 3. Drawer ─────────────────────────────────────────────────────────────
+    final drawer = NovaAppDrawer(
+      controller: _drawerController,
+
+      // novaDrawerBodyNavigate intercepts inline-page routes so the external
+      // router is NOT also called for them. All other routes go to GoRouter.
+      onNavigate: novaDrawerBodyNavigate(
+        pages: _inlinePages,
+        external: (ctx, route) => GoRouter.of(ctx).go(route),
+      ),
+
+      onItemTap: (item) {
+        setState(() => _pageTitle = item.title);
+      },
+
+      header: NovaDrawerHeader(
+        config: NovaHeaderConfig(
+          variant: NovaHeaderVariant.classic,
+          profile: const NovaHeaderUserProfile(
+            name: 'Alice Johnson',
+            email: 'alice@acme.com',
+            role: 'Store Manager',
+            status: NovaUserStatus.online,
+          ),
+          showCloseButton: true,
+          showStatusIndicator: true,
+        ),
+      ),
+
+      config: const NovaDrawerConfig(
+        animationType: NovaDrawerAnimationType.slide,
+        closeOnItemTap: true,
+      ),
+
+      sections: [
+        NovaDrawerSectionData(
+          id: 'settings',
+          title: 'Settings',
+          items: [
+            NovaDrawerItem(
+              id: 'units',                         // ← matches NovaDrawerPage.id
+              title: 'Units',
+              icon: Icons.straighten_outlined,
+              route: AppRoutes.unitsPage,           // ← matches NovaDrawerPage.route
+            ),
+            NovaDrawerItem(
+              id: 'currencies',
+              title: 'Currencies',
+              icon: Icons.currency_exchange_outlined,
+              route: AppRoutes.currenciesPage,
+            ),
+          ],
+        ),
+        NovaDrawerSectionData(
+          id: 'products',
+          title: 'Products',
+          items: [
+            NovaDrawerItem(
+              id: 'categories',
+              title: 'Categories',
+              icon: Icons.category_outlined,
+              route: AppRoutes.categoriesPage,
+            ),
+          ],
+        ),
+        NovaDrawerSectionData(
+          id: 'crm',
+          title: 'CRM',
+          items: [
+            NovaDrawerItem(
+              id: 'customer_types',
+              title: 'Customer Types',
+              icon: Icons.group_work_outlined,
+              route: AppRoutes.customerTypesPage,
+            ),
+            NovaDrawerItem(
+              id: 'customers',
+              title: 'Customers',
+              icon: Icons.people_outlined,
+              route: AppRoutes.customersPage,
+            ),
+          ],
+        ),
+      ],
+    );
+
+    // ── 4. Scaffold ───────────────────────────────────────────────────────────
+    return NovaDrawerScaffold(
+      controller: _drawerController,
+      drawer: drawer,
+
+      // AppBar — title updates when the user taps a drawer item.
+      appBar: AppBar(
+        title: Text(_pageTitle),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: _drawerController.toggle,
+        ),
+      ),
+
+      // ↓ KEY: The tab bar lives here — it never moves, regardless of whether
+      //   a tab or a drawer page is currently displayed in the body slot below.
+      bottomNavigationBar: MotionTabBar(
+        labels: _tabLabels,
+        icons: const [
+          Icons.shopping_cart_outlined,
+          Icons.account_balance_wallet_outlined,
+          Icons.inventory_2_outlined,
+          Icons.grid_view_outlined,
+          Icons.people_outlined,
+        ],
+        initialSelectedTab: _tabLabels[_tabIndex],
+        tabSize: 50,
+        tabBarHeight: 55,
+        tabSelectedColor: cs.primary,
+        tabIconColor: cs.onSurfaceVariant,
+        textStyle: TextStyle(
+          fontSize: 11,
+          color: cs.onPrimary,
+          fontWeight: FontWeight.w500,
+        ),
+        onTabItemSelected: (int value) {
+          setState(() {
+            _tabIndex = value;
+            // Clear drawer selection → NovaDrawerBodyRouter shows the fallback
+            // (the IndexedStack tab content) instead of the last drawer page.
+            _drawerController.clearSelection();
+            _pageTitle = _tabLabels[value];
+          });
+        },
+      ),
+
+      // ↓ Body router — the fallback (tab content) is shown when no drawer
+      //   page is active. When a drawer page is active, that page's widget
+      //   fills this slot. The MotionTabBar above never changes position.
+      body: NovaDrawerBodyRouter(
+        controller: _drawerController,
+        pages: _inlinePages,
+        fallback: IndexedStack(
+          index: _tabIndex,
+          children: const [
+            // Replace with your real tab page widgets:
+            Center(child: Text('Sales')),
+            Center(child: Text('Finance')),
+            Center(child: Text('Inventory')),
+            Center(child: Text('Products')),
+            Center(child: Text('Clients')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+### Why this works
+
+`NovaDrawerBodyRouter` sits inside the `body` slot of `NovaDrawerScaffold`. The scaffold's `bottomNavigationBar` is rendered by Flutter *outside* the body, so it is completely unaffected by what the body slot shows. Whether the body is displaying the tab `IndexedStack` or an inline drawer page, the `MotionTabBar` stays exactly where it is.
+
+The only thing that changes is the `body` slot content, which `NovaDrawerBodyRouter` controls via its own internal `IndexedStack`, switching between the `fallback` and whichever registered `NovaDrawerPage` the controller has selected.
 
 ---
 

@@ -1,9 +1,10 @@
 name: nova_drawer
-description: >
-  NovaDrawer – A modern, fully dynamic, and highly responsive
-  app drawer component for Flutter supporting mobile, tablet, and desktop
+description: >-
+  NovaDrawer – Production-grade Flutter drawer system with responsive layout
+  (mobile/tablet/desktop), 16 animation types, 10 header variants, inline body
+  routing (NovaDrawerBodyRouter), RTL support, and full accessibility.
 
-version: 1.0.9
+version: 1.1.0
 homepage: https://github.com/yasersabri580-oss/NovaDrawer
 
 environment:
