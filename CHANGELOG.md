@@ -1,5 +1,70 @@
 # Changelog
 
+## 1.1.0
+
+### New Features
+
+- **Inline body routing via `NovaDrawerBodyRouter`**: A new `body` widget for
+  `NovaDrawerScaffold` that hosts drawer navigation pages inside the scaffold
+  body using an `IndexedStack`, so the `AppBar`, `bottomNavigationBar` (e.g. a
+  `MotionTabBar`), and any other scaffold-level widget stay visible no matter
+  which drawer page is active.
+
+  The classic `Navigator.push` / `GoRouter.go` pattern replaces the entire
+  scaffold — wiping out bottom bars and app bars. `NovaDrawerBodyRouter`
+  eliminates this problem by keeping the outer scaffold fixed and swapping only
+  the content area:
+
+  ```dart
+  // MotionTabBar lives HERE → always visible, even on drawer pages
+  bottomNavigationBar: MotionTabBar(..., onTabItemSelected: (i) {
+    setState(() {
+      _tabIndex = i;
+      _drawerController.clearSelection(); // return to fallback
+    });
+  }),
+
+  // Body swaps between tab content and drawer pages
+  body: NovaDrawerBodyRouter(
+    controller: _drawerController,
+    pages: _inlinePages,
+    fallback: IndexedStack(index: _tabIndex, children: tabWidgets),
+  ),
+  ```
+
+- **`NovaDrawerPage` model**: Maps a `NovaDrawerItem.id` to a lazily-built
+  `WidgetBuilder`. Pages that the user never visits are never constructed.
+
+  | Field | Type | Default | Purpose |
+  |---|---|---|---|
+  | `id` | `String` | – | **Required.** Must match `NovaDrawerItem.id`. |
+  | `route` | `String?` | `null` | Optional route; used by `novaDrawerBodyNavigate` to suppress double-navigation. |
+  | `builder` | `WidgetBuilder` | – | **Required.** Lazily called on first activation. |
+  | `keepAlive` | `bool` | `true` | When `true`, widget state is preserved while the page is hidden. When `false`, the subtree is rebuilt fresh on every visit. |
+
+- **`novaDrawerBodyNavigate` navigation helper**: Produces an `onNavigate`
+  callback for `NovaAppDrawer` that intercepts routes handled inline by
+  `NovaDrawerBodyRouter` (preventing double-navigation) and forwards everything
+  else to your external router:
+
+  ```dart
+  NovaAppDrawer(
+    onNavigate: novaDrawerBodyNavigate(
+      pages: _inlinePages,
+      external: (ctx, route) => GoRouter.of(ctx).go(route),
+    ),
+    ...
+  )
+  ```
+
+- **Lazy page construction + per-page `keepAlive`**: Pages are built on first
+  activation only, keeping startup fast regardless of how many pages are
+  registered. Setting `keepAlive: false` on any page discards its widget
+  subtree when the user navigates away, so it rebuilds from scratch on the
+  next visit — useful for pages that must always show fresh server data.
+
+---
+
 ## 1.0.9
 
 ### New Features
