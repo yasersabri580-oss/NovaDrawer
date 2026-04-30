@@ -49,6 +49,12 @@ class NovaDrawerPage {
   /// When provided, [novaDrawerBodyNavigate] will intercept navigation
   /// requests for this route and prevent them from being forwarded to the
   /// external router, since the page is already shown inline.
+  ///
+  /// When omitted, [novaDrawerBodyNavigate] falls back to matching by
+  /// [id]: if the drawer controller's currently selected item ID equals
+  /// this page's [id], external navigation is still suppressed.  Omitting
+  /// [route] is safe as long as the corresponding [NovaDrawerItem.id]
+  /// matches this page's [id].
   final String? route;
 
   /// Builder that produces the page widget.
