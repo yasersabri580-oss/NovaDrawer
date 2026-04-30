@@ -104,8 +104,8 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
         width: effectiveWidth,
         decoration: BoxDecoration(
           color: drawerTheme.backgroundColor,
-          border: Border(
-            right: BorderSide(
+          border: BorderDirectional(
+            end: BorderSide(
               color: drawerTheme.dividerColor ?? Colors.grey.shade300,
               width: 1.0,
             ),

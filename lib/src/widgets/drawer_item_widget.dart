@@ -328,9 +328,14 @@ class _NovaDrawerItemWidgetState extends State<NovaDrawerItemWidget>
   Widget _buildExpandIcon(NovaDrawerTheme drawerTheme) {
     final controller = NovaDrawerControllerProvider.of(context);
     final isExpanded = controller.isItemExpanded(widget.item.id);
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
+    // In LTR: not expanded = 0.0 (chevron_right), expanded = 0.25 (down).
+    // In RTL: not expanded = 0.5 (chevron_left = 180°), expanded = 0.25 (down).
+    final turns = isExpanded ? 0.25 : (isRtl ? 0.5 : 0.0);
 
     return AnimatedRotation(
-      turns: isExpanded ? 0.25 : 0.0,
+      turns: turns,
       duration: const Duration(milliseconds: 200),
       child: Icon(
         Icons.chevron_right,
