@@ -3,8 +3,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../../models/footer_config.dart';
-import '../../models/header_config.dart';
+import '../models/footer_config.dart';
+import '../models/header_config.dart';
 
 /// Shared utility helpers used by all footer variant widgets.
 class NovaFooterWidgetUtils {

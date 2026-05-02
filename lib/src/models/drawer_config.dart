@@ -299,7 +299,9 @@ class NovaDrawerConfig {
   /// When `true` (default), the drawer scroll position is animated to bring
   /// the currently selected item into the centre of the visible area each time
   /// the drawer transitions from closed → open. This is especially useful when
-  /// there are many items (30+) and the user last tapped one near the bottom.
+  /// there are many items (30+) and the user last tapped one that is not in the
+  /// currently visible portion of the list (whether near the top, bottom, or
+  /// anywhere else).
   final bool enableAutoScrollToSelected;
 
   /// Duration of the auto-scroll animation.

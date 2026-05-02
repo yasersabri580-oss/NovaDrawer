@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../models/footer_config.dart';
+import '../models/footer_config.dart';
 import 'footer_utils.dart';
 
 /// Compact user-card footer showing the signed-in user's avatar, name,

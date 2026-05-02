@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../models/footer_config.dart';
+import '../models/footer_config.dart';
 import 'footer_utils.dart';
 
 /// Minimal footer displaying the app version and optional legal / links row.

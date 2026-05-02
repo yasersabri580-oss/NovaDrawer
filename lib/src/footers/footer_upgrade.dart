@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../models/footer_config.dart';
+import '../models/footer_config.dart';
 import 'footer_utils.dart';
 
 /// Upgrade / premium CTA footer with an animated gradient background.

@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../models/footer_config.dart';
+import '../models/footer_config.dart';
 import 'footer_utils.dart';
 
 /// Branding footer that shows a logo widget, app name, and version number.
