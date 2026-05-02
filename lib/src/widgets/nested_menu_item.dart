@@ -169,9 +169,12 @@ class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
     NovaDrawerTheme drawerTheme,
     NovaDrawerController controller,
   ) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return PopupMenuButton<String>(
       tooltip: widget.item.title,
-      offset: const Offset(56, 0),
+      // In RTL the mini drawer is on the right, so the popup must open to the
+      // left (negative x offset).  In LTR it opens to the right.
+      offset: Offset(isRtl ? -56 : 56, 0),
       onSelected: (itemId) {
         final selectedItem = _findItem(itemId, widget.item.children);
         if (selectedItem != null) {
@@ -204,7 +207,7 @@ class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
         value: item.id,
         enabled: item.isEnabled,
         child: Padding(
-          padding: EdgeInsets.only(left: depth * 16.0),
+          padding: EdgeInsetsDirectional.only(start: depth * 16.0),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [

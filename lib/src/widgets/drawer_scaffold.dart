@@ -201,17 +201,10 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
         final scaffoldState = _scaffoldKey.currentState;
         if (scaffoldState == null) return;
 
-        final isRtl = Directionality.of(context) == TextDirection.rtl;
-        final isDrawerActuallyOpen = isRtl
-            ? scaffoldState.isEndDrawerOpen
-            : scaffoldState.isDrawerOpen;
+        final isDrawerActuallyOpen = scaffoldState.isDrawerOpen;
 
         if (widget.controller.isOpen && !isDrawerActuallyOpen) {
-          if (isRtl) {
-            scaffoldState.openEndDrawer();
-          } else {
-            scaffoldState.openDrawer();
-          }
+          scaffoldState.openDrawer();
         } else if (!widget.controller.isOpen && isDrawerActuallyOpen) {
           Navigator.of(context).maybePop();
         }
@@ -304,14 +297,15 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
     return Scaffold(
       key: _scaffoldKey,
       onDrawerChanged: _handleScaffoldDrawerChanged,
-      onEndDrawerChanged: _handleScaffoldDrawerChanged,
       appBar: widget.appBar,
       body: _buildGestureDetector(
         child: widget.body,
         isRtl: isRtl,
       ),
-      drawer: isRtl ? null : widget.drawer,
-      endDrawer: isRtl ? widget.drawer : null,
+      // Always use `drawer` (start edge). Flutter positions it on the LEFT in
+      // LTR and on the RIGHT in RTL automatically via AlignmentDirectional,
+      // so no manual RTL branching is needed here.
+      drawer: widget.drawer,
       floatingActionButton: widget.floatingActionButton,
       floatingActionButtonLocation: widget.floatingActionButtonLocation,
       bottomNavigationBar: widget.bottomNavigationBar,
