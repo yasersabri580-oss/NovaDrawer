@@ -1,5 +1,73 @@
 # Changelog
 
+## 1.2.0
+
+### New Features
+
+- **Auto-scroll to selected item** (`NovaDrawerConfig.enableAutoScrollToSelected`):
+  When the drawer opens, it now automatically animates the scroll position so
+  that the currently selected item is centred in the visible area. This is
+  especially valuable when there are many items (30+) and the user last tapped
+  one near the bottom or top.
+
+  The feature is enabled by default and can be tuned or disabled:
+
+  ```dart
+  NovaDrawerConfig(
+    enableAutoScrollToSelected: true,   // default
+    autoScrollDuration: Duration(milliseconds: 380),
+    autoScrollCurve: Curves.easeInOut,
+  )
+  ```
+
+  Works with all three item layouts (flat `items`, `sections`, and `entries`).
+
+- **Footer variant system — 5 modern, fully flexible footers**:
+  A new `NovaDrawerFooter` widget (parallel to `NovaDrawerHeader`) routes to
+  one of five built-in footer variants based on `NovaFooterConfig.variant`:
+
+  | Variant | Description |
+  |---|---|
+  | `NovaFooterVariant.minimal` | Version text + optional quick-links and legal text |
+  | `NovaFooterVariant.branding` | Logo widget + app name + version + accent line |
+  | `NovaFooterVariant.actions` | Centred row of labelled icon buttons (notifications, settings, logout…) |
+  | `NovaFooterVariant.userCard` | Compact avatar + name + email + settings/logout icons |
+  | `NovaFooterVariant.upgrade` | Animated gradient upgrade / premium CTA banner |
+
+  Drop any variant into `NovaAppDrawer.footer`:
+
+  ```dart
+  NovaAppDrawer(
+    footer: NovaDrawerFooter(
+      config: NovaFooterConfig(
+        variant: NovaFooterVariant.userCard,
+        profile: NovaHeaderUserProfile(name: 'Alice', email: 'alice@acme.com'),
+        onSettingsTap: () => Navigator.pushNamed(context, '/settings'),
+        onLogoutTap: () => authService.logout(),
+      ),
+    ),
+    ...
+  )
+  ```
+
+  A custom builder is also supported via `NovaFooterConfig.customFooterBuilder`.
+
+- **5 new header variants** — brings the total to 15 built-in header styles:
+
+  | Variant | `NovaHeaderVariant` value | Description |
+  |---|---|---|
+  | Neumorphic | `neumorphic` | Soft-UI embossed shadows on a neutral surface |
+  | Banner Info | `bannerInfo` | Gradient banner with scrollable stat chips from `metadata` |
+  | Minimal Card | `minimalCard` | Elevated rounded card with compact info row |
+  | Dark Glass | `darkGlass` | Deep blur dark panel with a neon glow ring around the avatar |
+  | Avatar Focused | `avatarFocused` | Large centred avatar with a continuously rotating gradient ring |
+
+  All new variants accept the same `NovaHeaderConfig` and support
+  `customHeaderBuilder`, `isLoading`, `showStatusIndicator`, `actions`, and all
+  other existing config fields.
+
+---
+
 ## 1.1.2
 
  - Fix directionality issue

@@ -235,6 +235,9 @@ class NovaDrawerConfig {
     this.resizeToAvoidBottomInset = true,
     this.enableHoverExpand = false,
     this.hoverExpandDelay = const Duration(milliseconds: 500),
+    this.enableAutoScrollToSelected = true,
+    this.autoScrollDuration = const Duration(milliseconds: 380),
+    this.autoScrollCurve = Curves.easeInOut,
   });
 
   /// How the drawer is displayed on screen.
@@ -291,11 +294,19 @@ class NovaDrawerConfig {
   /// Whether the drawer resizes when the keyboard appears.
   final bool resizeToAvoidBottomInset;
 
-  /// Whether hovering over the mini drawer expands it (desktop).
-  final bool enableHoverExpand;
+  /// Whether the drawer auto-scrolls to the selected item when opened.
+  ///
+  /// When `true` (default), the drawer scroll position is animated to bring
+  /// the currently selected item into the centre of the visible area each time
+  /// the drawer transitions from closed → open. This is especially useful when
+  /// there are many items (30+) and the user last tapped one near the bottom.
+  final bool enableAutoScrollToSelected;
 
-  /// Delay before hover-expand activates.
-  final Duration hoverExpandDelay;
+  /// Duration of the auto-scroll animation.
+  final Duration autoScrollDuration;
+
+  /// Curve applied to the auto-scroll animation.
+  final Curve autoScrollCurve;
 
   /// Creates a copy of this config with the given fields replaced.
   NovaDrawerConfig copyWith({
@@ -319,6 +330,9 @@ class NovaDrawerConfig {
     bool? resizeToAvoidBottomInset,
     bool? enableHoverExpand,
     Duration? hoverExpandDelay,
+    bool? enableAutoScrollToSelected,
+    Duration? autoScrollDuration,
+    Curve? autoScrollCurve,
   }) {
     return NovaDrawerConfig(
       displayMode: displayMode ?? this.displayMode,
@@ -342,6 +356,10 @@ class NovaDrawerConfig {
           resizeToAvoidBottomInset ?? this.resizeToAvoidBottomInset,
       enableHoverExpand: enableHoverExpand ?? this.enableHoverExpand,
       hoverExpandDelay: hoverExpandDelay ?? this.hoverExpandDelay,
+      enableAutoScrollToSelected:
+          enableAutoScrollToSelected ?? this.enableAutoScrollToSelected,
+      autoScrollDuration: autoScrollDuration ?? this.autoScrollDuration,
+      autoScrollCurve: autoScrollCurve ?? this.autoScrollCurve,
     );
   }
 }

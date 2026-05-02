@@ -43,6 +43,11 @@ import 'profile_header_avatar_stack.dart';
 import 'profile_header_multi_action.dart';
 import 'profile_header_status_aware.dart';
 import 'profile_header_collapsible.dart';
+import 'profile_header_neumorphic.dart';
+import 'profile_header_banner_info.dart';
+import 'profile_header_minimal_card.dart';
+import 'profile_header_dark_glass.dart';
+import 'profile_header_avatar_focused.dart';
 
 /// A pluggable drawer header that routes to the appropriate variant
 /// based on [NovaHeaderConfig.variant].
@@ -110,6 +115,16 @@ class NovaDrawerHeader extends StatelessWidget {
         return NovaProfileHeaderStatusAware(config: config, theme: theme);
       case NovaHeaderVariant.collapsible:
         return NovaProfileHeaderCollapsible(config: config, theme: theme);
+      case NovaHeaderVariant.neumorphic:
+        return NovaProfileHeaderNeumorphic(config: config, theme: theme);
+      case NovaHeaderVariant.bannerInfo:
+        return NovaProfileHeaderBannerInfo(config: config, theme: theme);
+      case NovaHeaderVariant.minimalCard:
+        return NovaProfileHeaderMinimalCard(config: config, theme: theme);
+      case NovaHeaderVariant.darkGlass:
+        return NovaProfileHeaderDarkGlass(config: config, theme: theme);
+      case NovaHeaderVariant.avatarFocused:
+        return NovaProfileHeaderAvatarFocused(config: config, theme: theme);
     }
   }
 }

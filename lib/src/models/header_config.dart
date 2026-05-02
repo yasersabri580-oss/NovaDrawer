@@ -52,6 +52,21 @@ enum NovaHeaderVariant {
 
   /// Header that can collapse/expand with animation.
   collapsible,
+
+  /// Soft neumorphic / skeuomorphic header with embossed shadows.
+  neumorphic,
+
+  /// Information banner header with stat chips below the avatar row.
+  bannerInfo,
+
+  /// Clean card-style header with rounded container and subtle shadow.
+  minimalCard,
+
+  /// Dark glassmorphism header with deep blur and neon accent glow.
+  darkGlass,
+
+  /// Large centred avatar header with animated gradient ring.
+  avatarFocused,
 }
 
 /// Configuration for a header action button.

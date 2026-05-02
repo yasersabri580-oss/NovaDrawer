@@ -50,6 +50,7 @@ class NovaDrawerSectionWidget extends StatefulWidget {
     this.itemAnimation,
     this.itemAnimationIndex = 0,
     this.totalAnimatedItems = 10,
+    this.itemKeys,
   });
 
   /// The section data to render.
@@ -78,6 +79,12 @@ class NovaDrawerSectionWidget extends StatefulWidget {
 
   /// Total items for staggered timing calculation.
   final int totalAnimatedItems;
+
+  /// Optional map of item IDs to [GlobalKey]s used for auto-scroll.
+  ///
+  /// When provided, each item's wrapper widget is assigned the matching key,
+  /// enabling [Scrollable.ensureVisible] to locate and centre the item.
+  final Map<String, GlobalKey>? itemKeys;
 
   @override
   State<NovaDrawerSectionWidget> createState() => _NovaDrawerSectionWidgetState();
@@ -266,25 +273,32 @@ class _NovaDrawerSectionWidgetState extends State<NovaDrawerSectionWidget>
     int index,
   ) {
     if (item.customWidget != null) {
-      return item.customWidget!;
+      return KeyedSubtree(
+        key: widget.itemKeys?[item.id],
+        child: item.customWidget!,
+      );
     }
 
     final isSelected = controller.isSelected(item.id);
 
     if (item.hasChildren) {
-      return NovaNestedMenuItem(
-        item: item,
-        isSelected: isSelected,
-        onItemTap: widget.onItemTap,
-        onNavigate: widget.onNavigate,
-        theme: widget.theme,
-        config: widget.config,
-        isMiniMode: widget.isMiniMode,
-        depth: 0,
+      return KeyedSubtree(
+        key: widget.itemKeys?[item.id],
+        child: NovaNestedMenuItem(
+          item: item,
+          isSelected: isSelected,
+          onItemTap: widget.onItemTap,
+          onNavigate: widget.onNavigate,
+          theme: widget.theme,
+          config: widget.config,
+          isMiniMode: widget.isMiniMode,
+          depth: 0,
+        ),
       );
     }
 
     return Padding(
+      key: widget.itemKeys?[item.id],
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: NovaDrawerItemWidget(
         item: item,
