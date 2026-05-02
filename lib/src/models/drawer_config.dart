@@ -294,6 +294,18 @@ class NovaDrawerConfig {
   /// Whether the drawer resizes when the keyboard appears.
   final bool resizeToAvoidBottomInset;
 
+  /// Whether hovering over a mini drawer causes it to expand automatically.
+  ///
+  /// When `true`, moving the mouse cursor over the [NovaMiniDrawer] will
+  /// trigger expansion after [hoverExpandDelay]. Has no effect on touch
+  /// devices where hover events are not fired.
+  final bool enableHoverExpand;
+
+  /// Delay between the hover-enter event and the drawer expanding.
+  ///
+  /// Only used when [enableHoverExpand] is `true`. Defaults to 500 ms.
+  final Duration hoverExpandDelay;
+
   /// Whether the drawer auto-scrolls to the selected item when opened.
   ///
   /// When `true` (default), the drawer scroll position is animated to bring
