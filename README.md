@@ -9,21 +9,23 @@
 
 <p align="center">
   A <strong>modern, production-grade, and highly responsive</strong> app drawer system for Flutter.<br>
-  Supports <strong>mobile, tablet, and desktop</strong> with 16+ animation types, 10 header variants,<br>
-  10 surface styles, nested menus, RTL, accessibility, slot-based builders, and much more.
+  Supports <strong>mobile, tablet, and desktop</strong> with 16+ animation types, 15 header variants,<br>
+  5 footer variants, auto-scroll to selected item, nested menus, RTL, accessibility, and much more.
 </p>
 
 ---
 
 ## Overview
 
-NovaDrawer is a complete **drawer navigation system** — not just a styled container. It ships as a full system comprising a state controller, responsive layout management, 10 header variants, 10 surface styles, 16 animation types, and a set of in-drawer content widgets (workspace switcher, shortcuts grid, stats card, recent items, filter chips, and app status bar).
+NovaDrawer is a complete **drawer navigation system** — not just a styled container. It ships as a full system comprising a state controller, responsive layout management, 15 header variants, 5 footer variants, 10 surface styles, 16 animation types, and a set of in-drawer content widgets (workspace switcher, shortcuts grid, stats card, recent items, filter chips, and app status bar).
 
 Think of it as a drop-in replacement for Flutter's built-in `Drawer` that automatically handles:
 
 - **Responsive layout switching** — overlay on mobile, push on tablet, persistent sidebar on desktop, with mini/icon-only mode in between
 - **Drawer state management** — open/close, pinned, mini, selection, loading, error — all in one controller object
-- **Header theming** — 10 ready-made profile header layouts that go far beyond a simple user tile
+- **Auto-scroll to selected item** — drawer smoothly scrolls to centre the selected item when reopened (great for 30+ item lists)
+- **Header theming** — 15 ready-made profile header layouts that go far beyond a simple user tile
+- **Footer theming** — 5 ready-made footer variants (minimal, branding, actions, user card, upgrade CTA)
 - **In-drawer UI blocks** — workspace switcher, quick-action grid, stats card, recents list, filter chips, and app status bar as plug-in widgets
 
 **Quick orientation map:**
@@ -36,7 +38,9 @@ Think of it as a drop-in replacement for Flutter's built-in `Drawer` that automa
 | Control drawer state from code | `NovaDrawerController` |
 | Define menu items | `NovaDrawerItem`, `NovaDrawerSectionData` |
 | Interleave items and sections in any order | `NovaAppDrawer.entries` with `NovaDrawerItemEntry` / `NovaDrawerSectionEntry` |
+| Auto-scroll to the selected item on open | `NovaDrawerConfig(enableAutoScrollToSelected: true)` |
 | Customize the header | `NovaDrawerHeader` + `NovaHeaderConfig` |
+| Add a flexible footer | `NovaDrawerFooter` + `NovaFooterConfig` |
 | Simple custom header without variants | `NovaDrawerHeaderWidget` |
 | Collapse to icons-only on desktop | `NovaMiniDrawer` |
 | Render a workspace/org switcher | `NovaDrawerWorkspaceSwitcher` |
@@ -54,7 +58,7 @@ Think of it as a drop-in replacement for Flutter's built-in `Drawer` that automa
 
 ```yaml
 dependencies:
-  nova_drawer: ^1.1.0
+  nova_drawer: ^1.2.0
 ```
 
 ```dart
@@ -68,6 +72,7 @@ import 'package:nova_drawer/nova_drawer.dart';
 - [NovaDrawerScaffold](#novadrawerscaffold)
 - [NovaDrawerBodyRouter](#novadrawerbodyrouter)
 - [NovaAppDrawer](#novaappdrawer)
+- [Auto-Scroll to Selected Item](#auto-scroll-to-selected-item)
 - [NovaDrawerController](#novadrawercontroller)
 - [NovaDrawerItem](#novadraweritem)
 - [NovaDrawerSectionData](#novadrawersectiondata)
@@ -84,6 +89,17 @@ import 'package:nova_drawer/nova_drawer.dart';
   - [NovaProfileHeaderMultiAction](#novaprofileheadermultiaction)
   - [NovaProfileHeaderStatusAware](#novaprofileheaderstatusaware)
   - [NovaProfileHeaderCollapsible](#novaprofileheadercollapsible)
+  - [NovaProfileHeaderNeumorphic](#novaprofileheaderneumorphic)
+  - [NovaProfileHeaderBannerInfo](#novaprofileheaderbanner-info)
+  - [NovaProfileHeaderMinimalCard](#novaprofileheaderminimalcard)
+  - [NovaProfileHeaderDarkGlass](#novaprofileheaderdarkglass)
+  - [NovaProfileHeaderAvatarFocused](#novaprofileheaderavatarfocused)
+- [NovaDrawerFooter (Variant System)](#novadrawerfooter-variant-system)
+  - [NovaFooterMinimal](#novafooterminimal)
+  - [NovaFooterBranding](#novafooterbranding)
+  - [NovaFooterActions](#novafooteractions)
+  - [NovaFooterUserCard](#novafooteruser-card)
+  - [NovaFooterUpgrade](#novafooter-upgrade)
 - [NovaMiniDrawer](#novaminidrawer)
 - [NovaDrawerSectionWidget](#novadrawersectionwidget)
 - [NovaNestedMenuItem](#novanestedmenuitem)
@@ -1013,7 +1029,242 @@ NovaDrawerHeader(
 
 ---
 
-## NovaMiniDrawer
+### NovaProfileHeaderNeumorphic
+
+**Conceptual role:** A soft-UI header that uses embossed box shadows on a neutral surface to simulate physical depth, without images or gradients.
+
+**Use when:** Your app uses a neumorphic/skeuomorphic design system or you want a distinctive, tactile-feeling header.
+
+```dart
+NovaDrawerHeader(
+  config: NovaHeaderConfig(
+    variant: NovaHeaderVariant.neumorphic,
+    profile: NovaHeaderUserProfile(name: 'Alice', email: 'alice@acme.com'),
+  ),
+)
+```
+
+---
+
+### NovaProfileHeaderBannerInfo
+
+**Conceptual role:** A gradient banner header with a user info row and a horizontal strip of coloured stat chips (posts, followers, streak, etc.) populated from `NovaHeaderUserProfile.metadata`.
+
+**Use when:** You want to surface key KPIs or stats directly in the drawer header — common in social, fitness, or productivity apps.
+
+```dart
+NovaDrawerHeader(
+  config: NovaHeaderConfig(
+    variant: NovaHeaderVariant.bannerInfo,
+    profile: NovaHeaderUserProfile(
+      name: 'Alice',
+      email: 'alice@acme.com',
+      metadata: {
+        'stat_Posts': '142',
+        'stat_Followers': '3.2 K',
+        'stat_Streak': '🔥 7',
+      },
+    ),
+  ),
+)
+```
+
+---
+
+### NovaProfileHeaderMinimalCard
+
+**Conceptual role:** An elevated card with rounded corners that wraps the user info in a clean, clearly-bounded container.
+
+**Use when:** You want a distinct visual separator between the header and the item list without a cover image, suitable for light or material-3 themes.
+
+```dart
+NovaDrawerHeader(
+  config: NovaHeaderConfig(
+    variant: NovaHeaderVariant.minimalCard,
+    profile: NovaHeaderUserProfile(name: 'Alice', email: 'alice@acme.com'),
+  ),
+)
+```
+
+---
+
+### NovaProfileHeaderDarkGlass
+
+**Conceptual role:** A deep-blur dark glassmorphism panel with a vivid gradient glow ring around the avatar. Designed for dark-themed drawers or drawers with image/gradient backgrounds.
+
+**Use when:** Your drawer background is dark, an image, or a gradient and you want a premium, futuristic aesthetic.
+
+```dart
+NovaDrawerHeader(
+  config: NovaHeaderConfig(
+    variant: NovaHeaderVariant.darkGlass,
+    profile: myProfile,
+    gradientColors: [Color(0xFF6366F1), Color(0xFF06B6D4)], // glow colour
+  ),
+)
+```
+
+---
+
+### NovaProfileHeaderAvatarFocused
+
+**Conceptual role:** A centred-layout header where the avatar is the hero element, wrapped in a continuously rotating gradient ring. Name and subtitle appear below.
+
+**Use when:** Personal apps (journaling, social, fitness) where the user's identity is the primary focus of the drawer.
+
+```dart
+NovaDrawerHeader(
+  config: NovaHeaderConfig(
+    variant: NovaHeaderVariant.avatarFocused,
+    profile: myProfile,
+    gradientColors: [Color(0xFFF59E0B), Color(0xFFEF4444), Color(0xFF8B5CF6)],
+  ),
+)
+```
+
+---
+
+## NovaDrawerFooter (Variant System)
+
+A modular footer framework with 5 built-in variants and full custom-builder support. Use `NovaDrawerFooter` as the `footer` parameter of `NovaAppDrawer`.
+
+```dart
+NovaAppDrawer(
+  footer: NovaDrawerFooter(
+    config: NovaFooterConfig(
+      variant: NovaFooterVariant.userCard,
+      profile: NovaHeaderUserProfile(name: 'Alice', email: 'alice@acme.com'),
+      onSettingsTap: () => Navigator.pushNamed(context, '/settings'),
+      onLogoutTap: () => authService.logout(),
+    ),
+  ),
+  ...
+)
+```
+
+### NovaFooterMinimal
+
+Version string + optional quick-links and legal/copyright text. The smallest possible footer footprint.
+
+```dart
+NovaDrawerFooter(
+  config: NovaFooterConfig(
+    variant: NovaFooterVariant.minimal,
+    appVersion: '2.4.1',
+    legalText: '© 2026 Acme Inc.',
+    links: [
+      NovaFooterLink(label: 'Privacy', onTap: () {}),
+      NovaFooterLink(label: 'Terms', onTap: () {}),
+    ],
+  ),
+)
+```
+
+### NovaFooterBranding
+
+Logo widget + app name + version + an optional gradient accent line. Useful for white-label apps where brand presence in the drawer matters.
+
+```dart
+NovaDrawerFooter(
+  config: NovaFooterConfig(
+    variant: NovaFooterVariant.branding,
+    logoWidget: Image.asset('assets/logo.png'),
+    appName: 'MyApp',
+    appVersion: '1.2.0',
+    gradientColors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+  ),
+)
+```
+
+### NovaFooterActions
+
+A centred row of labelled icon buttons. Each `NovaFooterAction` renders as an icon with an optional label. Destructive actions (e.g., logout) are tinted in the error colour.
+
+```dart
+NovaDrawerFooter(
+  config: NovaFooterConfig(
+    variant: NovaFooterVariant.actions,
+    actions: [
+      NovaFooterAction(
+        id: 'alerts', icon: Icons.notifications_outlined,
+        label: 'Alerts', badge: 3, onTap: () {},
+      ),
+      NovaFooterAction(
+        id: 'settings', icon: Icons.settings_outlined,
+        label: 'Settings', onTap: () {},
+      ),
+      NovaFooterAction(
+        id: 'logout', icon: Icons.logout,
+        label: 'Logout', isDestructive: true, onTap: () {},
+      ),
+    ],
+  ),
+)
+```
+
+### NovaFooterUserCard
+
+Compact user-card footer — avatar, name, email, optional settings icon, and optional logout icon. Ideal for quick account access at the bottom of the drawer.
+
+```dart
+NovaDrawerFooter(
+  config: NovaFooterConfig(
+    variant: NovaFooterVariant.userCard,
+    profile: NovaHeaderUserProfile(name: 'Alice', email: 'alice@acme.com'),
+    onSettingsTap: () => Navigator.pushNamed(context, '/settings'),
+    onLogoutTap: () => authService.logout(),
+  ),
+)
+```
+
+### NovaFooterUpgrade
+
+Animated gradient upgrade/premium CTA banner with a pulsing shimmer and a prominent action button. The gradient, title, subtitle, and CTA label are all customisable.
+
+```dart
+NovaDrawerFooter(
+  config: NovaFooterConfig(
+    variant: NovaFooterVariant.upgrade,
+    upgradeTitle: 'Upgrade to Pro',
+    upgradeSubtitle: 'Unlock all features',
+    upgradeCTALabel: 'Upgrade',
+    onUpgradeTap: () => Navigator.pushNamed(context, '/upgrade'),
+    gradientColors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+  ),
+)
+```
+
+---
+
+## Auto-Scroll to Selected Item
+
+When a drawer has 30+ items and the user last tapped item 23, reopening the drawer shows item 1 at the top — the user has to scroll to find their context. The auto-scroll feature solves this.
+
+**Default behaviour (no config needed):** The drawer animates the scroll position so the selected item is centred in the visible area every time the drawer transitions from closed → open.
+
+**Configuration:**
+
+```dart
+NovaDrawerConfig(
+  enableAutoScrollToSelected: true,   // default
+  autoScrollDuration: Duration(milliseconds: 380),
+  autoScrollCurve: Curves.easeInOut,
+)
+```
+
+**Disable it:**
+
+```dart
+NovaDrawerConfig(
+  enableAutoScrollToSelected: false,
+)
+```
+
+Works with all three item layouts: flat `items`, `sections`, and `entries`.
+
+---
+
+
 
 ### What it actually is
 

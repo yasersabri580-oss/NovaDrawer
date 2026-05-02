@@ -159,6 +159,12 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
   late AnimationController _animationController;
   final ScrollController _scrollController = ScrollController();
 
+  /// Keys registered per item ID — used for auto-scroll via [Scrollable.ensureVisible].
+  final Map<String, GlobalKey> _itemKeys = {};
+
+  /// Tracks whether the drawer was open on the previous controller notification.
+  bool _wasOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -172,6 +178,7 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
     // cause this widget to rebuild. This is necessary for flat items rendered
     // directly in _buildFlatItem, which do not go through a widget that
     // depends on NovaDrawerControllerProvider.of(context).
+    _wasOpen = widget.controller.isOpen;
     widget.controller.addListener(_onControllerChanged);
 
     // Defer controller state updates to post-frame to avoid calling
@@ -197,6 +204,7 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       oldWidget.controller.removeListener(_onControllerChanged);
+      _wasOpen = widget.controller.isOpen;
       widget.controller.addListener(_onControllerChanged);
     }
   }
@@ -210,8 +218,36 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
   }
 
   void _onControllerChanged() {
-    if (mounted) setState(() {});
+    if (mounted) {
+      final isNowOpen = widget.controller.isOpen;
+      // Trigger auto-scroll when the drawer transitions from closed → open.
+      if (isNowOpen && !_wasOpen && widget.config.enableAutoScrollToSelected) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          _scrollToSelectedItem();
+        });
+      }
+      _wasOpen = isNowOpen;
+      setState(() {});
+    }
   }
+
+  /// Scrolls the list to centre the currently selected item, if any.
+  void _scrollToSelectedItem() {
+    final selectedId = widget.controller.selectedItemId;
+    if (selectedId == null) return;
+    final key = _itemKeys[selectedId];
+    if (key?.currentContext == null) return;
+    Scrollable.ensureVisible(
+      key!.currentContext!,
+      alignment: 0.5,
+      duration: widget.config.autoScrollDuration,
+      curve: widget.config.autoScrollCurve,
+    );
+  }
+
+  /// Returns (and lazily creates) the [GlobalKey] for the given item ID.
+  GlobalKey _keyFor(String itemId) =>
+      _itemKeys.putIfAbsent(itemId, GlobalKey.new);
 
   @override
   Widget build(BuildContext context) {
@@ -348,6 +384,7 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
                   onNavigate: widget.onNavigate,
                   theme: widget.theme,
                   config: widget.config,
+                  itemKeys: _itemKeys,
                 )
           // Sections
           else if (widget.sections.isNotEmpty)
@@ -358,6 +395,7 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
                 onNavigate: widget.onNavigate,
                 theme: widget.theme,
                 config: widget.config,
+                itemKeys: _itemKeys,
               )
           // Flat items
           else
@@ -374,22 +412,28 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
     NovaDrawerTheme drawerTheme,
     NovaDrawerController controller,
   ) {
-    if (item.customWidget != null) return item.customWidget!;
+    if (item.customWidget != null) {
+      return KeyedSubtree(key: _keyFor(item.id), child: item.customWidget!);
+    }
 
     final isSelected = controller.isSelected(item.id);
 
     if (item.hasChildren) {
-      return NovaNestedMenuItem(
-        item: item,
-        isSelected: isSelected,
-        onItemTap: widget.onItemTap,
-        onNavigate: widget.onNavigate,
-        theme: widget.theme,
-        config: widget.config,
+      return KeyedSubtree(
+        key: _keyFor(item.id),
+        child: NovaNestedMenuItem(
+          item: item,
+          isSelected: isSelected,
+          onItemTap: widget.onItemTap,
+          onNavigate: widget.onNavigate,
+          theme: widget.theme,
+          config: widget.config,
+        ),
       );
     }
 
     return Padding(
+      key: _keyFor(item.id),
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: NovaDrawerItemWidget(
         item: item,

@@ -63,6 +63,20 @@ export 'src/headers/profile_header_avatar_stack.dart';
 export 'src/headers/profile_header_multi_action.dart';
 export 'src/headers/profile_header_status_aware.dart';
 export 'src/headers/profile_header_collapsible.dart';
+export 'src/headers/profile_header_neumorphic.dart';
+export 'src/headers/profile_header_banner_info.dart';
+export 'src/headers/profile_header_minimal_card.dart';
+export 'src/headers/profile_header_dark_glass.dart';
+export 'src/headers/profile_header_avatar_focused.dart';
+
+// ── Footers ──────────────────────────────────────────────────────────────
+export 'src/models/footer_config.dart';
+export 'src/footers/nova_drawer_footer.dart';
+export 'src/footers/footer_minimal.dart';
+export 'src/footers/footer_branding.dart';
+export 'src/footers/footer_actions.dart';
+export 'src/footers/footer_user_card.dart';
+export 'src/footers/footer_upgrade.dart';
 
 // ── Builders ────────────────────────────────────────────────────────────
 export 'src/builders/drawer_builders.dart';
