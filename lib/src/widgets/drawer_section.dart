@@ -266,6 +266,11 @@ class _NovaDrawerSectionWidgetState extends State<NovaDrawerSectionWidget>
     );
   }
 
+  /// Returns (and lazily creates) the [GlobalKey] for the given item ID,
+  /// or `null` when [widget.itemKeys] is not provided.
+  GlobalKey? _keyFor(String itemId) =>
+      widget.itemKeys?.putIfAbsent(itemId, GlobalKey.new);
+
   Widget _buildItem(
     NovaDrawerItem item,
     NovaDrawerTheme drawerTheme,
@@ -274,7 +279,7 @@ class _NovaDrawerSectionWidgetState extends State<NovaDrawerSectionWidget>
   ) {
     if (item.customWidget != null) {
       return KeyedSubtree(
-        key: widget.itemKeys?[item.id],
+        key: _keyFor(item.id),
         child: item.customWidget!,
       );
     }
@@ -283,7 +288,7 @@ class _NovaDrawerSectionWidgetState extends State<NovaDrawerSectionWidget>
 
     if (item.hasChildren) {
       return KeyedSubtree(
-        key: widget.itemKeys?[item.id],
+        key: _keyFor(item.id),
         child: NovaNestedMenuItem(
           item: item,
           isSelected: isSelected,
@@ -298,7 +303,7 @@ class _NovaDrawerSectionWidgetState extends State<NovaDrawerSectionWidget>
     }
 
     return Padding(
-      key: widget.itemKeys?[item.id],
+      key: _keyFor(item.id),
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: NovaDrawerItemWidget(
         item: item,
