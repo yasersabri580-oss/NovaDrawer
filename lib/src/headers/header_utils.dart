@@ -78,8 +78,8 @@ class NovaHeaderWidgetUtils {
         clipBehavior: Clip.none,
         children: [
           avatar,
-          Positioned(
-            right: 0,
+          PositionedDirectional(
+            end: 0,
             bottom: 0,
             child: _StatusDot(status: profile.status, size: radius * 0.4),
           ),
@@ -370,8 +370,8 @@ class _ActionIconButton extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           button,
-          Positioned(
-            right: 0,
+          PositionedDirectional(
+            end: 0,
             top: 0,
             child: Container(
               padding: const EdgeInsets.all(2),
