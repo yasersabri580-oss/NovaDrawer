@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.2
+
+ - Fix directionality issue
+
 ## 1.1.1
 
  - Now it support directionality
