@@ -1150,6 +1150,21 @@ class _DemoHomePageState extends State<DemoHomePage> {
         return 'Status';
       case NovaHeaderVariant.collapsible:
         return 'Collapsible';
+      case NovaHeaderVariant.neumorphic:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case NovaHeaderVariant.bannerInfo:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case NovaHeaderVariant.minimalCard:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case NovaHeaderVariant.darkGlass:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case NovaHeaderVariant.avatarFocused:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 

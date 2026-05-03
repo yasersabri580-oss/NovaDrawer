@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+- Bug fixes
+
 ## 1.2.0
 
 ### New Features
@@ -70,11 +74,11 @@
 
 ## 1.1.2
 
- - Fix directionality issue
+- Fix directionality issue
 
 ## 1.1.1
 
- - Now it support directionality
+- Now it support directionality
 
 ## 1.1.0
 

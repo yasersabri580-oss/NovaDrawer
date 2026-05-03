@@ -205,6 +205,21 @@ class _HeaderShowcaseScreenState extends State<HeaderShowcaseScreen> {
           showCloseButton: false,
           showPinButton: false,
         );
+      case NovaHeaderVariant.neumorphic:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case NovaHeaderVariant.bannerInfo:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case NovaHeaderVariant.minimalCard:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case NovaHeaderVariant.darkGlass:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case NovaHeaderVariant.avatarFocused:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
   }
 }
