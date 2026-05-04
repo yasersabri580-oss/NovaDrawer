@@ -193,6 +193,18 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
       if (widget.items.isNotEmpty) {
         widget.controller.setItems(widget.items);
       }
+      // In overlay mode (mobile), Flutter only mounts NovaAppDrawer when
+      // the drawer actually opens. This means _wasOpen is already `true`
+      // at initState() time, so the closed→open transition in
+      // _onControllerChanged never fires and auto-scroll is skipped.
+      // Schedule a second post-frame callback so the scroll runs after
+      // any rebuild triggered by setSections/setItems above, guaranteeing
+      // all item keys are registered and layouts are complete.
+      if (_wasOpen && widget.config.enableAutoScrollToSelected) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _scrollToSelectedItem();
+        });
+      }
     });
 
     // Start the entrance animation
