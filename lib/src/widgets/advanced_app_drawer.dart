@@ -230,17 +230,26 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
   }
 
   void _onControllerChanged() {
-    if (mounted) {
-      final isNowOpen = widget.controller.isOpen;
-      // Trigger auto-scroll when the drawer transitions from closed → open.
-      if (isNowOpen && !_wasOpen && widget.config.enableAutoScrollToSelected) {
+    if (!mounted) return;
+    final isNowOpen = widget.controller.isOpen;
+    // Trigger auto-scroll when the drawer transitions from closed → open.
+    if (isNowOpen && !_wasOpen && widget.config.enableAutoScrollToSelected) {
+      // Use a nested double post-frame callback so the scroll always fires
+      // after the rebuild triggered by setState() below has completed and
+      // all item GlobalKey contexts are fully registered and laid out.
+      // A single post-frame is not sufficient on the second+ open because
+      // setState() may schedule its rebuild into the same frame that the
+      // single callback targets, causing _scrollToSelectedItem() to run
+      // before keys are re-established (context == null → silent no-op).
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          _scrollToSelectedItem();
+          if (mounted) _scrollToSelectedItem();
         });
-      }
-      _wasOpen = isNowOpen;
-      setState(() {});
+      });
     }
+    _wasOpen = isNowOpen;
+    setState(() {});
   }
 
   /// Scrolls the list to centre the currently selected item, if any.
