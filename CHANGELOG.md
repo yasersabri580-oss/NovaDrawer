@@ -1,6 +1,15 @@
 # Changelog
 
 
+## 1.2.3
+
+- Fixed autoscroll-to-selected not working on the second (and subsequent) drawer
+  opens. A single post-frame callback in `_onControllerChanged` was insufficient
+  because the concurrent `setState()` rebuild could land in the same frame,
+  leaving item `GlobalKey` contexts unresolved before the scroll was attempted.
+  The fix mirrors the double post-frame approach already used in `initState`
+  so that the scroll always runs after the rebuild is fully complete.
+
 ## 1.2.2
  
 - Auto scroll bug fix
