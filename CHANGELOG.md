@@ -1,5 +1,10 @@
 # Changelog
 
+
+## 1.2.2
+ 
+- Auto scroll bug fix
+
 ## 1.2.1
 
 - Bug fixes
