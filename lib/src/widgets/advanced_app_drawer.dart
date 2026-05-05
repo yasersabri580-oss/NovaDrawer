@@ -255,17 +255,112 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
   }
 
   /// Scrolls the list to centre the currently selected item, if any.
+  ///
+  /// When the item is already built (visible), [Scrollable.ensureVisible] is
+  /// used directly for pixel-perfect positioning.  When the item is off-screen
+  /// (not yet built by the lazy [ListView]), the offset is estimated from the
+  /// item's rank in the ordered list of visible items and the current
+  /// [ScrollController] max extent.  After that initial jump, a post-frame
+  /// callback calls [Scrollable.ensureVisible] to refine the position once the
+  /// item's [RenderObject] has been created.
   void _scrollToSelectedItem() {
     final selectedId = widget.controller.selectedItemId;
     if (selectedId == null) return;
     final key = _itemKeys[selectedId];
-    if (key?.currentContext == null) return;
-    Scrollable.ensureVisible(
-      key!.currentContext!,
-      alignment: 0.5,
-      duration: widget.config.autoScrollDuration,
-      curve: widget.config.autoScrollCurve,
-    );
+
+    // Fast path: item is already built — use ensureVisible for precision.
+    if (key?.currentContext != null) {
+      Scrollable.ensureVisible(
+        key!.currentContext!,
+        alignment: 0.5,
+        duration: widget.config.autoScrollDuration,
+        curve: widget.config.autoScrollCurve,
+      );
+      return;
+    }
+
+    // Slow path: item is off-screen (not yet built by the lazy ListView).
+    // Estimate its offset from its rank in the rendered item order, scroll
+    // there, then refine with ensureVisible once the item is built.
+    if (!_scrollController.hasClients) return;
+    final maxExtent = _scrollController.position.maxScrollExtent;
+    if (maxExtent <= 0) return;
+
+    final orderedIds = _orderedVisibleItemIds();
+    if (orderedIds.isEmpty) return;
+    final index = orderedIds.indexOf(selectedId);
+    if (index < 0) return;
+
+    final estimated = (index / orderedIds.length) * maxExtent;
+    _scrollController
+        .animateTo(
+          estimated.clamp(0.0, maxExtent),
+          duration: widget.config.autoScrollDuration,
+          curve: widget.config.autoScrollCurve,
+        )
+        .then((_) {
+      // After the first scroll the item should now be built.  Use an instant
+      // (zero-duration) ensureVisible to snap it precisely to centre without
+      // triggering a second visible animation.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final ctx = _itemKeys[selectedId]?.currentContext;
+        if (ctx != null) {
+          Scrollable.ensureVisible(
+            ctx,
+            alignment: 0.5,
+            duration: Duration.zero,
+          );
+        }
+      });
+    });
+  }
+
+  /// Returns an ordered flat list of item IDs as they appear in the scroll
+  /// list, mirroring the render order used by [_buildScrollableContent].
+  ///
+  /// Only items that are visible and not hidden by the controller are included.
+  /// Items inside collapsed sections are excluded because their render height
+  /// is zero and they cannot be meaningfully scrolled to.
+  List<String> _orderedVisibleItemIds() {
+    final controller = widget.controller;
+    final ids = <String>[];
+
+    void addItem(NovaDrawerItem item) {
+      if (item.isVisible && !controller.isItemHidden(item.id)) {
+        ids.add(item.id);
+      }
+    }
+
+    void addSection(NovaDrawerSectionData section) {
+      // Skip items inside collapsed sections — they have zero render height.
+      if (section.isCollapsible && !controller.isSectionExpanded(section.id)) {
+        return;
+      }
+      for (final item in section.items) {
+        addItem(item);
+      }
+    }
+
+    if (widget.entries.isNotEmpty) {
+      for (final entry in widget.entries) {
+        if (entry is NovaDrawerItemEntry) {
+          addItem(entry.item);
+        } else if (entry is NovaDrawerSectionEntry) {
+          addSection(entry.section);
+        }
+      }
+    } else if (widget.sections.isNotEmpty) {
+      for (final section in widget.sections) {
+        addSection(section);
+      }
+    } else {
+      for (final item in widget.items) {
+        addItem(item);
+      }
+    }
+
+    return ids;
   }
 
   /// Returns (and lazily creates) the [GlobalKey] for the given item ID.
