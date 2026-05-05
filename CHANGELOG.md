@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.2.4
+## 1.2.5
 
-- Some Bug fixes
+- Auth scroll not works for invisile items
 
 ## 1.2.3
 
