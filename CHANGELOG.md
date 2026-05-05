@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.4
+
+- Some Bug fixes
 
 ## 1.2.3
 
@@ -11,7 +14,7 @@
   so that the scroll always runs after the rebuild is fully complete.
 
 ## 1.2.2
- 
+
 - Auto scroll bug fix
 
 ## 1.2.1
