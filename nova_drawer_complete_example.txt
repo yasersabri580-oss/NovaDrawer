@@ -647,6 +647,81 @@ tablet/desktop (showMiniOnCollapse: true). Customise it via the scaffold:
 
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 9b. NovaDrawerBodyRouter  (inline pages — bottom bar stays visible)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Use NovaDrawerBodyRouter when you want drawer pages to render INSIDE the
+scaffold body so the AppBar and bottomNavigationBar always stay visible.
+
+  // Declare the list ONCE with late final — not inside build().
+  late final _pages = <NovaDrawerPage>[
+    // ─── IMPORTANT: flutter_bloc / Provider / get_it ──────────────────
+    // NovaDrawerBodyRouter renders pages OUTSIDE the GoRouter route tree.
+    // BlocProviders added in GoRoute.builder are NOT ancestors here.
+    // You MUST add the same BlocProvider inside each NovaDrawerPage.builder.
+    //
+    // ❌ WRONG — throws ProviderNotFoundException at runtime:
+    //   NovaDrawerPage(
+    //     id: 'accessibility',
+    //     route: AppRouter.accessibilityPage,
+    //     builder: (context) => const AccessibilityListPage(),
+    //   ),
+    //
+    // ✅ CORRECT — provide the bloc inside the builder:
+    NovaDrawerPage(
+      keepAlive: true,
+      id: 'accessibility',
+      route: AppRouter.accessibilityPage,
+      builder: (context) => BlocProvider(
+        create: (_) => sl<AccessibilityBloc>(),
+        child: const AccessibilityListPage(),
+      ),
+    ),
+
+    // Multiple blocs — use MultiBlocProvider:
+    NovaDrawerPage(
+      keepAlive: true,
+      id: 'users',
+      route: AppRouter.usersPage,
+      builder: (context) => MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => sl<UserBloc>()),
+          BlocProvider(create: (_) => sl<UserPermissionBloc>()),
+        ],
+        child: const UserListPage(),
+      ),
+    ),
+  ];
+
+  // Wire onNavigate so inline routes are NOT forwarded to GoRouter:
+  NovaAppDrawer(
+    onNavigate: novaDrawerBodyNavigate(
+      pages: _pages,
+      external: (ctx, route) => GoRouter.of(ctx).push(route),
+    ),
+    onItemTap: (item) {
+      setState(() => _selectedPageTitle = item.title);
+      // side-effect-only items (route: null) are handled here
+    },
+    // ...
+  )
+
+  // Use as the scaffold body:
+  body: NovaDrawerBodyRouter(
+    controller: _drawerController,
+    pages: _pages,
+    fallback: _tabsBody,   // shown when no drawer page is active
+  ),
+
+  // When the user returns to a tab, clear the drawer selection so the
+  // fallback body (IndexedStack of tabs) is shown again:
+  onTabItemSelected: (int index) {
+    _drawerController.clearSelection();
+    setState(() => _tabIndex = index);
+  },
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  10. ALL ANIMATION TYPES
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

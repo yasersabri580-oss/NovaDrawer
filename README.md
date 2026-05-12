@@ -256,7 +256,7 @@ NovaDrawerScaffold
 |---|---|---|---|
 | `id` | `String` | – | **Required.** Must match the `NovaDrawerItem.id` of the corresponding drawer item. |
 | `route` | `String?` | `null` | Optional route path. Provide it so `novaDrawerBodyNavigate` can prevent the external router from also navigating for this page. |
-| `builder` | `WidgetBuilder` | – | **Required.** Builds the page widget. Called lazily — pages the user never visits are never constructed. |
+| `builder` | `WidgetBuilder` | – | **Required.** Builds the page widget. Called lazily. **Must include any `BlocProvider`/`Provider` wrappers the page needs.** Pages are rendered outside the GoRouter route tree, so providers added in `GoRoute.builder` are not available here (see key rule 7). |
 | `keepAlive` | `bool` | `true` | When `true`, the widget subtree stays in the tree while hidden and its state is preserved. When `false`, the subtree is discarded on deactivation and rebuilt fresh on the next visit. |
 
 ### novaDrawerBodyNavigate helper
@@ -275,11 +275,17 @@ Pass the returned callback to `NovaAppDrawer.onNavigate`. It intercepts navigati
 ```dart
 // 1. Declare pages once — use late final so the list is stable across rebuilds.
 late final _pages = [
+  // Pages that need a BLoC must wrap with BlocProvider.
+  // GoRoute.builder is NOT an ancestor here; the bloc must be provided explicitly.
   NovaDrawerPage(
     id: 'settings',
     route: '/settings',
-    builder: (_) => const SettingsPage(),
+    builder: (_) => BlocProvider(
+      create: (_) => sl<SettingsBloc>(),
+      child: const SettingsPage(),
+    ),
   ),
+  // Plain widgets with no providers are fine as-is.
   NovaDrawerPage(
     id: 'profile',
     route: '/profile',
@@ -345,6 +351,58 @@ body: NovaDrawerBodyRouter(
 >   id: 'logout',
 >   route: '/logout',  // ← omit this for side-effect-only items
 >   ...
+> )
+> ```
+
+7. **Supply your own `BlocProvider` / `Provider` wrappers inside each `builder`.** `NovaDrawerBodyRouter` renders pages *outside* the GoRouter route tree. Providers registered in `GoRoute.builder` are **not** ancestor widgets of the builder passed to `NovaDrawerPage`. Any page that calls `context.read<MyBloc>()` (or uses `BlocBuilder`) will throw a `ProviderNotFoundException` unless the bloc is also provided directly in the `NovaDrawerPage.builder`.
+
+> **⚠️ ProviderNotFoundException with flutter_bloc / get_it**
+>
+> This is the most common error when first adopting `NovaDrawerBodyRouter`.
+> The fix is always the same: copy the `BlocProvider` (or `MultiBlocProvider`)
+> wrapper from your `GoRoute.builder` into your `NovaDrawerPage.builder`.
+>
+> ```dart
+> // In your GoRouter setup — bloc injected here:
+> GoRoute(
+>   path: '/admin/accessibility',
+>   builder: (context, state) => BlocProvider(
+>     create: (_) => sl<AccessibilityBloc>(),
+>     child: const AccessibilityListPage(),
+>   ),
+> ),
+>
+> // ❌ WRONG — missing BlocProvider.
+> // AccessibilityListPage calls context.read<AccessibilityBloc>() in initState
+> // but there is no BlocProvider ancestor → ProviderNotFoundException.
+> NovaDrawerPage(
+>   id: 'accessibility',
+>   route: AppRouter.accessibilityPage,
+>   builder: (context) => const AccessibilityListPage(),
+> )
+>
+> // ✅ CORRECT — provide the bloc inside the NovaDrawerPage builder,
+> // exactly as the GoRoute does.
+> NovaDrawerPage(
+>   id: 'accessibility',
+>   route: AppRouter.accessibilityPage,
+>   builder: (context) => BlocProvider(
+>     create: (_) => sl<AccessibilityBloc>(),
+>     child: const AccessibilityListPage(),
+>   ),
+> )
+>
+> // ✅ Multiple blocs — use MultiBlocProvider.
+> NovaDrawerPage(
+>   id: 'users',
+>   route: AppRouter.usersPage,
+>   builder: (context) => MultiBlocProvider(
+>     providers: [
+>       BlocProvider(create: (_) => sl<UserBloc>()),
+>       BlocProvider(create: (_) => sl<UserPermissionBloc>()),
+>     ],
+>     child: const UserListPage(),
+>   ),
 > )
 > ```
 

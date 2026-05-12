@@ -58,6 +58,59 @@ class NovaDrawerPage {
   final String? route;
 
   /// Builder that produces the page widget.
+  ///
+  /// Called lazily — the builder is not invoked until the first time the
+  /// matching drawer item is selected.
+  ///
+  /// **Dependency injection (flutter_bloc / Provider / get_it)**
+  ///
+  /// `NovaDrawerBodyRouter` renders pages *inside the scaffold body*,
+  /// completely outside the GoRouter (or Navigator 2.0) route tree.
+  /// Any `BlocProvider`, `Provider`, or other inherited widget that your
+  /// `GoRoute.builder` normally wraps the page with is **not** an ancestor
+  /// of this builder — it lives in a sibling subtree.
+  ///
+  /// If your page calls `context.read<MyBloc>()` (or `context.watch`,
+  /// `BlocBuilder`, etc.) and the bloc is provided only in the GoRoute,
+  /// you will get a `ProviderNotFoundException` at runtime.
+  ///
+  /// **Fix:** supply the same providers directly inside the builder:
+  ///
+  /// ```dart
+  /// // ✅ Correct — wrap with BlocProvider so the bloc is accessible.
+  /// NovaDrawerPage(
+  ///   id: 'accessibility',
+  ///   route: '/admin/accessibility',
+  ///   builder: (context) => BlocProvider(
+  ///     create: (_) => sl<AccessibilityBloc>(),
+  ///     child: const AccessibilityListPage(),
+  ///   ),
+  /// )
+  ///
+  /// // ❌ Wrong — BlocProvider only exists in the GoRoute; this builder has
+  /// //   no such ancestor, so context.read<AccessibilityBloc>() will throw.
+  /// NovaDrawerPage(
+  ///   id: 'accessibility',
+  ///   route: '/admin/accessibility',
+  ///   builder: (context) => const AccessibilityListPage(),
+  /// )
+  /// ```
+  ///
+  /// If multiple blocs are needed, use `MultiBlocProvider`:
+  ///
+  /// ```dart
+  /// NovaDrawerPage(
+  ///   id: 'dashboard',
+  ///   route: '/dashboard',
+  ///   builder: (context) => MultiBlocProvider(
+  ///     providers: [
+  ///       BlocProvider(create: (_) => sl<UserBloc>()),
+  ///       BlocProvider(create: (_) => sl<StatsBloc>()),
+  ///     ],
+  ///     child: const DashboardPage(),
+  ///   ),
+  /// )
+  /// ```
   final WidgetBuilder builder;
 
   /// Whether the page's widget subtree is preserved while the page is
