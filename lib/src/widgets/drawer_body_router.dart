@@ -34,20 +34,46 @@ import '../models/body_router_page.dart';
 /// prevent routes covered by registered pages from also being forwarded to
 /// the external router.
 ///
+/// **Dependency injection (flutter_bloc / Provider / get_it)**
+///
+/// Pages built here are rendered *outside* the GoRouter (or Navigator 2.0)
+/// route tree.  A `BlocProvider` or `Provider` that your `GoRoute.builder`
+/// normally wraps the page with is **not** an ancestor of the builder passed
+/// to [NovaDrawerPage].  Accessing that bloc via `context.read<MyBloc>()`
+/// inside the page will throw a `ProviderNotFoundException`.
+///
+/// Always provide the required blocs/providers directly in the
+/// [NovaDrawerPage.builder]:
+///
+/// ```dart
+/// NovaDrawerPage(
+///   id: 'accessibility',
+///   route: '/admin/accessibility',
+///   builder: (context) => BlocProvider(
+///     create: (_) => sl<AccessibilityBloc>(),
+///     child: const AccessibilityListPage(),
+///   ),
+/// )
+/// ```
+///
 /// ## Example
 ///
 /// ```dart
 /// // 1. Declare pages (reuse the same list in both places).
-/// final _pages = [
+/// late final _pages = [
 ///   NovaDrawerPage(
 ///     id: 'accounting_home',
 ///     route: '/accounting/home',
-///     builder: (_) => const AccountingHomePage(),
+///     // ✅ Wrap with the same BlocProvider used in the GoRoute.
+///     builder: (_) => BlocProvider(
+///       create: (_) => sl<AccountingBloc>(),
+///       child: const AccountingHomePage(),
+///     ),
 ///   ),
 ///   NovaDrawerPage(
 ///     id: 'settings',
 ///     route: '/settings',
-///     builder: (_) => const SettingsPage(),
+///     builder: (_) => const SettingsPage(),  // no bloc needed — plain widget
 ///     keepAlive: false,
 ///   ),
 /// ];

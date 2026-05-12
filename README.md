@@ -156,7 +156,7 @@ Think of `NovaDrawerScaffold` as a smarter `Scaffold`. Drop it in place of `Scaf
 | `appBar` | `PreferredSizeWidget?` | Standard app bar wired into the scaffold. |
 | `miniDrawerItems` / `miniDrawerSections` | `List?` | Items shown in mini mode; defaults to the full drawer's items. |
 | `miniDrawerHeader` / `miniDrawerFooter` | `Widget?` | Optional header/footer for the mini drawer. |
-| `onItemTap` | `void Function(NovaDrawerItem)?` | Central tap handler wired to both full and mini drawer. Falls back to `NovaAppDrawer.onItemTap` if not set. |
+| `onItemTap` | `void Function(NovaDrawerItem)?` | Central tap handler wired to both full and mini drawer. Falls back to `NovaAppDrawer.onItemTap` if not set. When `onNavigate` is also set, use this only for UI state (e.g. updating a page title). Do **not** also navigate here — that causes double navigation. |
 | `onMiniDrawerExpandRequest` | `VoidCallback?` | Called when the mini drawer's expand button is tapped or hover-expand fires. Overrides the default `controller.open()`. |
 
 ### Display modes (set via `NovaDrawerConfig.displayMode`)
@@ -256,7 +256,7 @@ NovaDrawerScaffold
 |---|---|---|---|
 | `id` | `String` | – | **Required.** Must match the `NovaDrawerItem.id` of the corresponding drawer item. |
 | `route` | `String?` | `null` | Optional route path. Provide it so `novaDrawerBodyNavigate` can prevent the external router from also navigating for this page. |
-| `builder` | `WidgetBuilder` | – | **Required.** Builds the page widget. Called lazily — pages the user never visits are never constructed. |
+| `builder` | `WidgetBuilder` | – | **Required.** Builds the page widget. Called lazily. **Must include any `BlocProvider`/`Provider` wrappers the page needs.** Pages are rendered outside the GoRouter route tree, so providers added in `GoRoute.builder` are not available here (see key rule 7). |
 | `keepAlive` | `bool` | `true` | When `true`, the widget subtree stays in the tree while hidden and its state is preserved. When `false`, the subtree is discarded on deactivation and rebuilt fresh on the next visit. |
 
 ### novaDrawerBodyNavigate helper
@@ -275,11 +275,17 @@ Pass the returned callback to `NovaAppDrawer.onNavigate`. It intercepts navigati
 ```dart
 // 1. Declare pages once — use late final so the list is stable across rebuilds.
 late final _pages = [
+  // Pages that need a BLoC must wrap with BlocProvider.
+  // GoRoute.builder is NOT an ancestor here; the bloc must be provided explicitly.
   NovaDrawerPage(
     id: 'settings',
     route: '/settings',
-    builder: (_) => const SettingsPage(),
+    builder: (_) => BlocProvider(
+      create: (_) => sl<SettingsBloc>(),
+      child: const SettingsPage(),
+    ),
   ),
+  // Plain widgets with no providers are fine as-is.
   NovaDrawerPage(
     id: 'profile',
     route: '/profile',
@@ -312,6 +318,93 @@ body: NovaDrawerBodyRouter(
 3. Declare `_pages` as **`late final`**, not inside `build()`. Recreating the list on every rebuild causes `NovaDrawerBodyRouter` to reset all page state.
 4. Call `_drawerController.clearSelection()` in your tab bar's `onTabItemSelected` so the router shows the fallback when the user returns to a tab.
 5. Your persistent bar (`MotionTabBar`, `NavigationBar`, etc.) **must live in `NovaDrawerScaffold.bottomNavigationBar`** — not inside the body. Only the body slot changes; the scaffold shell is fixed.
+6. **Never navigate inside `onItemTap` when `onNavigate` is set.** `novaNavigateForItem` calls `onNavigate` automatically after `onItemTap` returns. If you also call the router inside `onItemTap`, every tap navigates twice — once in your callback and once via `onNavigate`. Use `onItemTap` only for UI state (page title, analytics, etc.).
+
+> **⚠️ Logout and other side-effect-only items**
+>
+> Items that perform a side effect instead of navigating (e.g. logout, clear cache) should have **`route: null`** set on their `NovaDrawerItem`. When `route` is `null`, `novaNavigateForItem` does not call `onNavigate` at all, so your `onItemTap` handler is the only thing that runs — exactly what you want.
+>
+> ```dart
+> // ✅ Correct — omit route so onNavigate is never called for this item.
+> // Handle the side effect entirely in onItemTap.
+> NovaDrawerItem(
+>   id: 'logout',
+>   title: 'Logout',
+>   icon: Icons.logout_outlined,
+>   selectedIcon: Icons.logout,
+>   // no route field
+> )
+>
+> // onItemTap handles it:
+> onItemTap: (item) {
+>   if (item.id == 'logout') {
+>     authBloc.add(LogoutEvent());
+>     GoRouter.of(context).go('/login');
+>   }
+>   // update page title etc.
+> },
+>
+> // ❌ Wrong — route is set to '/logout'.
+> // novaNavigateForItem will also try to push '/logout' via the external
+> // callback, causing double action or a router error.
+> NovaDrawerItem(
+>   id: 'logout',
+>   route: '/logout',  // ← omit this for side-effect-only items
+>   ...
+> )
+> ```
+
+7. **Supply your own `BlocProvider` / `Provider` wrappers inside each `builder`.** `NovaDrawerBodyRouter` renders pages *outside* the GoRouter route tree. Providers registered in `GoRoute.builder` are **not** ancestor widgets of the builder passed to `NovaDrawerPage`. Any page that calls `context.read<MyBloc>()` (or uses `BlocBuilder`) will throw a `ProviderNotFoundException` unless the bloc is also provided directly in the `NovaDrawerPage.builder`.
+
+> **⚠️ ProviderNotFoundException with flutter_bloc / get_it**
+>
+> This is the most common error when first adopting `NovaDrawerBodyRouter`.
+> The fix is always the same: copy the `BlocProvider` (or `MultiBlocProvider`)
+> wrapper from your `GoRoute.builder` into your `NovaDrawerPage.builder`.
+>
+> ```dart
+> // In your GoRouter setup — bloc injected here:
+> GoRoute(
+>   path: '/admin/accessibility',
+>   builder: (context, state) => BlocProvider(
+>     create: (_) => sl<AccessibilityBloc>(),
+>     child: const AccessibilityListPage(),
+>   ),
+> ),
+>
+> // ❌ WRONG — missing BlocProvider.
+> // AccessibilityListPage calls context.read<AccessibilityBloc>() in initState
+> // but there is no BlocProvider ancestor → ProviderNotFoundException.
+> NovaDrawerPage(
+>   id: 'accessibility',
+>   route: AppRouter.accessibilityPage,
+>   builder: (context) => const AccessibilityListPage(),
+> )
+>
+> // ✅ CORRECT — provide the bloc inside the NovaDrawerPage builder,
+> // exactly as the GoRoute does.
+> NovaDrawerPage(
+>   id: 'accessibility',
+>   route: AppRouter.accessibilityPage,
+>   builder: (context) => BlocProvider(
+>     create: (_) => sl<AccessibilityBloc>(),
+>     child: const AccessibilityListPage(),
+>   ),
+> )
+>
+> // ✅ Multiple blocs — use MultiBlocProvider.
+> NovaDrawerPage(
+>   id: 'users',
+>   route: AppRouter.usersPage,
+>   builder: (context) => MultiBlocProvider(
+>     providers: [
+>       BlocProvider(create: (_) => sl<UserBloc>()),
+>       BlocProvider(create: (_) => sl<UserPermissionBloc>()),
+>     ],
+>     child: const UserListPage(),
+>   ),
+> )
+> ```
 
 ---
 
@@ -345,7 +438,7 @@ Think of `NovaAppDrawer` as the drawer's *view layer*, and `NovaDrawerController
 | `items` | `List<NovaDrawerItem>` | Flat list of items (used when no sections are provided). |
 | `header` | `Widget?` | Any widget placed at the top of the drawer — typically a `NovaDrawerHeader`. |
 | `footer` | `Widget?` | Any widget pinned to the bottom — typically an `NovaDrawerAppStatusWidget`. |
-| `onItemTap` | `void Function(NovaDrawerItem)?` | Called when any item is tapped. Use for navigation. |
+| `onItemTap` | `void Function(NovaDrawerItem)?` | Called when any item is tapped. When `onNavigate` is **not** set, use this to navigate (`Navigator.pushNamed`, `GoRouter`, etc.). When `onNavigate` **is** set (e.g. via `novaDrawerBodyNavigate`), use this only for UI callbacks (updating a page title, firing analytics). Navigating here **and** in `onNavigate` causes every tap to navigate twice. |
 | `theme` | `NovaDrawerTheme?` | Visual overrides for colors, text styles, dimensions. |
 | `config` | `NovaDrawerConfig` | Behavior: animation type, gesture config, accessibility, etc. |
 | `width` | `double?` | Override the responsive width calculation. |
