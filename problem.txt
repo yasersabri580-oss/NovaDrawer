@@ -1,0 +1,992 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:accounting_helal_front/core/di/di.dart';
+import 'package:accounting_helal_front/core/shared/page/not_found_page.dart';
+import 'package:accounting_helal_front/modules/auth/presentation/pages/login_page.dart';
+import 'package:accounting_helal_front/modules/auth/presentation/pages/welcome_page.dart';
+import 'package:accounting_helal_front/modules/dashboard/presentation/pages/dashboard.dart';
+import 'package:accounting_helal_front/modules/user_permission/presentation/bloc/user_permission_bloc.dart';
+import 'package:accounting_helal_front/modules/user_permission/presentation/bloc/user_permission_event.dart';
+import 'package:accounting_helal_front/modules/user_permission/presentation/pages/user_permission_list_page.dart';
+import 'package:accounting_helal_front/modules/user/presentation/bloc/user_bloc.dart';
+import 'package:accounting_helal_front/modules/user/presentation/pages/user_list_page.dart';
+import 'package:accounting_helal_front/modules/accessibility/presentation/bloc/accessibility_bloc.dart';
+import 'package:accounting_helal_front/modules/accessibility/presentation/pages/accessibility_list_page.dart';
+import 'package:accounting_helal_front/modules/company/presentation/bloc/company_bloc.dart';
+import 'package:accounting_helal_front/modules/company/presentation/pages/company_list_page.dart';
+import 'package:accounting_helal_front/modules/shobe/presentation/bloc/shobe_bloc.dart';
+import 'package:accounting_helal_front/modules/shobe/presentation/pages/shobe_list_page.dart';
+import 'package:accounting_helal_front/modules/karbar/presentation/bloc/karbar_bloc.dart';
+import 'package:accounting_helal_front/modules/karbar/presentation/pages/karbar_list_page.dart';
+import 'package:accounting_helal_front/modules/kala/presentation/bloc/kala_bloc.dart';
+import 'package:accounting_helal_front/modules/kala/presentation/pages/kala_list_page.dart';
+import 'package:accounting_helal_front/modules/product_group/presentation/bloc/product_group_bloc.dart';
+import 'package:accounting_helal_front/modules/product_group/presentation/pages/product_group_list_page.dart';
+import 'package:accounting_helal_front/modules/vahed_kala/presentation/bloc/vahed_kala_bloc.dart';
+import 'package:accounting_helal_front/modules/vahed_kala/presentation/pages/vahed_kala_list_page.dart';
+import 'package:accounting_helal_front/modules/kala_serial/presentation/bloc/kala_serial_bloc.dart';
+import 'package:accounting_helal_front/modules/kala_serial/presentation/pages/kala_serial_list_page.dart';
+import 'package:accounting_helal_front/modules/barcode/presentation/bloc/barcode_bloc.dart';
+import 'package:accounting_helal_front/modules/barcode/presentation/pages/barcode_list_page.dart';
+import 'package:accounting_helal_front/modules/tax/presentation/bloc/tax_bloc.dart';
+import 'package:accounting_helal_front/modules/tax/presentation/pages/tax_list_page.dart';
+import 'package:accounting_helal_front/modules/khadamat/presentation/bloc/khadamat_bloc.dart';
+import 'package:accounting_helal_front/modules/khadamat/presentation/pages/khadamat_list_page.dart';
+import 'package:accounting_helal_front/modules/moshtari/presentation/bloc/moshtari_bloc.dart';
+import 'package:accounting_helal_front/modules/moshtari/presentation/pages/moshtari_list_page.dart';
+import 'package:accounting_helal_front/modules/moshtari_group/presentation/bloc/moshtari_group_bloc.dart';
+import 'package:accounting_helal_front/modules/moshtari_group/presentation/pages/moshtari_group_list_page.dart';
+import 'package:accounting_helal_front/modules/warehouse/presentation/bloc/warehouse_bloc.dart';
+import 'package:accounting_helal_front/modules/warehouse/presentation/pages/warehouse_list_page.dart';
+import 'package:accounting_helal_front/modules/warehouse_stock/presentation/bloc/warehouse_stock_bloc.dart';
+import 'package:accounting_helal_front/modules/warehouse_stock/presentation/pages/warehouse_stock_list_page.dart';
+import 'package:accounting_helal_front/modules/warehouse_receipt/presentation/bloc/warehouse_receipt_bloc.dart';
+import 'package:accounting_helal_front/modules/warehouse_receipt/presentation/pages/warehouse_receipt_list_page.dart';
+import 'package:accounting_helal_front/modules/warehouse_dispatch/presentation/bloc/warehouse_dispatch_bloc.dart';
+import 'package:accounting_helal_front/modules/warehouse_dispatch/presentation/pages/warehouse_dispatch_list_page.dart';
+import 'package:accounting_helal_front/modules/warehouse_transfer/presentation/bloc/warehouse_transfer_bloc.dart';
+import 'package:accounting_helal_front/modules/warehouse_transfer/presentation/pages/warehouse_transfer_list_page.dart';
+import 'package:accounting_helal_front/modules/warehouse_return/presentation/bloc/warehouse_return_bloc.dart';
+import 'package:accounting_helal_front/modules/warehouse_return/presentation/pages/warehouse_return_list_page.dart';
+import 'package:accounting_helal_front/modules/warehouse_damage/presentation/bloc/warehouse_damage_bloc.dart';
+import 'package:accounting_helal_front/modules/warehouse_damage/presentation/pages/warehouse_damage_list_page.dart';
+import 'package:transit_kit/transit_kit.dart';
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+class AppRouter {
+  static const String root = '/dashboard';
+  static const String welcomePage = '/welcome_page';
+  static const String userRegistrationPage = '/user_registration_page';
+  static const String signUpPage = '/sign_up_page';
+  static const String loginPage = '/login_page';
+  static const String aboutPage = '/about';
+
+  // Settings
+  static const String companyPage = '/settings/company';
+  static const String shobePage = '/settings/shobe';
+  static const String karbarPage = '/settings/karbar';
+
+  // Products
+  static const String kalaPage = '/products/kala';
+  static const String productGroupPage = '/products/product-group';
+  static const String vahedKalaPage = '/products/vahed-kala';
+  static const String kalaSerialPage = '/products/kala-serial';
+  static const String barcodePage = '/products/barcode';
+  static const String taxPage = '/products/tax';
+  static const String khadamatPage = '/products/khadamat';
+
+  // Customers
+  static const String moshtariPage = '/customers/moshtari';
+  static const String moshtariGroupPage = '/customers/moshtari-group';
+
+  // Warehouse
+  static const String warehousePage = '/warehouse/list';
+  static const String warehouseStockPage = '/warehouse/stock';
+  static const String warehouseReceiptPage = '/warehouse/receipt';
+  static const String warehouseDispatchPage = '/warehouse/dispatch';
+  static const String warehouseTransferPage = '/warehouse/transfer';
+  static const String warehouseReturnPage = '/warehouse/return';
+  static const String warehouseDamagePage = '/warehouse/damage';
+
+  // Administration
+  static const String usersPage = '/admin/users';
+  static const String userPermissionsPage = '/admin/user-permissions';
+  static const String accessibilityPage = '/admin/accessibility';
+
+
+  static bool entered = false;
+
+  final router = GoRouter(
+    navigatorKey: navigatorKey,
+    errorBuilder: (context, state) => NotFoundPage(),
+    initialLocation: loginPage,
+    routes: [
+      // ── Dashboard ──────────────────────────────────────────────────────
+      GoRoute(
+        path: root,
+        pageBuilder: (context, state) => TransitPage(
+          child: BlocProvider(
+            create: (_) => sl<UserPermissionBloc>()..add(GetAllUserPermissionsEvent()),
+            child: const Dashboard(),
+          ),
+          key: state.pageKey,
+          type: TransitType.fade,
+        ),
+      ),
+
+      // ── Auth ──────────────────────────────────────────────────────────
+      GoRoute(path: welcomePage, builder: (context, state) => WelcomePage()),
+      GoRoute(path: loginPage, builder: (context, state) => LoginPage()),
+
+      // ── Settings ──────────────────────────────────────────────────────
+      GoRoute(
+        path: companyPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<CompanyBloc>(),
+          child: const CompanyListPage(),
+        ),
+      ),
+      GoRoute(
+        path: shobePage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<ShobeBloc>(),
+          child: const ShobeListPage(),
+        ),
+      ),
+      GoRoute(
+        path: karbarPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<KarbarBloc>(),
+          child: const KarbarListPage(),
+        ),
+      ),
+
+      // ── Products ──────────────────────────────────────────────────────
+      GoRoute(
+        path: kalaPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<KalaBloc>(),
+          child: const KalaListPage(),
+        ),
+      ),
+      GoRoute(
+        path: productGroupPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<ProductGroupBloc>(),
+          child: const ProductGroupListPage(),
+        ),
+      ),
+      GoRoute(
+        path: vahedKalaPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<VahedKalaBloc>(),
+          child: const VahedKalaListPage(),
+        ),
+      ),
+      GoRoute(
+        path: kalaSerialPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<KalaSerialBloc>(),
+          child: const KalaSerialListPage(),
+        ),
+      ),
+      GoRoute(
+        path: barcodePage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<BarcodeBloc>(),
+          child: const BarcodeListPage(),
+        ),
+      ),
+      GoRoute(
+        path: taxPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<TaxBloc>(),
+          child: const TaxListPage(),
+        ),
+      ),
+      GoRoute(
+        path: khadamatPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<KhadamatBloc>(),
+          child: const KhadamatListPage(),
+        ),
+      ),
+
+      // ── Customers ─────────────────────────────────────────────────────
+      GoRoute(
+        path: moshtariPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<MoshtariBloc>(),
+          child: const MoshtariListPage(),
+        ),
+      ),
+      GoRoute(
+        path: moshtariGroupPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<MoshtariGroupBloc>(),
+          child: const MoshtariGroupListPage(),
+        ),
+      ),
+
+      // ── Warehouse ─────────────────────────────────────────────────────
+      GoRoute(
+        path: warehousePage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<WarehouseBloc>(),
+          child: const WarehouseListPage(),
+        ),
+      ),
+      GoRoute(
+        path: warehouseStockPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<WarehouseStockBloc>(),
+          child: const WarehouseStockListPage(),
+        ),
+      ),
+      GoRoute(
+        path: warehouseReceiptPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<WarehouseReceiptBloc>(),
+          child: const WarehouseReceiptListPage(),
+        ),
+      ),
+      GoRoute(
+        path: warehouseDispatchPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<WarehouseDispatchBloc>(),
+          child: const WarehouseDispatchListPage(),
+        ),
+      ),
+      GoRoute(
+        path: warehouseTransferPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<WarehouseTransferBloc>(),
+          child: const WarehouseTransferListPage(),
+        ),
+      ),
+      GoRoute(
+        path: warehouseReturnPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<WarehouseReturnBloc>(),
+          child: const WarehouseReturnListPage(),
+        ),
+      ),
+      GoRoute(
+        path: warehouseDamagePage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<WarehouseDamageBloc>(),
+          child: const WarehouseDamageListPage(),
+        ),
+      ),
+
+      // ── Administration ────────────────────────────────────────────────
+      GoRoute(
+        path: usersPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<UserBloc>(),
+          child: const UserListPage(),
+        ),
+      ),
+      GoRoute(
+        path: userPermissionsPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<UserPermissionBloc>(),
+          child: const UserPermissionListPage(),
+        ),
+      ),
+      GoRoute(
+        path: accessibilityPage,
+        builder: (context, state) => BlocProvider(
+          create: (_) => sl<AccessibilityBloc>(),
+          child: const AccessibilityListPage(),
+        ),
+      ),
+    ],
+  );
+}
+import 'dart:async';
+
+import 'package:accounting_helal_front/core/responsive/responsive_helper.dart';
+import 'package:accounting_helal_front/modules/accessibility/presentation/pages/accessibility_list_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:accounting_helal_front/core/router/app_router.dart';
+
+import 'package:accounting_helal_front/core/toast/toast_enums.dart';
+import 'package:accounting_helal_front/l10n/app_localizations.dart';
+import 'package:accounting_helal_front/modules/auth/presentation/bloc/auth_bloc.dart';
+import 'package:accounting_helal_front/modules/auth/presentation/bloc/auth_event.dart';
+import 'package:accounting_helal_front/modules/auth/presentation/bloc/auth_state.dart';
+import 'package:accounting_helal_front/modules/user_permission/data/model/user_permission_model.dart';
+import 'package:accounting_helal_front/modules/user_permission/presentation/bloc/user_permission_bloc.dart';
+import 'package:accounting_helal_front/modules/user_permission/presentation/bloc/user_permission_state.dart';
+
+import 'package:accounting_helal_front/core/widgets/nova_bottom_navigation_bar.dart';
+import 'package:accounting_helal_front/theme_builder/theme/theme.dart';
+import 'package:nova_drawer/nova_drawer.dart';
+import 'package:toast_kit/toast_kit.dart';
+
+class Dashboard extends StatefulWidget {
+  const Dashboard({super.key});
+
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
+  late NovaDrawerController _drawerController;
+  String _selectedPageTitle = '';
+  final NovaHeaderVariant _headerVariant = NovaHeaderVariant.classic;
+  int _tabIndex = 0;
+  late TabController _tabController;
+  bool _initialized = false;
+  @override
+  void initState() {
+    super.initState();
+    //if was desktop opened with a tab index, keep it when coming back from another page
+
+    _tabController = TabController(length: 5, vsync: this);
+    init();
+  }
+
+  Future<void> init() async {}
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final l10n = AppLocalizations.of(context);
+    if (_selectedPageTitle.isEmpty) {
+      _selectedPageTitle = l10n?.home ?? 'Home';
+    }
+
+    if (_initialized) return;
+
+    final isDesktop = ResponsiveHelper.of(context).isDesktop;
+
+    if (isDesktop) {
+      _tabIndex = 0;
+      _drawerController = NovaDrawerController(initiallyOpen: true);
+    } else {
+      _drawerController = NovaDrawerController(initiallyOpen: false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _drawerController.dispose();
+    _tabController.dispose();
+    _backTimer?.cancel();
+    super.dispose();
+  }
+
+  bool canPop = false;
+
+  Timer? _backTimer;
+
+  Future<void> _handleBackPressed() async {
+    // first press
+    if (!canPop) {
+      setState(() {
+        canPop = true;
+      });
+
+      _backTimer?.cancel();
+
+      _backTimer = Timer(const Duration(seconds: 2), () {
+        if (mounted) {
+          setState(() {
+            canPop = false;
+          });
+        }
+      });
+
+      return;
+    }
+    ToastKit.channel(AppToastChannel.app.name).show(
+      ToastEvent.info(
+        message: "آیا میخواهید از برنامه خارج شوید؟",
+        dismissible: false,
+        actions: [
+          ToastAction(
+            label: "بله",
+            onPressedWithController: (controller) {
+              controller.dismiss();
+              SystemNavigator.pop();
+            },
+          ),
+          ToastAction(
+            label: "خیر",
+            onPressedWithController: (controller) {
+              controller.dismiss();
+              setState(() {
+                canPop = false;
+              });
+            },
+          ),
+        ],
+        customVariantName: AppToastVariant.appInfo.name,
+      ),
+    );
+  }
+
+  // ── Drawer sections ──────────────────────────────────────────────────
+
+  List<NovaDrawerSectionData> _buildSections(
+    AppLocalizations? l10n,
+    UserPermissionModel? perm,
+  ) {
+    final sections = <NovaDrawerSectionData>[];
+
+    // ── Settings ──────────────────────────────────────────────────────
+    if (perm == null ||
+        perm.canEditCompanyInfo ||
+        perm.canManageBranches ||
+        perm.canManageKarbars) {
+      final items = <NovaDrawerItem>[];
+      if (perm == null || perm.canEditCompanyInfo) {
+        items.add(
+          NovaDrawerItem(
+            id: 'company',
+            title: l10n?.companyName ?? 'Company',
+            icon: Icons.business_outlined,
+            selectedIcon: Icons.business,
+            route: AppRouter.companyPage,
+          ),
+        );
+      }
+      if (perm == null || perm.canManageBranches) {
+        items.add(
+          NovaDrawerItem(
+            id: 'shobe',
+            title: 'Branches',
+            icon: Icons.account_tree_outlined,
+            selectedIcon: Icons.account_tree,
+            route: AppRouter.shobePage,
+          ),
+        );
+      }
+      if (perm == null || perm.canManageKarbars) {
+        items.add(
+          NovaDrawerItem(
+            id: 'karbar',
+            title: l10n?.employee ?? 'Employees',
+            icon: Icons.badge_outlined,
+            selectedIcon: Icons.badge,
+            route: AppRouter.karbarPage,
+          ),
+        );
+      }
+      if (items.isNotEmpty) {
+        sections.add(
+          NovaDrawerSectionData(
+            initiallyExpanded: false,
+            id: 'settings_section',
+            title: l10n?.settings ?? 'Settings',
+            icon: Icons.settings_outlined,
+            items: items,
+          ),
+        );
+      }
+    }
+
+    // ── Products ──────────────────────────────────────────────────────
+    if (perm == null || perm.canManageProducts) {
+      sections.add(
+        NovaDrawerSectionData(
+          initiallyExpanded: false,
+          id: 'products_section',
+          title: l10n?.products ?? 'Products',
+          icon: Icons.inventory_2_outlined,
+          items: [
+            NovaDrawerItem(
+              id: 'kala',
+              title: l10n?.product ?? 'Product',
+              icon: Icons.inventory_2_outlined,
+              selectedIcon: Icons.inventory_2,
+              route: AppRouter.kalaPage,
+            ),
+            NovaDrawerItem(
+              id: 'product_group',
+              title: l10n?.categories ?? 'Product Groups',
+              icon: Icons.category_outlined,
+              selectedIcon: Icons.category,
+              route: AppRouter.productGroupPage,
+            ),
+            NovaDrawerItem(
+              id: 'vahed_kala',
+              title: l10n?.units ?? 'Units',
+              icon: Icons.straighten_outlined,
+              selectedIcon: Icons.straighten,
+              route: AppRouter.vahedKalaPage,
+            ),
+            NovaDrawerItem(
+              id: 'kala_serial',
+              title: 'Product Serials',
+              icon: Icons.qr_code_outlined,
+              selectedIcon: Icons.qr_code,
+              route: AppRouter.kalaSerialPage,
+            ),
+            NovaDrawerItem(
+              id: 'barcode',
+              title: 'Barcode',
+              icon: Icons.barcode_reader,
+              selectedIcon: Icons.barcode_reader,
+              route: AppRouter.barcodePage,
+            ),
+            NovaDrawerItem(
+              id: 'tax',
+              title: 'Tax',
+              icon: Icons.percent_outlined,
+              selectedIcon: Icons.percent,
+              route: AppRouter.taxPage,
+            ),
+            NovaDrawerItem(
+              id: 'khadamat',
+              title: 'Services',
+              icon: Icons.miscellaneous_services_outlined,
+              selectedIcon: Icons.miscellaneous_services,
+              route: AppRouter.khadamatPage,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // ── Customers ─────────────────────────────────────────────────────
+    if (perm == null || perm.canManageCustomers) {
+      sections.add(
+        NovaDrawerSectionData(
+          initiallyExpanded: false,
+          id: 'customers_section',
+          title: l10n?.customers ?? 'Customers',
+          icon: Icons.people_outlined,
+          items: [
+            NovaDrawerItem(
+              id: 'moshtari',
+              title: l10n?.customer ?? 'Customer',
+              icon: Icons.person_outlined,
+              selectedIcon: Icons.person,
+              route: AppRouter.moshtariPage,
+            ),
+            NovaDrawerItem(
+              id: 'moshtari_group',
+              title: l10n?.customerTypes ?? 'Customer Groups',
+              icon: Icons.group_outlined,
+              selectedIcon: Icons.group,
+              route: AppRouter.moshtariGroupPage,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // ── Warehouse ─────────────────────────────────────────────────────
+    if (perm == null || perm.canManageWarehouse) {
+      sections.add(
+        NovaDrawerSectionData(
+          initiallyExpanded: false,
+          id: 'warehouse_section',
+          title: l10n?.inventory ?? 'Warehouse',
+          icon: Icons.warehouse_outlined,
+          items: [
+            NovaDrawerItem(
+              id: 'warehouse',
+              title: 'Warehouses',
+              icon: Icons.warehouse_outlined,
+              selectedIcon: Icons.warehouse,
+              route: AppRouter.warehousePage,
+            ),
+            NovaDrawerItem(
+              id: 'warehouse_stock',
+              title: l10n?.lowStock ?? 'Stock',
+              icon: Icons.inventory_outlined,
+              selectedIcon: Icons.inventory,
+              route: AppRouter.warehouseStockPage,
+            ),
+            NovaDrawerItem(
+              id: 'warehouse_receipt',
+              title: l10n?.purchaseInvoice ?? 'Receipt',
+              icon: Icons.receipt_outlined,
+              selectedIcon: Icons.receipt,
+              route: AppRouter.warehouseReceiptPage,
+            ),
+            NovaDrawerItem(
+              id: 'warehouse_dispatch',
+              title: l10n?.saleInvoice ?? 'Dispatch',
+              icon: Icons.local_shipping_outlined,
+              selectedIcon: Icons.local_shipping,
+              route: AppRouter.warehouseDispatchPage,
+            ),
+            NovaDrawerItem(
+              id: 'warehouse_transfer',
+              title: 'Transfer',
+              icon: Icons.swap_horiz_outlined,
+              selectedIcon: Icons.swap_horiz,
+              route: AppRouter.warehouseTransferPage,
+            ),
+            NovaDrawerItem(
+              id: 'warehouse_return',
+              title: 'Return',
+              icon: Icons.keyboard_return_outlined,
+              selectedIcon: Icons.keyboard_return,
+              route: AppRouter.warehouseReturnPage,
+            ),
+            NovaDrawerItem(
+              id: 'warehouse_damage',
+              title: 'Damage',
+              icon: Icons.broken_image_outlined,
+              selectedIcon: Icons.broken_image,
+              route: AppRouter.warehouseDamagePage,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // ── Administration ────────────────────────────────────────────────
+    // Show only when user has no restriction record (admin) or has full access
+    if (perm == null) {
+      sections.add(
+        NovaDrawerSectionData(
+          initiallyExpanded: false,
+          id: 'admin_section',
+          title: 'Administration',
+          icon: Icons.admin_panel_settings_outlined,
+          items: [
+            NovaDrawerItem(
+              id: 'users',
+              title: l10n?.users ?? 'Users',
+              icon: Icons.manage_accounts_outlined,
+              selectedIcon: Icons.manage_accounts,
+              route: AppRouter.usersPage,
+            ),
+            NovaDrawerItem(
+              id: 'user_permissions',
+              title: 'User Permissions',
+              icon: Icons.lock_outlined,
+              selectedIcon: Icons.lock,
+              route: AppRouter.userPermissionsPage,
+            ),
+            NovaDrawerItem(
+              id: 'accessibility',
+              title: 'Accessibility',
+              icon: Icons.accessibility_outlined,
+              selectedIcon: Icons.accessibility,
+              route: AppRouter.accessibilityPage,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return sections;
+  }
+
+  final pages = <NovaDrawerPage>[
+    NovaDrawerPage(
+      keepAlive: true,
+      route: AppRouter.accessibilityPage,
+      id: "accessibility",
+      builder: (context) => AccessibilityListPage(),
+    ),
+  ];
+
+  void _onItemTap(NovaDrawerItem item) {
+    setState(() {
+      _selectedPageTitle = item.title;
+    });
+    switch (item.id) {
+      case 'logout':
+        context.read<AuthBloc>().add(LogoutEvent());
+        GoRouter.of(context).go(AppRouter.loginPage);
+        break;
+      case 'about':
+        GoRouter.of(context).go(AppRouter.aboutPage);
+        break;
+      default:
+        if (item.route != null && item.route!.isNotEmpty) {
+          GoRouter.of(context).push(item.route!);
+        }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final drawerTheme =
+        context.read<ThemeCubit>().state.variant == ThemeVariant.dark
+        ? NovaDrawerTheme.dark()
+        : NovaDrawerTheme.light();
+
+    final config = NovaDrawerConfig(
+      enableAutoScrollToSelected: true,
+      autoScrollDuration: const Duration(milliseconds: 200),
+      autoScrollCurve: Curves.easeInOut,
+      animationType: NovaDrawerAnimationType.slide,
+      displayMode: NovaDrawerDisplayMode.auto,
+      showMiniOnCollapse: true,
+      gestureConfig: const NovaDrawerGestureConfig(
+        enableSwipeToOpen: true,
+        enableSwipeToClose: true,
+      ),
+      animationConfig: const NovaDrawerAnimationConfig(
+        duration: Duration(milliseconds: 350),
+        curve: Curves.easeOutCubic,
+        enableStaggeredAnimations: true,
+      ),
+    );
+
+    final headerConfig = NovaHeaderConfig(
+      variant: _headerVariant,
+      profile: NovaHeaderUserProfile(
+        name: 'accounting_helal_front User',
+        email: 'user@accounting_helal_front.me',
+        status: NovaUserStatus.online,
+        notificationCount: 0,
+      ),
+      showCloseButton: true,
+      showPinButton: false,
+      showStatusIndicator: true,
+      enableCollapseExpand: true,
+      gradientColors: const [
+        Color(0xFF1565C0),
+        Color(0xFF0288D1),
+        Color(0xFF00ACC1),
+      ],
+      actions: [
+        NovaHeaderAction(
+          id: 'notifications',
+          icon: Icons.notifications_outlined,
+          tooltip: l10n?.notifications ?? 'Notifications',
+          onTap: () {},
+        ),
+        if (ResponsiveHelper.of(context).isDesktop)
+          NovaHeaderAction(
+            customWidget: BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (context, themeState) {
+                final isDark = themeState.variant == ThemeVariant.dark;
+                return IconButton(
+                  icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+                  onPressed: () => context.read<ThemeCubit>().toggle(),
+                  tooltip: isDark ? 'Light Mode' : 'Dark Mode',
+                );
+              },
+            ),
+            id: 'theme',
+            icon: Icons.abc,
+          ),
+      ],
+      onEditProfile: () {},
+      onSwitchAccount: () {},
+    );
+
+    // Tab labels built from l10n so they are always localised.
+    final tabLabels = [
+      l10n?.shopping ?? 'Shopping',
+      l10n?.debt ?? 'Debt',
+      l10n?.balanceSheet ?? 'Balance Sheet',
+      l10n?.inventory ?? 'Inventory',
+      l10n?.users ?? 'Users',
+    ];
+
+    return BlocBuilder<UserPermissionBloc, UserPermissionState>(
+      builder: (context, permState) {
+        UserPermissionModel? userPerm;
+        if (permState is UserPermissionListLoadedState) {
+          final authState = context.read<AuthBloc>().state;
+          int? currentUserId;
+          if (authState is AuthLoginSuccessState) {
+            currentUserId = authState.data.userId;
+          }
+          try {
+            userPerm = permState.items.firstWhere(
+              (p) => p.userId == currentUserId,
+            );
+          } on StateError {
+            userPerm = null;
+          }
+        } else {
+          userPerm = null;
+        }
+
+        final sections = _buildSections(l10n, userPerm);
+
+        final drawer = NovaAppDrawer(
+          onNavigate: novaDrawerBodyNavigate(
+            pages: pages,
+            external: (context, route) => GoRouter.of(context).push(route),
+          ),
+          controller: _drawerController,
+          entries: [
+            NovaDrawerItemEntry(
+              NovaDrawerItem(
+                id: 'home',
+                title: l10n?.home ?? 'Home',
+                icon: Icons.home_outlined,
+                selectedIcon: Icons.home,
+                route: '/home',
+              ),
+            ),
+
+            ...sections.map((s) => NovaDrawerSectionEntry(s)),
+
+            NovaDrawerItemEntry(
+              NovaDrawerItem(
+                id: 'logout',
+                title: l10n?.logout ?? 'Logout',
+                icon: Icons.logout_outlined,
+                selectedIcon: Icons.logout,
+                route: '/logout',
+              ),
+            ),
+
+            NovaDrawerItemEntry(
+              NovaDrawerItem(
+                id: 'about',
+                title:
+                    l10n?.aboutaccounting_helal_front ??
+                    'About accounting_helal_front',
+                icon: Icons.info_outline,
+                selectedIcon: Icons.info,
+                route: '/about',
+              ),
+            ),
+          ],
+          sections: sections,
+          header: NovaDrawerHeader(config: headerConfig),
+          footer: _buildDrawerFooter(l10n),
+          onItemTap: _onItemTap,
+          theme: drawerTheme,
+          config: config,
+        );
+
+        return PopScope(
+          canPop: canPop,
+          onPopInvokedWithResult: (didPop, result) async {
+            if (didPop) return;
+            await _handleBackPressed();
+          },
+          child: NovaDrawerScaffold(
+            bottomNavigationBar: !ResponsiveHelper.of(context).isDesktop
+                ? NovaBottomNavigationBar(
+                    labels: tabLabels,
+                    icons: const [
+                      Icons.shopping_cart_outlined,
+                      Icons.account_balance_wallet_outlined,
+                      Icons.grid_view_outlined,
+                      Icons.inventory_2_outlined,
+                      Icons.people_outlined,
+                    ],
+                    initialSelectedTab: tabLabels[_tabIndex],
+                    tabSize: 50,
+                    tabBarHeight: 65,
+                    textStyle: TextStyle(
+                      fontSize: 11,
+                      color: colorScheme.onPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    tabIconColor: colorScheme.onSurfaceVariant,
+                    tabSelectedColor: colorScheme.primary,
+                    onTabItemSelected: (int value) {
+                      _drawerController.selectItem('');
+                      setState(() {
+                        _tabIndex = value;
+                      });
+                    },
+                  )
+                : null,
+
+            controller: _drawerController,
+            drawer: drawer,
+            theme: drawerTheme,
+            config: config,
+            onItemTap: _onItemTap,
+            miniDrawerHeader: Icon(
+              Icons.account_balance_outlined,
+              color: colorScheme.primary,
+            ),
+            appBar: !ResponsiveHelper.of(context).isDesktop
+                ? AppBar(
+                    actions: [
+                      BlocBuilder<ThemeCubit, ThemeState>(
+                        builder: (context, themeState) {
+                          final isDark =
+                              themeState.variant == ThemeVariant.dark;
+                          return IconButton(
+                            icon: Icon(
+                              isDark ? Icons.light_mode : Icons.dark_mode,
+                            ),
+                            onPressed: () =>
+                                context.read<ThemeCubit>().toggle(),
+                            tooltip: isDark ? 'Light Mode' : 'Dark Mode',
+                          );
+                        },
+                      ),
+                    ],
+                  )
+                : null,
+            body: NovaDrawerBodyRouter(
+              pages: pages,
+              controller: _drawerController,
+              fallback: ResponsiveHelper.of(context).isDesktop
+                  ? null
+                  : IndexedStack(
+                      index: _tabIndex,
+                      children: [
+                        _TabPlaceholder(
+                          icon: Icons.shopping_cart_outlined,
+                          label: tabLabels[0],
+                        ),
+                        _TabPlaceholder(
+                          icon: Icons.account_balance_wallet_outlined,
+                          label: tabLabels[1],
+                        ),
+                        _TabPlaceholder(
+                          icon: Icons.grid_view_outlined,
+                          label: tabLabels[2],
+                        ),
+                        _TabPlaceholder(
+                          icon: Icons.inventory_2_outlined,
+                          label: tabLabels[3],
+                        ),
+                        _TabPlaceholder(
+                          icon: Icons.people_outlined,
+                          label: tabLabels[4],
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDrawerFooter(AppLocalizations? l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Divider(height: 1),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '${l10n?.appVersion ?? 'App Version'} 1.0.0',
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Placeholder widget shown inside each tab until real pages are implemented.
+class _TabPlaceholder extends StatelessWidget {
+  const _TabPlaceholder({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 64, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(height: 16),
+          Text(label, style: Theme.of(context).textTheme.headlineSmall),
+        ],
+      ),
+    );
+  }
+}
