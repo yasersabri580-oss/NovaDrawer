@@ -34,6 +34,17 @@ import '../models/drawer_item.dart';
 /// Returns `null` when [pages] is empty and [external] is `null` (i.e.
 /// nothing to do), to avoid allocating an empty closure.
 ///
+/// **Do NOT also navigate inside [NovaAppDrawer.onItemTap] when this helper
+/// is used.**  After `onItemTap` returns, the drawer calls `novaNavigateForItem`
+/// which invokes the callback returned here.  Navigating in both places causes
+/// every tap to navigate twice.  Use `onItemTap` only for UI-state updates
+/// (page title, analytics, etc.).
+///
+/// Items that perform side effects without navigating (e.g. logout) should
+/// have `route: null` on their [NovaDrawerItem].  When `route` is `null`,
+/// `novaNavigateForItem` skips the `onNavigate` call entirely, so the
+/// `onItemTap` handler is the only code that runs for that item.
+///
 /// Example:
 /// ```dart
 /// final _pages = [
@@ -48,6 +59,15 @@ import '../models/drawer_item.dart';
 ///     pages: _pages,
 ///     external: (ctx, route) => GoRouter.of(ctx).go(route),
 ///   ),
+///   // ✅ UI state only — no GoRouter call here.
+///   onItemTap: (item) {
+///     setState(() => _pageTitle = item.title);
+///     // Logout item has route: null, so onNavigate is not called for it.
+///     if (item.id == 'logout') {
+///       authBloc.add(LogoutEvent());
+///       GoRouter.of(context).go('/login');
+///     }
+///   },
 ///   ...
 /// )
 /// ```

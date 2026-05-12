@@ -156,7 +156,7 @@ Think of `NovaDrawerScaffold` as a smarter `Scaffold`. Drop it in place of `Scaf
 | `appBar` | `PreferredSizeWidget?` | Standard app bar wired into the scaffold. |
 | `miniDrawerItems` / `miniDrawerSections` | `List?` | Items shown in mini mode; defaults to the full drawer's items. |
 | `miniDrawerHeader` / `miniDrawerFooter` | `Widget?` | Optional header/footer for the mini drawer. |
-| `onItemTap` | `void Function(NovaDrawerItem)?` | Central tap handler wired to both full and mini drawer. Falls back to `NovaAppDrawer.onItemTap` if not set. |
+| `onItemTap` | `void Function(NovaDrawerItem)?` | Central tap handler wired to both full and mini drawer. Falls back to `NovaAppDrawer.onItemTap` if not set. When `onNavigate` is also set, use this only for UI state (e.g. updating a page title). Do **not** also navigate here — that causes double navigation. |
 | `onMiniDrawerExpandRequest` | `VoidCallback?` | Called when the mini drawer's expand button is tapped or hover-expand fires. Overrides the default `controller.open()`. |
 
 ### Display modes (set via `NovaDrawerConfig.displayMode`)
@@ -312,6 +312,41 @@ body: NovaDrawerBodyRouter(
 3. Declare `_pages` as **`late final`**, not inside `build()`. Recreating the list on every rebuild causes `NovaDrawerBodyRouter` to reset all page state.
 4. Call `_drawerController.clearSelection()` in your tab bar's `onTabItemSelected` so the router shows the fallback when the user returns to a tab.
 5. Your persistent bar (`MotionTabBar`, `NavigationBar`, etc.) **must live in `NovaDrawerScaffold.bottomNavigationBar`** — not inside the body. Only the body slot changes; the scaffold shell is fixed.
+6. **Never navigate inside `onItemTap` when `onNavigate` is set.** `novaNavigateForItem` calls `onNavigate` automatically after `onItemTap` returns. If you also call the router inside `onItemTap`, every tap navigates twice — once in your callback and once via `onNavigate`. Use `onItemTap` only for UI state (page title, analytics, etc.).
+
+> **⚠️ Logout and other side-effect-only items**
+>
+> Items that perform a side effect instead of navigating (e.g. logout, clear cache) should have **`route: null`** set on their `NovaDrawerItem`. When `route` is `null`, `novaNavigateForItem` does not call `onNavigate` at all, so your `onItemTap` handler is the only thing that runs — exactly what you want.
+>
+> ```dart
+> // ✅ Correct — omit route so onNavigate is never called for this item.
+> // Handle the side effect entirely in onItemTap.
+> NovaDrawerItem(
+>   id: 'logout',
+>   title: 'Logout',
+>   icon: Icons.logout_outlined,
+>   selectedIcon: Icons.logout,
+>   // no route field
+> )
+>
+> // onItemTap handles it:
+> onItemTap: (item) {
+>   if (item.id == 'logout') {
+>     authBloc.add(LogoutEvent());
+>     GoRouter.of(context).go('/login');
+>   }
+>   // update page title etc.
+> },
+>
+> // ❌ Wrong — route is set to '/logout'.
+> // novaNavigateForItem will also try to push '/logout' via the external
+> // callback, causing double action or a router error.
+> NovaDrawerItem(
+>   id: 'logout',
+>   route: '/logout',  // ← omit this for side-effect-only items
+>   ...
+> )
+> ```
 
 ---
 
@@ -345,7 +380,7 @@ Think of `NovaAppDrawer` as the drawer's *view layer*, and `NovaDrawerController
 | `items` | `List<NovaDrawerItem>` | Flat list of items (used when no sections are provided). |
 | `header` | `Widget?` | Any widget placed at the top of the drawer — typically a `NovaDrawerHeader`. |
 | `footer` | `Widget?` | Any widget pinned to the bottom — typically an `NovaDrawerAppStatusWidget`. |
-| `onItemTap` | `void Function(NovaDrawerItem)?` | Called when any item is tapped. Use for navigation. |
+| `onItemTap` | `void Function(NovaDrawerItem)?` | Called when any item is tapped. When `onNavigate` is **not** set, use this to navigate (`Navigator.pushNamed`, `GoRouter`, etc.). When `onNavigate` **is** set (e.g. via `novaDrawerBodyNavigate`), use this only for UI callbacks (updating a page title, firing analytics). Navigating here **and** in `onNavigate` causes every tap to navigate twice. |
 | `theme` | `NovaDrawerTheme?` | Visual overrides for colors, text styles, dimensions. |
 | `config` | `NovaDrawerConfig` | Behavior: animation type, gesture config, accessibility, etc. |
 | `width` | `double?` | Override the responsive width calculation. |

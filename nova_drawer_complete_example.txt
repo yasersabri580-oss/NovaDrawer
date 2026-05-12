@@ -499,10 +499,17 @@ class _HomePageState extends State<HomePage> {
         onTap: () => debugPrint('sign out'),
       ),
       onItemTap: (item) {
+        // Use onItemTap for UI-state updates (page title, analytics, etc.).
+        // When onNavigate is also set (e.g. via novaDrawerBodyNavigate),
+        // do NOT also call the router here — that causes double navigation.
+        // Route-based navigation is handled entirely by onNavigate.
+        //
+        // For side-effect-only items like logout, set route: null on the
+        // NovaDrawerItem so novaNavigateForItem skips the onNavigate call.
         debugPrint('Tapped: ${item.id}');
-        if (item.route != null) {
-          // Navigator.pushNamed(context, item.route!);
-        }
+        // Example without onNavigate — navigate here only when onNavigate is
+        // NOT set:
+        // if (item.route != null) Navigator.pushNamed(context, item.route!);
       },
     );
 
