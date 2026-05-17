@@ -179,6 +179,11 @@ class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
         final selectedItem = _findItem(itemId, widget.item.children);
         if (selectedItem != null) {
           controller.selectItem(selectedItem.id);
+          final config = widget.config ?? const NovaDrawerConfig();
+          if (config.closeOnItemTap &&
+              controller.deviceType == NovaDeviceType.mobile) {
+            controller.close();
+          }
           widget.onItemTap?.call(selectedItem);
           selectedItem.onTap?.call();
           novaNavigateForItem(context, selectedItem, widget.onNavigate);
@@ -277,16 +282,16 @@ class _NovaNestedMenuItemState extends State<NovaNestedMenuItem>
         depth: depth,
         onTap: () {
           controller.selectItem(item.id);
-          widget.onItemTap?.call(item);
-          item.onTap?.call();
-          novaNavigateForItem(context, item, widget.onNavigate);
-
-          // Close drawer on mobile
+          // Close drawer before callbacks/navigation to make item tap close
+          // behavior deterministic on mobile overlays.
           final config = widget.config ?? const NovaDrawerConfig();
           if (config.closeOnItemTap &&
               controller.deviceType == NovaDeviceType.mobile) {
             controller.close();
           }
+          widget.onItemTap?.call(item);
+          item.onTap?.call();
+          novaNavigateForItem(context, item, widget.onNavigate);
         },
         theme: widget.theme,
         config: widget.config,
