@@ -558,13 +558,13 @@ class _NovaAppDrawerState extends State<NovaAppDrawer>
         isSelected: isSelected,
         onTap: () {
           controller.selectItem(item.id);
-          widget.onItemTap?.call(item);
-          item.onTap?.call();
-          novaNavigateForItem(context, item, widget.onNavigate);
           if (widget.config.closeOnItemTap &&
               controller.deviceType == NovaDeviceType.mobile) {
             controller.close();
           }
+          widget.onItemTap?.call(item);
+          item.onTap?.call();
+          novaNavigateForItem(context, item, widget.onNavigate);
         },
         theme: widget.theme,
         config: widget.config,

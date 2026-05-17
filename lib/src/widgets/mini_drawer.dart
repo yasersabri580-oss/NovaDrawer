@@ -233,6 +233,10 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
 
   void _handleItemTap(NovaDrawerItem item, NovaDrawerController controller) {
     controller.selectItem(item.id);
+    final config = widget.config ?? const NovaDrawerConfig();
+    if (config.closeOnItemTap && controller.deviceType == NovaDeviceType.mobile) {
+      controller.close();
+    }
     widget.onItemTap?.call(item);
     item.onTap?.call();
     novaNavigateForItem(context, item, widget.onNavigate);
