@@ -238,6 +238,8 @@ class NovaDrawerConfig {
     this.enableAutoScrollToSelected = true,
     this.autoScrollDuration = const Duration(milliseconds: 380),
     this.autoScrollCurve = Curves.easeInOut,
+    this.appBarSurfaceTintColor = Colors.transparent,
+    this.appBarScrolledUnderElevation = 0,
   });
 
   /// How the drawer is displayed on screen.
@@ -322,6 +324,18 @@ class NovaDrawerConfig {
   /// Curve applied to the auto-scroll animation.
   final Curve autoScrollCurve;
 
+  /// Surface tint color applied to all [AppBar]s inside the scaffold.
+  ///
+  /// Defaults to [Colors.transparent] to suppress the Material 3 tint overlay.
+  /// Set to `null` to restore the ambient theme value.
+  final Color? appBarSurfaceTintColor;
+
+  /// Scrolled-under elevation applied to all [AppBar]s inside the scaffold.
+  ///
+  /// Defaults to `0` so the app bar does not gain elevation when the body is
+  /// scrolled beneath it. Set to `null` to restore the ambient theme value.
+  final double? appBarScrolledUnderElevation;
+
   /// Creates a copy of this config with the given fields replaced.
   NovaDrawerConfig copyWith({
     NovaDrawerDisplayMode? displayMode,
@@ -347,6 +361,8 @@ class NovaDrawerConfig {
     bool? enableAutoScrollToSelected,
     Duration? autoScrollDuration,
     Curve? autoScrollCurve,
+    Color? appBarSurfaceTintColor,
+    double? appBarScrolledUnderElevation,
   }) {
     return NovaDrawerConfig(
       displayMode: displayMode ?? this.displayMode,
@@ -374,6 +390,10 @@ class NovaDrawerConfig {
           enableAutoScrollToSelected ?? this.enableAutoScrollToSelected,
       autoScrollDuration: autoScrollDuration ?? this.autoScrollDuration,
       autoScrollCurve: autoScrollCurve ?? this.autoScrollCurve,
+      appBarSurfaceTintColor:
+          appBarSurfaceTintColor ?? this.appBarSurfaceTintColor,
+      appBarScrolledUnderElevation:
+          appBarScrolledUnderElevation ?? this.appBarScrolledUnderElevation,
     );
   }
 }

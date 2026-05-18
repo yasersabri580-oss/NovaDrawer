@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.2.9
+
+- **AppBar tint & elevation defaults**: `NovaDrawerScaffold` now sets
+  `surfaceTintColor: Colors.transparent` and `scrolledUnderElevation: 0` on
+  every `AppBar` inside the scaffold by default, preventing the unwanted
+  Material 3 colour-tint overlay and shadow that appears when content scrolls
+  under the bar.
+
+  Both values can be customised via `NovaDrawerConfig`:
+
+  ```dart
+  NovaDrawerConfig(
+    appBarSurfaceTintColor: Colors.transparent, // default
+    appBarScrolledUnderElevation: 0,            // default
+  )
+  ```
+
+  Set either field to `null` to restore the ambient `AppBarTheme` value from
+  your app's `ThemeData`.
+
 ## 1.2.8
 
 - Fix drawer close-on-item-tap behavior so one tap closes the drawer when `closeOnItemTap` is enabled.

@@ -261,11 +261,20 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
         isDrawerOpen: widget.controller.isOpen,
         isPinned: widget.controller.isPinned,
         displayMode: widget.config.displayMode,
-        child: _buildLayout(
-          deviceType,
-          displayMode,
-          drawerTheme,
-          isRtl,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              surfaceTintColor: widget.config.appBarSurfaceTintColor,
+              scrolledUnderElevation:
+                  widget.config.appBarScrolledUnderElevation,
+            ),
+          ),
+          child: _buildLayout(
+            deviceType,
+            displayMode,
+            drawerTheme,
+            isRtl,
+          ),
         ),
       ),
     );
