@@ -1,8 +1,8 @@
 # Changelog
 
-## 1.2.6
+## 1.2.7
 
-- Not auto close drawer on item select
+- Not auto close drawer on item select in overlay mode
 
 
 ## 1.2.5
