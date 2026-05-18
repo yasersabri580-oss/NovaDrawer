@@ -1,5 +1,44 @@
 # Changelog
 
+## 1.2.10
+
+- **Fix: drawer requires double-tap to close in overlay mode** — root cause was
+  that `_onControllerChanged` called `Navigator.of(context).maybePop()` to
+  dismiss the overlay drawer. `maybePop()` is async (it `await`s
+  `route.willPop()`), so any navigation call that runs synchronously after
+  `controller.close()` (e.g. `pushNamed` from `novaNavigateForItem`, or a
+  `GoRouter.go` inside `onItemTap`) could push a new route onto the navigator
+  stack before `maybePop()`'s continuation ran. `maybePop()` then saw the wrong
+  top-of-stack route, its identity check failed silently, and the drawer stayed
+  open. A second tap triggered close with no navigation following, so the check
+  passed and the drawer finally closed.
+
+  The fix replaces `Navigator.of(context).maybePop()` with
+  `scaffoldState.closeDrawer()`, which directly reverses the scaffold's
+  `DrawerController` animation without touching the navigator. This is
+  synchronous, immune to any navigator-stack mutations, and works correctly
+  regardless of whether the item has a `route`.
+
+## 1.2.9
+
+- **AppBar tint & elevation defaults**: `NovaDrawerScaffold` now sets
+  `surfaceTintColor: Colors.transparent` and `scrolledUnderElevation: 0` on
+  every `AppBar` inside the scaffold by default, preventing the unwanted
+  Material 3 colour-tint overlay and shadow that appears when content scrolls
+  under the bar.
+
+  Both values can be customised via `NovaDrawerConfig`:
+
+  ```dart
+  NovaDrawerConfig(
+    appBarSurfaceTintColor: Colors.transparent, // default
+    appBarScrolledUnderElevation: 0,            // default
+  )
+  ```
+
+  Set either field to `null` to restore the ambient `AppBarTheme` value from
+  your app's `ThemeData`.
+
 ## 1.2.8
 
 - Fix drawer close-on-item-tap behavior so one tap closes the drawer when `closeOnItemTap` is enabled.

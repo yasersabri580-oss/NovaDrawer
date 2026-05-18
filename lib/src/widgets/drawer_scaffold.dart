@@ -206,7 +206,16 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
         if (widget.controller.isOpen && !isDrawerActuallyOpen) {
           scaffoldState.openDrawer();
         } else if (!widget.controller.isOpen && isDrawerActuallyOpen) {
-          Navigator.of(context).maybePop();
+          // Use ScaffoldState.closeDrawer() instead of Navigator.maybePop()
+          // so the drawer is closed synchronously.  maybePop() is async — it
+          // awaits route.willPop() — and that async gap lets any pushNamed /
+          // GoRouter.go call that runs synchronously afterwards change the
+          // navigator stack before maybePop()'s continuation executes.  At
+          // that point the internal route-identity check in maybePop() fails
+          // silently, so the drawer stays open and the user needs a second tap
+          // to dismiss it.  closeDrawer() bypasses the navigator entirely and
+          // directly reverses the scaffold's DrawerController animation.
+          scaffoldState.closeDrawer();
         }
         return;
       }
@@ -261,11 +270,20 @@ class _NovaDrawerScaffoldState extends State<NovaDrawerScaffold>
         isDrawerOpen: widget.controller.isOpen,
         isPinned: widget.controller.isPinned,
         displayMode: widget.config.displayMode,
-        child: _buildLayout(
-          deviceType,
-          displayMode,
-          drawerTheme,
-          isRtl,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            appBarTheme: Theme.of(context).appBarTheme.copyWith(
+              surfaceTintColor: widget.config.appBarSurfaceTintColor,
+              scrolledUnderElevation:
+                  widget.config.appBarScrolledUnderElevation,
+            ),
+          ),
+          child: _buildLayout(
+            deviceType,
+            displayMode,
+            drawerTheme,
+            isRtl,
+          ),
         ),
       ),
     );
