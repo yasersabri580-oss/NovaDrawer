@@ -322,7 +322,7 @@ class _NovaDrawerSectionWidgetState extends State<NovaDrawerSectionWidget>
     // Close drawer on mobile before callbacks/navigation to avoid races
     // where route changes prevent a visible close transition.
     final config = widget.config ?? const NovaDrawerConfig();
-    if (config.closeOnItemTap && controller.deviceType == NovaDeviceType.mobile) {
+    if (config.closeOnItemTap) {
       controller.close();
     }
     widget.onItemTap?.call(item);
