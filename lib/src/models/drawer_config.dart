@@ -276,7 +276,7 @@ class NovaDrawerConfig {
   /// Whether RTL language support is enabled.
   final bool rtlSupport;
 
-  /// Whether to close the drawer when an item is tapped (mobile).
+  /// Whether to close the drawer when an item is tapped.
   final bool closeOnItemTap;
 
   /// Whether to close the drawer when tapping outside it.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.8
+
+- Fix drawer close-on-item-tap behavior so one tap closes the drawer when `closeOnItemTap` is enabled.
+
 ## 1.2.7
 
 - Not auto close drawer on item select in overlay mode
