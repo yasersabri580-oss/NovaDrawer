@@ -277,6 +277,19 @@ void main() {
       expect(controller.isOpen, isFalse);
     });
 
+    test('close notifies even when already closed', () {
+      var notificationCount = 0;
+      controller.addListener(() {
+        notificationCount++;
+      });
+
+      expect(controller.isOpen, isFalse);
+      controller.close();
+
+      expect(controller.isOpen, isFalse);
+      expect(notificationCount, 1);
+    });
+
     test('toggle', () {
       controller.toggle();
       expect(controller.isOpen, isTrue);

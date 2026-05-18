@@ -128,10 +128,13 @@ class NovaDrawerController extends ChangeNotifier {
 
   /// Closes the drawer.
   void close() {
-    if (_isOpen && !_isPinned) {
-      _isOpen = false;
-      notifyListeners();
-    }
+    if (_isPinned) return;
+
+    // Always notify on close requests so host widgets can reconcile any
+    // platform-level drawer state (e.g. Scaffold overlay drawer) even if the
+    // controller already believes it is closed.
+    _isOpen = false;
+    notifyListeners();
   }
 
   /// Toggles the drawer between open and closed.
