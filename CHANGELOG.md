@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.2.10
+
+- **Fix: drawer requires double-tap to close in overlay mode** — root cause was
+  that `_onControllerChanged` called `Navigator.of(context).maybePop()` to
+  dismiss the overlay drawer. `maybePop()` is async (it `await`s
+  `route.willPop()`), so any navigation call that runs synchronously after
+  `controller.close()` (e.g. `pushNamed` from `novaNavigateForItem`, or a
+  `GoRouter.go` inside `onItemTap`) could push a new route onto the navigator
+  stack before `maybePop()`'s continuation ran. `maybePop()` then saw the wrong
+  top-of-stack route, its identity check failed silently, and the drawer stayed
+  open. A second tap triggered close with no navigation following, so the check
+  passed and the drawer finally closed.
+
+  The fix replaces `Navigator.of(context).maybePop()` with
+  `scaffoldState.closeDrawer()`, which directly reverses the scaffold's
+  `DrawerController` animation without touching the navigator. This is
+  synchronous, immune to any navigator-stack mutations, and works correctly
+  regardless of whether the item has a `route`.
+
 ## 1.2.9
 
 - **AppBar tint & elevation defaults**: `NovaDrawerScaffold` now sets
