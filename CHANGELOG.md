@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.6
+
+- Not auto close drawer on item select
+
+
 ## 1.2.5
 
 - Auth scroll not works for invisile items

@@ -8,6 +8,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:nova_drawer/nova_drawer.dart';
 
 import '../models/drawer_item.dart';
 import '../models/drawer_theme.dart';
@@ -90,10 +91,10 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-    final drawerTheme = widget.theme?.resolve(themeData) ??
+    final drawerTheme =
+        widget.theme?.resolve(themeData) ??
         const NovaDrawerTheme().resolve(themeData);
-    final effectiveWidth =
-        widget.width ?? drawerTheme.miniDrawerWidth ?? 72.0;
+    final effectiveWidth = widget.width ?? drawerTheme.miniDrawerWidth ?? 72.0;
     final config = widget.config ?? const NovaDrawerConfig();
 
     return MouseRegion(
@@ -113,8 +114,7 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
           boxShadow: [
             if (drawerTheme.elevation != null && drawerTheme.elevation! > 0)
               BoxShadow(
-                color: (drawerTheme.shadowColor ?? Colors.black)
-                    .withAlpha(25),
+                color: (drawerTheme.shadowColor ?? Colors.black).withAlpha(25),
                 blurRadius: drawerTheme.elevation! * 2,
               ),
           ],
@@ -123,10 +123,7 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
           children: [
             // Header
             if (widget.header != null)
-              SizedBox(
-                height: 64.0,
-                child: Center(child: widget.header),
-              )
+              SizedBox(height: 64.0, child: Center(child: widget.header))
             else
               const SizedBox(height: 8.0),
 
@@ -135,20 +132,12 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
             const SizedBox(height: 8.0),
 
             // Items
-            Expanded(
-              child: _buildItemsList(drawerTheme),
-            ),
+            Expanded(child: _buildItemsList(drawerTheme)),
 
             // Footer
             if (widget.footer != null) ...[
-              Divider(
-                color: drawerTheme.dividerColor,
-                height: 1.0,
-              ),
-              SizedBox(
-                height: 56.0,
-                child: Center(child: widget.footer),
-              ),
+              Divider(color: drawerTheme.dividerColor, height: 1.0),
+              SizedBox(height: 56.0, child: Center(child: widget.footer)),
             ],
           ],
         ),
@@ -160,10 +149,12 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
     return Tooltip(
       message: 'Expand drawer',
       child: InkWell(
-        onTap: widget.onExpandRequest ?? () {
-          final controller = NovaDrawerControllerProvider.of(context);
-          controller.fromMini();
-        },
+        onTap:
+            widget.onExpandRequest ??
+            () {
+              final controller = NovaDrawerControllerProvider.of(context);
+              controller.fromMini();
+            },
         borderRadius: BorderRadius.circular(8.0),
         child: Container(
           width: 40.0,
@@ -186,12 +177,18 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
     final allItems = <NovaDrawerItem>[];
     if (widget.sections != null && widget.sections!.isNotEmpty) {
       for (final section in widget.sections!) {
-        allItems.addAll(section.items.where((item) =>
-            item.isVisible && !controller.isItemHidden(item.id)));
+        allItems.addAll(
+          section.items.where(
+            (item) => item.isVisible && !controller.isItemHidden(item.id),
+          ),
+        );
       }
     } else {
-      allItems.addAll(widget.items.where((item) =>
-          item.isVisible && !controller.isItemHidden(item.id)));
+      allItems.addAll(
+        widget.items.where(
+          (item) => item.isVisible && !controller.isItemHidden(item.id),
+        ),
+      );
     }
 
     return ListView.builder(
@@ -234,7 +231,7 @@ class _NovaMiniDrawerState extends State<NovaMiniDrawer> {
   void _handleItemTap(NovaDrawerItem item, NovaDrawerController controller) {
     controller.selectItem(item.id);
     final config = widget.config ?? const NovaDrawerConfig();
-    if (config.closeOnItemTap && controller.deviceType == NovaDeviceType.mobile) {
+    if (config.closeOnItemTap) {
       controller.close();
     }
     widget.onItemTap?.call(item);
